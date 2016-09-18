@@ -151,38 +151,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.mycila</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<header>license-header-template.txt</header>
-					<properties>
-						<owner>Mountain Fog, Inc.</owner>
-						<email>support@mtnfog.com</email>
-					</properties>
-					<excludes>
-						<exclude>**/README</exclude>
-						<exclude>src/test/resources/**</exclude>
-						<exclude>src/main/resources/**</exclude>
-						<exclude>scripts/**</exclude>
-						<exclude>packaging/**</exclude>
-						<exclude>*.sh</exclude>
-						<exclude>*.properties</exclude>
-						<exclude>*.bat</exclude>
-						<exclude>*.conf</exclude>
-						<exclude>*.md</exclude>
-						<exclude>*.txt</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
