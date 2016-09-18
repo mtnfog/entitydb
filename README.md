@@ -1,5 +1,7 @@
 # EntityDB
 
+[![Build Status](https://travis-ci.org/mtnfog/entitydb.png?branch=master)](https://travis-ci.org/mtnfog/entitydb)
+
 EntityDB is an application that integrates several components to provide a unified means for storing and querying entities (people, places, and things). This project includes the Entity Query Language (EQL) which facilitates querying entities across various underlying databases through a single query language.
 
 As EntityDB matures its goals are to provide a means for storing and querying entities that's scalable, efficient, and useful to the community.
@@ -18,23 +20,16 @@ Early versions of EntityDB included its own custom data store for entities. We d
 
 ## Contributing
 
-Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a Contributors License Agreement (CLA). It is a simple form to protect both sides and should take less than five minutes of your time.
+Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributors License Agreement (CLA)](https://www.mtnfog.com/about/legal/contributor-license-agreement/). It is a simple form to protect both sides and should take less than five minutes of your time.
 
 ## License
 
-Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
+Copyright © 2016 Mountain Fog, Inc.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
