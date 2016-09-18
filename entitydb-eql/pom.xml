@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.mtnfog.entitydb</groupId>
+		<artifactId>entitydb</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>entitydb-eql</artifactId>
+	<packaging>pom</packaging>
+	<name>entitydb-eql</name>
+	<modules>
+		<module>entitydb-eql-language</module>		
+		<module>entitydb-eql-filters</module>
+	</modules>
+	<properties>
+		<!-- Artifact versions -->
+		<antlr.version>4.0</antlr.version>
+		<commons.collections.version>4.0</commons.collections.version>
+		<commons.lang.version>3.4</commons.lang.version>
+		<entity.model.version>1.0.6</entity.model.version>
+		<failsafe.version>2.18</failsafe.version>
+		<jacoco.version>0.7.2.201409121644</jacoco.version>
+		<junit.version>4.12</junit.version>
+		<log4j.version>2.3</log4j.version>
+		<surefire.version>2.18</surefire.version>
+		<!-- Sonar properties -->
+		<sonar.jdbc.url>jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
+		<sonar.jdbc.username>sonar</sonar.jdbc.username>
+		<sonar.jdbc.password>sonar</sonar.jdbc.password>
+		<sonar.host.url>https://cm01.mtnfog.com/sonar/</sonar.host.url>
+		<sonar.jacoco.reportPath>target/coverage-reports/jacoco-ut.exec</sonar.jacoco.reportPath>
+		<sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.test.exclusions>**/test/*</sonar.test.exclusions>
+		<sonar.exclusions>**/test/**</sonar.exclusions>
+	</properties>	
+</project>

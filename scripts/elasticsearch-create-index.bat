@@ -1,0 +1,1 @@
+curl.exe -vvvv -k -X PUT -H "Content-Type: application/json" --data @mapping.json "https://search-entitydb-4cpoahp2k7dpakwchunuuxrcwm.us-east-1.es.amazonaws.com/entities/"

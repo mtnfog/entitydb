@@ -1,0 +1,8 @@
+.metadata
+.cache
+bin/
+.settings/
+target/
+.classpath
+.project
+activemq-data/

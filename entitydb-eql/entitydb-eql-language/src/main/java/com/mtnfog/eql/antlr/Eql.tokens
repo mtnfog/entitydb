@@ -1,0 +1,34 @@
+T__9=3
+T__8=4
+T__7=5
+T__6=6
+T__5=7
+T__4=8
+SORT_ORDER_FIELD=17
+STRING_FIELD=16
+NUMERIC_FIELD=14
+ENRICHMENT_FIELD=13
+OPTION_FIELD=15
+INTEGERS=18
+T__11=1
+T__3=9
+T__2=10
+STRING=19
+T__1=11
+T__0=12
+WS=20
+T__10=2
+'enrichment'=13
+'and'=6
+'between'=5
+'<='=1
+'>'=11
+'select * from entities where'=12
+'='=10
+'<'=9
+'>='=7
+';'=8
+'order by'=3
+'!='=4
+'confidence'=14
+'select * from entities'=2

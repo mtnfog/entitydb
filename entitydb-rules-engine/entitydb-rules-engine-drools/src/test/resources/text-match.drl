@@ -1,0 +1,21 @@
+import com.mtnfog.entity.Entity;
+import com.mtnfog.eql.filters.EqlFilters;
+
+// This is a sample rule that uses an EQL query as a condition.
+
+rule "Sample EQL Rule"
+	
+	salience 5
+	
+	when
+	
+		m : Entity()
+		
+		eval(EqlFilters.isMatch(m, "select * from entities where text = \"George Washington\""))
+		
+	then
+
+		System.out.println("Match!");
+		//insert("match");
+		
+end

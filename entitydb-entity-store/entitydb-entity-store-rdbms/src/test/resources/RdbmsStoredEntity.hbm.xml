@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+<hibernate-mapping package="com.mtnfog.entitydb.entitystore.rdbms.model">
+   <class name="RdbmsStoredEntity" table="Entities">
+      <id name="id" type="string" column="id">
+         <generator class="assigned"/>
+      </id>
+      <property name="text" column="text" type="string" not-null="true"/>
+      <property name="type" column="type" type="string" not-null="true"/>
+      <property name="confidence" column="probability" type="double" not-null="true"/>
+      <property name="context" column="context" type="string"/>
+      <property name="documentId" column="documentId" type="string"/>
+      <property name="uri" column="uri" type="string"/>
+      <property name="extractionDate" column="extractionDate" type="long"/>
+      <property name="language" column="language" type="string"/>
+      <property name="acl" column="acl" type="string"/>
+      <property name="timestamp" column="timestamp" type="long"/>
+      <property name="visible" column="visible" type="int"/>
+      <property name="indexed" column="indexed" type="long"/>
+      <set name="entityEnrichments" table="EntityEnrichments" lazy="false" cascade="save-update" fetch="select" inverse="false">
+		<key column="enrichmentId" not-null="true"/>
+		<one-to-many class="RdbmsStoredEntityEnrichment"/>
+	  </set>
+   </class>
+</hibernate-mapping>

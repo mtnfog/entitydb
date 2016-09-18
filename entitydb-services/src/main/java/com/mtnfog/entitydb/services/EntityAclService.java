@@ -1,0 +1,70 @@
+/**
+ * Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+ */
+package com.mtnfog.entitydb.services;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
+import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
+import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
+import com.mtnfog.entitydb.model.search.SearchIndex;
+import com.mtnfog.entitydb.model.security.Acl;
+
+@Component
+public class EntityAclService {
+
+	private static final Logger LOGGER = LogManager.getLogger(EntityAclService.class);
+			
+	@Autowired
+	private SearchIndex searchIndex;
+	
+	@Autowired
+	private QueuePublisher queuePublisher;
+	
+	public void updateEntityAcl(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException {
+		
+		// The entity just needs to exist here. The request to change the ACL will be put onto the queue.
+		
+		IndexedEntity indexedEntity = searchIndex.getEntity(entityId);
+		
+		if(indexedEntity == null) {
+			
+			throw new NonexistantEntityException("Entity with ID " + entityId + " was not found.");
+			
+		} else {
+		
+			// Validate the ACL.
+			if(!Acl.validate(acl)) {
+				throw new MalformedAclException("The acl is malformed.");
+			}
+			
+			LOGGER.trace("Queueing the entity ACL change request.");
+			
+			queuePublisher.queueUpdateAcl(entityId, acl, apiKey);
+		
+		}
+		
+	}
+	
+}
