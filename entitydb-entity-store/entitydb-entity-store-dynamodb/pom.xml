@@ -131,9 +131,9 @@
 			<version>${commons.lang.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog.eql</groupId>
-			<artifactId>entity-query-language</artifactId>
-			<version>${eql.version}</version>
+			<groupId>com.mtnfog.entitydb</groupId>
+			<artifactId>entitydb-eql-language</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>

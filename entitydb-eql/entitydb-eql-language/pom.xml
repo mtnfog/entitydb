@@ -35,7 +35,7 @@
 				<artifactId>antlr4-maven-plugin</artifactId>
 				<version>4.0</version>
 				<configuration>
-					<outputDirectory>${basedir}/src/main/java/com/mtnfog/eql/antlr</outputDirectory>
+					<outputDirectory>${basedir}/src/main/java/com/mtnfog/entitydb/eql/antlr</outputDirectory>
 				</configuration>
 				<executions>
 					<execution>

@@ -16,34 +16,56 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.eql.exceptions;
+package com.mtnfog.entitydb.eql.model;
 
 /**
- * An exception thrown when generating an {@link EntityQuery query}
- * from an EQL query.
- *
+ * Specifies the field to order by in an
+ * {@link EntityQuery query}.
+ * 
  * @author Mountain Fog, Inc.
  *
  */
-public class QueryGenerationException extends RuntimeException {
-
-	private static final long serialVersionUID = 2407358322163930971L;
+public enum EntityOrder {
 
 	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
+	 * Sort by the database-assigned ID.
 	 */
-	public QueryGenerationException(String message) {
-		super(message);
+	ID("id"),
+	
+	/**
+	 * Sort by the entity text.
+	 */
+	TEXT("text"),
+	
+	/**
+	 * Sort by the entity confidence.
+	 */
+	CONFIDENCE("confidence"),
+	
+	/**
+	 * Sort by the type of the entity.
+	 */
+	TYPE("type"),
+	
+	/**
+	 * Sort by the entity's extraction date.
+	 */
+	EXTRACTION_DATE("extractionDate");
+	
+	private String property;
+	
+	private EntityOrder(String property) {
+		
+		this.property = property;
+		
 	}
 	
 	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 * @param throwable The exception.
+	 * Gets the name of the property to sort by.
+	 * @return The name of the property.
 	 */
-	public QueryGenerationException(String message, Throwable throwable) {
-		super(message, throwable);
+	public String getProperty() {
+		return property;
 	}
 	
 }

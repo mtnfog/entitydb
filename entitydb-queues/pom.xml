@@ -52,11 +52,6 @@
 			<version>${activemq.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
-			<artifactId>commons-caching</artifactId>
-			<version>${commons.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>

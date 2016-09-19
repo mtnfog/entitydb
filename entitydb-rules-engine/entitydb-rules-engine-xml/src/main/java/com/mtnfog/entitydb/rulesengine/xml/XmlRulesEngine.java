@@ -56,7 +56,7 @@ import com.mtnfog.entitydb.model.rulesengine.EqlCondition;
 import com.mtnfog.entitydb.model.rulesengine.KinesisFirehoseRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.KinesisStreamRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
-import com.mtnfog.eql.filters.EqlFilters;
+import com.mtnfog.entitydb.eql.filters.EqlFilters;
 
 /**
  * An implementation of {@link RulesEngine} where the rules

@@ -1,7 +1,7 @@
 grammar Eql;
 
 @header {
- 	package com.mtnfog.eql.antlr;
+ 	package com.mtnfog.entitydb.eql.antlr;
 }
  	
 command:

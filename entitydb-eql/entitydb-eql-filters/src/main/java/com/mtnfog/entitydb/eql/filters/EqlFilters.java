@@ -16,7 +16,7 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.eql.filters;
+package com.mtnfog.entitydb.eql.filters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +29,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mtnfog.eql.Eql;
-import com.mtnfog.eql.exceptions.QueryGenerationException;
-import com.mtnfog.eql.filters.comparisons.DateComparison;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.filters.comparisons.DateComparison;
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.eql.Eql;
+import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 /**
  * Static functions for applying EQL statements to entities.

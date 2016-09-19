@@ -40,7 +40,6 @@ import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.messages.InternalQueueIngestMessage;
-import com.mtnfog.commons.caching.IdylCache;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -76,10 +75,10 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @throws JMSException Thrown if the ActiveMQ consumer cannot be created.
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			IdylCache idylCache, AuditLogger auditLogger, String brokerURL,
+			AuditLogger auditLogger, String brokerURL,
 			String queueName, int timeout) throws JMSException {
 		
-		super(entityStore, rulesEngines, idylCache, auditLogger);
+		super(entityStore, rulesEngines, auditLogger);
 
 		gson = new Gson();
 		
@@ -111,10 +110,10 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @throws JMSException Thrown if the ActiveMQ consumer cannot be created.
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			IdylCache idylCache, AuditLogger auditLogger, 
+			AuditLogger auditLogger, 
 			String brokerURL, String queueName) throws JMSException {
 	
-		this(entityStore, rulesEngines, idylCache, auditLogger, brokerURL, queueName, DEFAULT_TIMEOUT);
+		this(entityStore, rulesEngines, auditLogger, brokerURL, queueName, DEFAULT_TIMEOUT);
 		
 	}
 	

@@ -99,17 +99,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-entity-store-cassandra</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
 			<artifactId>entitydb-entity-store-rdbms</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-entity-store-mongodb</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -121,11 +111,6 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mtnfog</groupId>
-			<artifactId>commons-caching</artifactId>
-			<version>${commons.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

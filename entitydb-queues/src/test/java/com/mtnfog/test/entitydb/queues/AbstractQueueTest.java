@@ -20,7 +20,6 @@ package com.mtnfog.test.entitydb.queues;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +29,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mtnfog.commons.caching.IdylCache;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
@@ -52,7 +50,6 @@ public abstract class AbstractQueueTest {
 	
 	protected EntityStore<RdbmsStoredEntity> entityStore;
 	protected List<RulesEngine> rulesEngines;
-	protected IdylCache idylCache;
 	protected AuditLogger auditLogger;
 		
 	private final String jdbcDriver = "org.hsqldb.jdbcDriver";

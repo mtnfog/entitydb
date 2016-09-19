@@ -16,7 +16,7 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.eql.model;
+package com.mtnfog.entitydb.eql.model;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 

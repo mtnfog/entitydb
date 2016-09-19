@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.mtnfog.entity.Entity;
-import com.mtnfog.eql.filters.EqlFilters;
-import com.mtnfog.eql.filters.comparisons.DateComparison;
+import com.mtnfog.entitydb.eql.filters.EqlFilters;
+import com.mtnfog.entitydb.eql.filters.comparisons.DateComparison;
 
 public class EQL {
 	

@@ -16,39 +16,34 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.eql.model;
+package com.mtnfog.entitydb.eql.exceptions;
 
 /**
- * Specifies entity ordering for use in an
- * {@link EntityQuery query}.
- * 
+ * An exception thrown when generating an {@link EntityQuery query}
+ * from an EQL query.
+ *
  * @author Mountain Fog, Inc.
  *
  */
-public enum SortOrder {
+public class QueryGenerationException extends RuntimeException {
 
-	ASC("asc"),
-	DESC("desc");
-	
-	private String property;
-	
-	private SortOrder(String property) {
-		
-		this.property = property;
-		
-	}
-	
-	@Override
-	public String toString() {
-		return property;
+	private static final long serialVersionUID = 2407358322163930971L;
+
+	/**
+	 * Creates a new exception.
+	 * @param message The message of the exception.
+	 */
+	public QueryGenerationException(String message) {
+		super(message);
 	}
 	
 	/**
-	 * Gets the name of the property to sort by.
-	 * @return The name of the property.
+	 * Creates a new exception.
+	 * @param message The message of the exception.
+	 * @param throwable The exception.
 	 */
-	public String getSortOrder() {
-		return property;
+	public QueryGenerationException(String message, Throwable throwable) {
+		super(message, throwable);
 	}
 	
 }

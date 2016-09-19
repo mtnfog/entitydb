@@ -40,8 +40,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import com.mtnfog.eql.model.EntityEnrichmentFilter;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntityEnrichment;
 import com.mtnfog.entitydb.entitystore.rdbms.util.HibernateUtil;

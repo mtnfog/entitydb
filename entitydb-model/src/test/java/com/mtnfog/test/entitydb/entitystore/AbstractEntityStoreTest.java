@@ -42,10 +42,10 @@ import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.eql.model.ConfidenceRange;
-import com.mtnfog.eql.model.EntityEnrichmentFilter;
-import com.mtnfog.eql.model.EntityOrder;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.ConfidenceRange;
+import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityOrder;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.test.entity.utils.EntityUtils;
 
 public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {

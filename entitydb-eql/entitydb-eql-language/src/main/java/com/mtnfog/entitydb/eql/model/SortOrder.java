@@ -16,55 +16,38 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.eql.model;
+package com.mtnfog.entitydb.eql.model;
 
 /**
- * Specifies the field to order by in an
+ * Specifies entity ordering for use in an
  * {@link EntityQuery query}.
  * 
  * @author Mountain Fog, Inc.
  *
  */
-public enum EntityOrder {
+public enum SortOrder {
 
-	/**
-	 * Sort by the database-assigned ID.
-	 */
-	ID("id"),
-	
-	/**
-	 * Sort by the entity text.
-	 */
-	TEXT("text"),
-	
-	/**
-	 * Sort by the entity confidence.
-	 */
-	CONFIDENCE("confidence"),
-	
-	/**
-	 * Sort by the type of the entity.
-	 */
-	TYPE("type"),
-	
-	/**
-	 * Sort by the entity's extraction date.
-	 */
-	EXTRACTION_DATE("extractionDate");
+	ASC("asc"),
+	DESC("desc");
 	
 	private String property;
 	
-	private EntityOrder(String property) {
+	private SortOrder(String property) {
 		
 		this.property = property;
 		
+	}
+	
+	@Override
+	public String toString() {
+		return property;
 	}
 	
 	/**
 	 * Gets the name of the property to sort by.
 	 * @return The name of the property.
 	 */
-	public String getProperty() {
+	public String getSortOrder() {
 		return property;
 	}
 	

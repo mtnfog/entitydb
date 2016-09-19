@@ -16,13 +16,13 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.test.eql.model.test;
+package com.mtnfog.test.entitydb.eql.model.test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 public class EntityQueryTest {
 

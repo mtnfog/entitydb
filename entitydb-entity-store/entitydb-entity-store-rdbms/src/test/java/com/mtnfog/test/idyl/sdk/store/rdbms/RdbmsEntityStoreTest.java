@@ -32,8 +32,8 @@ import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
-import com.mtnfog.eql.model.EntityOrder;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.EntityOrder;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.test.entitydb.entitystore.AbstractEntityStoreTest;
 
 public class RdbmsEntityStoreTest extends AbstractEntityStoreTest<RdbmsStoredEntity> {

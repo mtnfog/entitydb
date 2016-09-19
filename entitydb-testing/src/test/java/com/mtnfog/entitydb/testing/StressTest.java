@@ -24,17 +24,13 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.client.EntityDbApiClient;
 import com.mtnfog.test.entity.utils.EntityUtils;
-
-import retrofit.client.Response;
 
 public class StressTest {
 	
 	private static final Logger LOGGER = LogManager.getLogger(StressTest.class);
 	
-	public static void main(String[] args) {		
+	/*public static void main(String[] args) {		
 		
 		final String host = args[0];
 		final String port = args[1];
@@ -80,6 +76,6 @@ public class StressTest {
 			
 		}		
 		
-	}
+	}*/
 	
 }

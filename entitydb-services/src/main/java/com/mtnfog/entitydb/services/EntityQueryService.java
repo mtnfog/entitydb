@@ -42,9 +42,9 @@ import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.users.User;
-import com.mtnfog.eql.Eql;
-import com.mtnfog.eql.exceptions.QueryGenerationException;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.Eql;
+import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 @Component
 public class EntityQueryService {

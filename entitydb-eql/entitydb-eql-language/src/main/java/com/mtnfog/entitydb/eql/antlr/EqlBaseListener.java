@@ -1,6 +1,6 @@
 // Generated from Eql.g4 by ANTLR 4.0
 
- 	package com.mtnfog.eql.antlr;
+ 	package com.mtnfog.entitydb.eql.antlr;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;

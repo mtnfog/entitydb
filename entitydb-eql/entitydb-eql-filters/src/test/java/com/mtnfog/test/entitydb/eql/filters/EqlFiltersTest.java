@@ -16,7 +16,7 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.test.eql.filters;
+package com.mtnfog.test.entitydb.eql.filters;
 
 import static org.junit.Assert.*;
 
@@ -30,8 +30,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.mtnfog.entity.Entity;
-import com.mtnfog.eql.filters.EqlFilters;
-import com.mtnfog.eql.filters.comparisons.DateComparison;
+import com.mtnfog.entitydb.eql.filters.EqlFilters;
+import com.mtnfog.entitydb.eql.filters.comparisons.DateComparison;
 
 public class EqlFiltersTest {
 

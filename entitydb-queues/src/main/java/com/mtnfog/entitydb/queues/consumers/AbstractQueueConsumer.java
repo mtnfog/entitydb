@@ -37,7 +37,6 @@ import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.commons.caching.IdylCache;
 
 /**
  * Abstract class for queue consumers that provides the functionality to process
@@ -54,15 +53,13 @@ public abstract class AbstractQueueConsumer {
 	
 	private EntityStore<?> entityStore;
 	private List<RulesEngine> rulesEngines;
-	private IdylCache idylCache;
 	private AuditLogger auditLogger;	
 
 	public AbstractQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			IdylCache idylCache, AuditLogger auditLogger) {
+			AuditLogger auditLogger) {
 		
 		this.entityStore = entityStore;
 		this.rulesEngines = rulesEngines;
-		this.idylCache = idylCache;
 		this.auditLogger = auditLogger;
 		
 	}

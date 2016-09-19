@@ -32,7 +32,7 @@ public class InternalQueueTest extends AbstractQueueTest {
 		
 		super.before();
 		
-		consumer = new InternalQueueConsumer(entityStore, rulesEngines, idylCache, auditLogger, sleepSeconds);
+		consumer = new InternalQueueConsumer(entityStore, rulesEngines, auditLogger, sleepSeconds);
 		publisher = new InternalQueuePublisher();				
 		
 	}

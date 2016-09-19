@@ -16,7 +16,7 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.eql;
+package com.mtnfog.entitydb.eql;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,17 +35,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mtnfog.eql.antlr.EqlBaseListener;
-import com.mtnfog.eql.antlr.EqlLexer;
-import com.mtnfog.eql.antlr.EqlParser;
-import com.mtnfog.eql.antlr.EqlParser.ConditionContext;
-import com.mtnfog.eql.antlr.EqlParser.OptionContext;
-import com.mtnfog.eql.exceptions.QueryGenerationException;
-import com.mtnfog.eql.model.ConfidenceRange;
-import com.mtnfog.eql.model.EntityEnrichmentFilter;
-import com.mtnfog.eql.model.EntityOrder;
-import com.mtnfog.eql.model.EntityQuery;
-import com.mtnfog.eql.model.SortOrder;
+import com.mtnfog.entitydb.eql.antlr.EqlBaseListener;
+import com.mtnfog.entitydb.eql.antlr.EqlLexer;
+import com.mtnfog.entitydb.eql.antlr.EqlParser;
+import com.mtnfog.entitydb.eql.antlr.EqlParser.ConditionContext;
+import com.mtnfog.entitydb.eql.antlr.EqlParser.OptionContext;
+import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
+import com.mtnfog.entitydb.eql.model.ConfidenceRange;
+import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityOrder;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.SortOrder;
 
 /**
  * Entity Query Language (EQL) for querying entity stores.

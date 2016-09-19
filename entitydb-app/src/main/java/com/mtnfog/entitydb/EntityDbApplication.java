@@ -49,9 +49,7 @@ import com.google.common.collect.Sets;
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.audit.FluentdAuditLogger;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
-import com.mtnfog.entitydb.entitystore.cassandra.CassandraEntityStore;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
-import com.mtnfog.entitydb.entitystore.mongodb.MongoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
@@ -70,13 +68,8 @@ import com.mtnfog.entitydb.rulesengine.xml.XmlRulesEngine;
 import com.mtnfog.entitydb.search.ElasticSearchIndex;
 import com.mtnfog.entitydb.search.EmbeddedElasticsearchServer;
 import com.mtnfog.entitydb.search.indexer.ElasticSearchIndexer;
-import com.mtnfog.commons.caching.IdylCache;
-import com.mtnfog.commons.caching.caches.IdylLocalCache;
-import com.mtnfog.commons.caching.caches.IdylRemoteCache;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
-
-import net.sf.ehcache.CacheManager;
 
 // Auto-configuration for MongoDB: http://stackoverflow.com/a/34415014/1428388
 // Auto-configuration for Jackson: http://www.leveluplunch.com/java/tutorials/023-configure-integrate-gson-spring-boot/
@@ -200,46 +193,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		return users;
 		
 	}
-	
-	@Bean
-	public IdylCache getIdylCache() {
 		
-		IdylCache idylCache = null;
-		
-		final String cache = properties.getCache();
-		
-		if("internal".equalsIgnoreCase(cache)) {
-			
-			CacheManager cacheManager = new CacheManager();
-						
-			idylCache = new IdylLocalCache(cacheManager, "entitydb");
-			
-		} else if("memcached".equalsIgnoreCase(cache)) {
-						
-			try {
-				
-				idylCache = new IdylRemoteCache(properties.getMemcachedHost(), properties.getMemcachedPor());
-				
-			} catch (IOException ex) {
-				
-				LOGGER.error("Unable to connect to memcached. Check connection details.", ex);
-			}
-			
-		} else {
-			
-			LOGGER.warn("Invalid cache: " + cache);
-			LOGGER.warn("An internal cache will be used.");
-			
-			CacheManager cacheManager = new CacheManager();
-			
-			idylCache = new IdylLocalCache(cacheManager, "entitydb");
-			
-		}
-		
-		return idylCache;
-		
-	}
-	
 	@Bean
 	public EntityStore<?> getEntityStore() {
 		
@@ -251,23 +205,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 		try {
 		
-			if("mongodb".equalsIgnoreCase(entitydb)) {
-				
-				if(StringUtils.isNotEmpty(properties.getMongoDBUsername())) {
-				
-					entityStore = new MongoDBEntityStore(properties.getMongoDBHost(), properties.getMongoDBPort(), properties.getMongoDBUsername(), properties.getMongoDBPassword(), properties.getMongoDBDatabase(), properties.getMongoDBCollection());
-					
-				} else {
-					
-					entityStore = new MongoDBEntityStore(properties.getMongoDBHost(), properties.getMongoDBPort(), properties.getMongoDBDatabase(), properties.getMongoDBCollection());
-					
-				}
-				
-			} else if("cassandra".equalsIgnoreCase(entitydb)) {
-								
-				entityStore = new CassandraEntityStore(properties.getCassandraHost(), properties.getCassandraPort(), properties.getCassandraKeyspace());
-				
-			} else if("mysql".equalsIgnoreCase(entitydb)) {
+			if("mysql".equalsIgnoreCase(entitydb)) {
 								
 				entityStore = RdbmsEntityStore.createMySQL5EntityStore(properties.getMySqlJdbURL(), properties.getMySqlUsername(), properties.getMySqlPassword(), "validate");
 				
@@ -452,11 +390,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			if(StringUtils.isNotEmpty(properties.getSqsAccessKey())) {
 			
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getIdylCache(), getAuditLogger(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
 				
 			} else {
 				
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getIdylCache(), getAuditLogger(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
 				
 			}
 			
@@ -466,7 +404,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 						
 			try {
 			
-				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getIdylCache(), getAuditLogger(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout());
+				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout());
 				
 			} catch (Exception ex) {
 				
@@ -478,14 +416,14 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Using internal queue.");
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getIdylCache(), getAuditLogger(), properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getQueueConsumerSleep());
 			
 		} else {
 			
 			LOGGER.warn("Invalid queue: {}", queue);
 			LOGGER.warn("Defaulting to the internal queue.");
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getIdylCache(), getAuditLogger(), properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getQueueConsumerSleep());
 			
 		}
 		

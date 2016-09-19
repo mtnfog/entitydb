@@ -60,10 +60,6 @@ import com.mtnfog.entitydb.queues.publishers.InternalQueuePublisher;
 import com.mtnfog.entitydb.search.ElasticSearchIndex;
 import com.mtnfog.entitydb.search.EmbeddedElasticsearchServer;
 import com.mtnfog.entitydb.services.EntityQueryService;
-import com.mtnfog.commons.caching.IdylCache;
-import com.mtnfog.commons.caching.caches.IdylLocalCache;
-
-import net.sf.ehcache.CacheManager;
 
 @Ignore
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
@@ -161,18 +157,9 @@ public class EntityQueryServiceTest {
 		}
 
 		@Bean
-		public IdylCache getCache() {
-
-			CacheManager cacheManager = new CacheManager();
-			return new IdylLocalCache(cacheManager, "entitydb");
-
-		}
-
-		@Bean
 		public QueueConsumer getQueueConsumer() throws IOException, URISyntaxException {
 
-			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getCache(),
-					getAuditLogger(), 5);
+			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), 5);
 
 		}
 

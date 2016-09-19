@@ -41,8 +41,8 @@ import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.search.ElasticSearchIndex;
 import com.mtnfog.entitydb.search.EmbeddedElasticsearchServer;
-import com.mtnfog.eql.Eql;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.Eql;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.test.entity.utils.EntityUtils;
 
 public class ElasticSearchIndexTest {

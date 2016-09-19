@@ -24,7 +24,7 @@ import java.util.Set;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.users.User;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 /**
  * Interface to a search index.

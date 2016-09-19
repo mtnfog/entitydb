@@ -27,7 +27,7 @@ import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 /**
  * Interface for entity stores.

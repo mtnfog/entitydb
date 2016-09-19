@@ -35,9 +35,9 @@ import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.users.User;
-import com.mtnfog.eql.model.EntityOrder;
-import com.mtnfog.eql.model.EntityQuery;
-import com.mtnfog.eql.model.SortOrder;
+import com.mtnfog.entitydb.eql.model.EntityOrder;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
+import com.mtnfog.entitydb.eql.model.SortOrder;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
