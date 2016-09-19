@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
@@ -188,7 +188,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
 				<configuration>
-					<argLine>${surefireArgLine} -Dtests.security.manager=false
+					<argLine>-Dtests.security.manager=false
 						-Dtests.jarhell.check=false</argLine>
 					<skipTests>${skipTests}</skipTests>
 					<excludes>
