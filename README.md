@@ -16,6 +16,14 @@ The API is REST-based and communicates via JSON. Through the API entities can be
 
 Early versions of EntityDB included its own custom data store for entities. We decided later on to let databases do what databases do best and instead provide an abstraction layer for multiple databases that give users a choice. We may revisit this decision in the future if there is a use-case where the optimal solution is a custom data store.
 
+## Building
+
+During EntityDB's build tests will be run. Some of the unit tests are more like integration tests and this is an area for improvement.
+
+## Running
+
+Once successfully built, an `entitydb.jar` will be under `entitydb-app/target`. This is a runnable jar that can be started with `java -jar entitydb.jar`. By default, all components will use internal implementations but this can be changed in the `entitydb.properties`.
+
 ## Contributing
 
 Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributors License Agreement (CLA)](https://www.mtnfog.com/about/legal/contributor-license-agreement/). It is a simple form to protect both sides and should take less than five minutes of your time.
