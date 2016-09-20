@@ -1,9 +1,5 @@
 # EntityDB
 
-[![Run Status](https://api.shippable.com/projects/57e071afb7c2d20e00d649ea/badge?branch=master)](https://app.shippable.com/projects/57e071afb7c2d20e00d649ea)
-
-[![Coverage Badge](https://api.shippable.com/projects/57e071afb7c2d20e00d649ea/coverageBadge?branch=master)](https://app.shippable.com/projects/57e071afb7c2d20e00d649ea)
-
 EntityDB is an application that integrates several components to provide a unified means for storing and querying entities (people, places, and things). This project includes the Entity Query Language (EQL) which facilitates querying entities across various underlying databases through a single query language.
 
 As EntityDB matures its goals are to provide a means for storing and querying entities that's scalable, efficient, and useful to the community.
