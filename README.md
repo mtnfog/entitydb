@@ -4,7 +4,7 @@ EntityDB is an application that integrates several components to provide a unifi
 
 As EntityDB matures its goals are to provide a means for storing and querying entities that's scalable, efficient, and useful to the community.
 
-For documentation on how to configure and use EntityDB refer to the [User Documentation](https://github.com/mtnfog/entitydb/blob/master/documentation.md). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
+For documentation on how to configure and use EntityDB refer to the [Documentation](https://github.com/mtnfog/entitydb/blob/master/documentation.md). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
 
 ## Architecture
 
@@ -22,7 +22,7 @@ During EntityDB's build tests will be run. Some of the unit tests are more like 
 
 ## Running
 
-Once successfully built, an `entitydb.jar` will be under `entitydb-app/target`. This is a runnable jar that can be started with `java -jar entitydb.jar`. By default, all components will use internal implementations but this can be changed in the `entitydb.properties`.
+Once successfully built, an `entitydb.jar` will be under `entitydb-app/target`. This is a runnable jar that can be started with `java -jar entitydb.jar`. By default, all components will use internal implementations but this can be changed in the `entitydb.properties`. See the [Documentation](https://github.com/mtnfog/entitydb/blob/master/documentation.md) for details on configuring the `entitydb.properties`.
 
 ## Contributing
 
