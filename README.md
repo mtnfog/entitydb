@@ -10,7 +10,7 @@ For help configuring and using EntityDB refer to the [Documentation](https://git
 
 ![Architecture](https://www.mtnfog.com/wp-content/uploads/2016/02/entitydb-architecture.png)
 
-The architecture of EntityDB is shown in the block diagram above. Entities are stored in an underlying database. Supported databases are MySQL and DynamoDB. The enterprise version of EntityDB also supports MongoDB and Cassandra. Entities are indexed in Elasticsearch for fast querying. A cache stores recently ingested and accessed entities to improve performance.
+The architecture of EntityDB is shown in the block diagram above. Entities are stored in an underlying database. Supported databases are MySQL, MongoDB, Cassandra, and DynamoDB. Entities are indexed in Elasticsearch for fast querying. A cache stores recently ingested and accessed entities to improve performance.
 
 The API is REST-based and communicates via JSON. Through the API entities can be ingested and queried through the Entity Query Language (EQL). Entities received through the API are placed onto a queue for ingestion.
 
@@ -42,7 +42,7 @@ When integrated directly with your application entities can be ingested through 
 
 ## Contributing
 
-Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributor Agreement](http://www.mtnfog.com/?p=1744). We encourage you to discuss your proposed contribution with us either through email or by creating an issue.
+Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributor Agreement](http://www.mtnfog.com/?p=1744). We encourage you to discuss your proposed contribution with us either through the [discussion groups](https://groups.google.com/forum/#!forum/entitydb), email, or by creating an issue.
 
 ## License
 
@@ -54,4 +54,4 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+For proprietary licenses please contact support@mtnfog.com or visit http://www.mtnfog.com.
