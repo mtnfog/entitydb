@@ -1,12 +1,12 @@
 # EntityDB
 
+For help using and configuring EntityDB please refer to the [wiki](https://github.com/mtnfog/entitydb/wiki). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
+
 EntityDB is an application that integrates several components to provide a unified means for storing and querying entities (people, places, and things). This project includes the Entity Query Language (EQL) which facilitates querying entities across various underlying databases through a single query language.
 
 As EntityDB matures its goals are to provide a means for storing and querying entities that's scalable, efficient, and useful to the community.
 
-For help configuring and using EntityDB refer to the [Documentation](https://github.com/mtnfog/entitydb/blob/master/documentation.md). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
-
-## Architecture
+## Architectural Overview
 
 ![Architecture](https://www.mtnfog.com/wp-content/uploads/2016/02/entitydb-architecture.png)
 
@@ -42,7 +42,7 @@ When integrated directly with your application entities can be ingested through 
 
 ## Contributing
 
-Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributor Agreement](http://www.mtnfog.com/?p=1744). We encourage you to discuss your proposed contribution with us either through the [discussion groups](https://groups.google.com/forum/#!forum/entitydb), email, or by creating an issue.
+Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributor Agreement](http://www.mtnfog.com/?p=1744). We encourage you to discuss your proposed contribution with us either through the [discussion groups](https://groups.google.com/forum/#!forum/entitydb), by creating an issue, or through email but only if the first two methods are unacceptable.
 
 ## License
 
