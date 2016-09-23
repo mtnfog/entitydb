@@ -22,6 +22,16 @@ Early versions of EntityDB included its own custom data store for entities. We d
 
 During EntityDB's build tests will be run. Some of the unit tests are more like integration tests and this is an area for improvement.
 
+```
+git clone https://github.com/mtnfog/entitydb.git
+cd entitydb
+mvn clean install
+```
+
+### Build Status
+
+[![Build Status](https://travis-ci.org/mtnfog/entitydb.svg?branch=master)](https://travis-ci.org/mtnfog/entitydb)
+
 ## Running
 
 Once successfully built, an `entitydb.jar` will be under `entitydb-app/target`. This is a runnable jar that can be started with `java -jar entitydb.jar`. By default, all components will use internal implementations but this can be changed in the `entitydb.properties`. See the [Documentation](https://github.com/mtnfog/entitydb/blob/master/documentation.md) for details on configuring the `entitydb.properties`.
