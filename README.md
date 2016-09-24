@@ -1,6 +1,6 @@
 # EntityDB
 
-For help using and configuring EntityDB please refer to the [wiki](https://github.com/mtnfog/entitydb/wiki). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
+For help using and configuring EntityDB please refer to the [wiki](https://github.com/mtnfog/entitydb/wiki), especially the [Quick Start Guide](https://github.com/mtnfog/entitydb/wiki/Quick-Start-Guide). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
 
 EntityDB is an application that integrates several components to provide a unified means for storing and querying entities (people, places, and things). This project includes the Entity Query Language (EQL) which facilitates querying entities across various underlying databases through a single query language.
 
