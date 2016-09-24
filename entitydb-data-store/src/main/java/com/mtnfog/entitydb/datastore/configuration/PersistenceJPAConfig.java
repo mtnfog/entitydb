@@ -76,15 +76,15 @@ public class PersistenceJPAConfig {
 		
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		
-		/*dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+		dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
 		dataSource.setUrl("jdbc:hsqldb:mem:entitydb-data-store");
 		dataSource.setUsername("sa");
-		dataSource.setPassword("");*/
+		dataSource.setPassword("");
 		
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		/*dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		dataSource.setUrl("jdbc:mysql://localhost/entitydb?useSSL=false");
 		dataSource.setUsername("root");
-		dataSource.setPassword("root");
+		dataSource.setPassword("root");*/
 
 		return dataSource;
 

@@ -46,7 +46,7 @@ public class User {
 		this.username = username;
 		this.apiKey = apiKey;
 		this.groups = groups;
-		
+				
 	}
 	
 	/**

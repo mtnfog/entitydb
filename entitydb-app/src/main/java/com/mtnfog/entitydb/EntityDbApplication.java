@@ -49,6 +49,7 @@ import com.google.common.collect.Sets;
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.audit.FluentdAuditLogger;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
+import com.mtnfog.entitydb.configuration.UserProperties;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
@@ -81,7 +82,8 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbApplication.class);
 		
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
-	
+	private static final UserProperties usersProperties = ConfigFactory.create(UserProperties.class);
+		
 	@Autowired
 	private Environment env;
 	
@@ -160,7 +162,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Loading users and groups.");
 								
-			for(String username : properties.getUsers().split(",")) {
+			for(String username : usersProperties.getUsers().split(",")) {
 				
 				String userApiKey = env.getProperty("user." + username + ".apikey");
 				
