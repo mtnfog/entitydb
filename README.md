@@ -50,6 +50,10 @@ Entities can be ingested through the API. Look under the `scripts/` directory fo
 
 When integrated directly with your application entities can be ingested through the queues bypassing the REST API. It is not recommended to ingest without queuing entities in order to prevent entity loss due to capacity or network issues.
 
+## Client Drivers
+
+* [EntityDB Java Driver](https://github.com/mtnfog/entitydb-java-driver)
+
 ## Contributing
 
 Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributor Agreement](http://www.mtnfog.com/?p=1744). We encourage you to discuss your proposed contribution with us either through the [discussion groups](https://groups.google.com/forum/#!forum/entitydb), by creating an issue, or through email but only if the first two methods are unacceptable.
