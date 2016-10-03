@@ -30,11 +30,12 @@ import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
+import com.mtnfog.entitydb.model.services.EntityAclService;
 
 @Component
-public class EntityAclService {
+public class DefaultEntityAclService implements EntityAclService {
 
-	private static final Logger LOGGER = LogManager.getLogger(EntityAclService.class);
+	private static final Logger LOGGER = LogManager.getLogger(DefaultEntityAclService.class);
 			
 	@Autowired
 	private SearchIndex searchIndex;
@@ -42,6 +43,10 @@ public class EntityAclService {
 	@Autowired
 	private QueuePublisher queuePublisher;
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void updateEntityAcl(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException {
 		
 		// The entity just needs to exist here. The request to change the ACL will be put onto the queue.

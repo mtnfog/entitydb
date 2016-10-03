@@ -34,8 +34,8 @@ import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
+import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.search.indexer.ElasticSearchIndexer;
 
 @Configuration
 @EnableScheduling
@@ -49,7 +49,7 @@ public class Scheduler {
 	private QueueConsumer queueConsumer;
 
 	@Autowired
-	private ElasticSearchIndexer indexer;
+	private Indexer indexer;
 	
 	@Autowired
 	private EntityStore<?> entityStore;

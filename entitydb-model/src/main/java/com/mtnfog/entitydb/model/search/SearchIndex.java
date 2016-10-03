@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
-import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 

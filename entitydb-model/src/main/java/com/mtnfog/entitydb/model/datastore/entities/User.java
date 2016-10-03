@@ -33,13 +33,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-@Entity
+/*@Entity
 @Table(name="Users", uniqueConstraints = {
 		@UniqueConstraint(columnNames = "ApiKey"),
-		@UniqueConstraint(columnNames = "UserName") })
+		@UniqueConstraint(columnNames = "UserName") })*/
 public class User implements Serializable {
 
-	private static final long serialVersionUID = -525179305412047212L;
+	/*private static final long serialVersionUID = -525179305412047212L;
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -97,6 +97,6 @@ public class User implements Serializable {
 
 	public void setGroups(List<Group> groups) {
 		this.groups = groups;
-	}
+	}*/
 	
 }

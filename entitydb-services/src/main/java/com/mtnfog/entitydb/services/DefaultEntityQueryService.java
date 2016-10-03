@@ -19,38 +19,41 @@
 package com.mtnfog.entitydb.services;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
+import com.mtnfog.entitydb.datastore.repository.ContinuousQueryRepository;
 import com.mtnfog.entitydb.model.audit.AuditAction;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
+import com.mtnfog.entitydb.model.datastore.entities.ContinuousQuery;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
 import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
 import com.mtnfog.entitydb.model.exceptions.api.InternalServerErrorException;
-import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
+import com.mtnfog.entitydb.model.services.UserService;
 import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.eql.Eql;
 import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 @Component
-public class EntityQueryService {
+public class DefaultEntityQueryService implements EntityQueryService {
 
-	private static final Logger LOGGER = LogManager.getLogger(EntityQueryService.class);
+	private static final Logger LOGGER = LogManager.getLogger(DefaultEntityQueryService.class);
 	
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
 			
@@ -60,23 +63,16 @@ public class EntityQueryService {
 	@Autowired
 	private AuditLogger auditLogger;
 	
-	//@Autowired
-	//private ContinuousQueryRepository continuousQueryRepository;
-	
-	//@Autowired
-	//private UserRepository userRepository;
+	@Autowired
+	private ContinuousQueryRepository continuousQueryRepository;
 	
 	@Autowired
-	private List<User> usersAndGroups;
+	private UserService userService;
 	
 	/**
-	 * Execute an EQL query.
-	 * @param query The EQL query.
-	 * @param apiKey The user's API key.
-	 * @param continuous <code>1</code> if the query is to be a continuous query. 
-	 * @param days The number of days to be continuous.
-	 * @return An {@link ExternalQueryResult result}.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public QueryResult eql(String query, String apiKey, int continuous, int days) {
 				
 		QueryResult queryResult = null;
@@ -91,13 +87,14 @@ public class EntityQueryService {
 				if(auditResult) {
 				
 				// Get the user from the API key.
-				User user = getUserByApiKey(apiKey);
+				User user = userService.getUserByApiKey(apiKey);
 				
+				// Execute the query.
 				queryResult = executeQuery(entityQuery, user, apiKey);
 				
 				// The query was validated and executed successfully.
 				// If it is set to be continuous we can now persist it.
-				//continuousQueryRepository.save(new ContinuousQuery(userRepository.getByApiKey(apiKey), query, new Date(), days));
+				continuousQueryRepository.save(new ContinuousQuery(user.getUsername(), query, new Date(), days));
 			
 			} else {
 				
@@ -111,13 +108,7 @@ public class EntityQueryService {
 			LOGGER.error("Malformed query: " + ex.getMessage(), ex);
 			
 			throw new BadRequestException("Malformed query.");		
-						
-		} catch (UnauthorizedException ex) {
-			
-			LOGGER.warn("Invalid authorization for API request.");
-			
-			throw ex;
-			
+									
 		} catch (Exception ex) {
 			
 			LOGGER.error("Unable to execute query.", ex);
@@ -191,21 +182,5 @@ public class EntityQueryService {
 		return queryResult;
 					
 	}
-	
-	private User getUserByApiKey(String apiKey) {
 		
-		for(User user : usersAndGroups) {
-			
-			if(StringUtils.equals(user.getApiKey(), apiKey)) {
-				
-				return user;
-				
-			}
-			
-		}
-		
-		return null;
-		
-	}
-	
 }

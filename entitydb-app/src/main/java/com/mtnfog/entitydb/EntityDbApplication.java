@@ -21,16 +21,12 @@ package com.mtnfog.entitydb;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
@@ -41,23 +37,20 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 
-import com.google.common.collect.Sets;
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.audit.FluentdAuditLogger;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
-import com.mtnfog.entitydb.configuration.UserProperties;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.queues.consumers.ActiveMQQueueConsumer;
 import com.mtnfog.entitydb.queues.consumers.InternalQueueConsumer;
 import com.mtnfog.entitydb.queues.consumers.SqsQueueConsumer;
@@ -76,17 +69,13 @@ import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
 // Auto-configuration for Jackson: http://www.leveluplunch.com/java/tutorials/023-configure-integrate-gson-spring-boot/
 
 @SpringBootApplication(exclude = { JacksonAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class })
-@PropertySource(value = {"file:entitydb.properties", "file:users.properties"}, ignoreResourceNotFound = false)
+@PropertySource(value = {"file:entitydb.properties"}, ignoreResourceNotFound = false)
 public class EntityDbApplication extends SpringBootServletInitializer {
 	
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbApplication.class);
 		
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
-	private static final UserProperties usersProperties = ConfigFactory.create(UserProperties.class);
-		
-	@Autowired
-	private Environment env;
-	
+			
 	public static void main(String[] args) throws Exception {
 						
 		// Start the REST service.
@@ -102,7 +91,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	}
 	
 	@Bean
-	public ElasticSearchIndexer getIndexer() {
+	public Indexer getIndexer() {
 		
 		return new ElasticSearchIndexer(getSearchIndex(), getEntityStore());
 		
@@ -150,52 +139,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		return auditLogger;
 		
 	}
-	
-	@Bean
-	public List<User> getUsersAndGroups() {
-		
-		List<User> users = new LinkedList<User>();
-		
-		final String userManager = properties.getUserManager();
-		
-		if("internal".equalsIgnoreCase(userManager)) {
 			
-			LOGGER.info("Loading users and groups.");
-								
-			for(String username : usersProperties.getUsers().split(",")) {
-				
-				String userApiKey = env.getProperty("user." + username + ".apikey");
-				
-				String userGroups = env.getProperty("user." + username + ".groups");
-				
-				Set<String> groups = null;
-				
-				if(StringUtils.isNotEmpty(userGroups)) {
-				
-					groups = Sets.newHashSet(userGroups.split(","));
-					
-				} else {
-					
-					groups = new HashSet<String>();
-					
-				}
-				
-				User user = new User(username, userApiKey, groups);
-				
-				users.add(user);
-				
-			}
-			
-			return users;
-			
-		} else {
-			
-		}
-		
-		return users;
-		
-	}
-		
 	@Bean
 	public EntityStore<?> getEntityStore() {
 		
@@ -308,13 +252,12 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 			try {
 				
-				rulesEngines.add(new DroolsRulesEngine(rulesDirectory));
-			
+				rulesEngines.add(new DroolsRulesEngine(rulesDirectory));			
 				rulesEngines.add(new XmlRulesEngine(rulesDirectory));
 				
 			} catch (RulesEngineException ex) {
 				
-				LOGGER.error("Unable to initialize the XML rules engine.", ex);
+				LOGGER.error("Unable to initialize the rules engine.", ex);
 				
 			}
 		

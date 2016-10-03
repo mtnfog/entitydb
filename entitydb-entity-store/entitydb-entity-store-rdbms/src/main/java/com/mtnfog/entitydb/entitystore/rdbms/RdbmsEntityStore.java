@@ -45,6 +45,7 @@ import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntityEnrichment;
 import com.mtnfog.entitydb.entitystore.rdbms.util.HibernateUtil;
+import com.mtnfog.entitydb.model.SystemProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
@@ -630,25 +631,43 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 		Map<Entity, String> storedEntities = new HashMap<Entity, String>();
 		
-		for(Entity entity : entities) {
+		int batchSize = 20;
+		int i = 1;
 		
-			try {
-				
-				String entityId = storeEntity(entity, acl);
-			
-				if(entityId != null) {
-					
-					storedEntities.put(entity, entityId);
-					
-				}
-				
-			} catch (EntityStoreException ex) {
-				
-				LOGGER.warn("At least one entity was not successully stored.");
-				
-			}
-        
+		if(System.getProperty(SystemProperties.RDBMS_ENTITY_STORE_BATCH_SIZE) != null) {
+			batchSize = Integer.valueOf(System.getProperty(SystemProperties.RDBMS_ENTITY_STORE_BATCH_SIZE));
+			LOGGER.debug("Using custom RDBMS batch size of {}.", batchSize);
 		}
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();	
+		
+		for(Entity entity : entities) {			
+		
+			RdbmsStoredEntity storedEntity = RdbmsStoredEntity.fromEntity(entity, acl);
+			session.save(storedEntity);
+			String entityId = storedEntity.getId();
+		
+			if(entityId != null) {					
+				storedEntities.put(entity, entityId);					
+			}
+			
+			i++;
+			
+			if (i % batchSize == 0) {
+		        session.flush();
+		        session.clear();
+		        i = 1;
+		    }
+				        
+		}
+		
+		if(i < batchSize) {			
+			session.flush();
+	        session.clear();	        
+		}
+		
+		session.close();
 		
 		return storedEntities;
 		

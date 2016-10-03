@@ -16,13 +16,26 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.model.services;
 
-import com.mtnfog.entitydb.model.datastore.entities.User;
+import com.mtnfog.entitydb.model.entitystore.QueryResult;
 
-//@Repository
-public interface UserRepository{ // extends CrudRepository<User, Long> {
+/**
+ * Interface for an entity query service.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public interface EntityQueryService {
+
+	/**
+	 * Execute an EQL query.
+	 * @param query The EQL query.
+	 * @param apiKey The user's API key.
+	 * @param continuous <code>1</code> if the query is to be a continuous query. 
+	 * @param days The number of days to be continuous.
+	 * @return The {@link ExternalQueryResult result}.
+	 */
+	public QueryResult eql(String query, String apiKey, int continuous, int days);
 	
-	public User getByApiKey(String apiKey);
- 
 }

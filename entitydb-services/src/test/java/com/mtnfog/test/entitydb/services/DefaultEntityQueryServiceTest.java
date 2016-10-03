@@ -24,11 +24,8 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -54,20 +51,19 @@ import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.queues.consumers.InternalQueueConsumer;
 import com.mtnfog.entitydb.queues.publishers.InternalQueuePublisher;
 import com.mtnfog.entitydb.search.ElasticSearchIndex;
 import com.mtnfog.entitydb.search.EmbeddedElasticsearchServer;
-import com.mtnfog.entitydb.services.EntityQueryService;
+import com.mtnfog.entitydb.services.DefaultEntityQueryService;
 
 @Ignore
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class EntityQueryServiceTest {
+public class DefaultEntityQueryServiceTest {
 
 	@Autowired
-	private EntityQueryService entityQueryService;
+	private DefaultEntityQueryService entityQueryService;
 	
 	private EmbeddedElasticsearchServer server;
 	
@@ -104,7 +100,7 @@ public class EntityQueryServiceTest {
 
 	public static String getSettings() throws IOException, URISyntaxException {
 		
-		return FileUtils.readFileToString(new File(EntityQueryServiceTest.class.getResource("/mapping.json").toURI()));
+		return FileUtils.readFileToString(new File(DefaultEntityQueryServiceTest.class.getResource("/mapping.json").toURI()));
 		
 	}
 
@@ -112,7 +108,7 @@ public class EntityQueryServiceTest {
 	@ComponentScan(basePackages = "com.mtnfog.entitydb")
 	static class ContextConfiguration {
 
-		@Bean
+		/*@Bean
 		public List<User> usersAndGroups() {
 
 			List<User> users = new LinkedList<User>();
@@ -126,7 +122,7 @@ public class EntityQueryServiceTest {
 
 			return users;
 
-		}
+		}*/
 
 		@Bean
 		public AuditLogger getAuditLogger() throws IOException {

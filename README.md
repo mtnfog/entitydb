@@ -1,4 +1,4 @@
-# EntityDB
+﻿# EntityDB
 
 For help using and configuring EntityDB please refer to the [wiki](https://github.com/mtnfog/entitydb/wiki), especially the [Quick Start Guide](https://github.com/mtnfog/entitydb/wiki/Quick-Start-Guide). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
 
@@ -56,7 +56,7 @@ When integrated directly with your application entities can be ingested through 
 
 ## Contributing
 
-Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Contributor Agreement](http://www.mtnfog.com/?p=1744). We encourage you to discuss your proposed contribution with us either through the [discussion groups](https://groups.google.com/forum/#!forum/entitydb), by creating an issue, or through email but only if the first two methods are unacceptable.
+Contributions via pull requests are absolutely always welcome. Before your pull request can be merged we ask you to complete a [Copyright Assignment Agreement](http://www.mtnfog.com/?p=1744). We encourage you to discuss your proposed contribution with us either through the [discussion groups](https://groups.google.com/forum/#!forum/entitydb), by creating an issue, or through email but only if the first two methods are unacceptable.
 
 ## License
 

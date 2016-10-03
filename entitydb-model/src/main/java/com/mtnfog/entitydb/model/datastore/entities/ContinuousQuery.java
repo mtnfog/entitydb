@@ -23,12 +23,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -42,9 +39,12 @@ public class ContinuousQuery implements Serializable {
 	@Column(name = "ID")
     private long id;
 	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="UserID")
-	private User user;
+	//@OneToOne(fetch=FetchType.EAGER)
+	//@JoinColumn(name="UserID")
+	//private User user;
+	
+	@Column(name="UserName")
+	private String userName;
 	
 	@Column(name="Query")
 	private String query;
@@ -59,9 +59,9 @@ public class ContinuousQuery implements Serializable {
 		
 	}
 	
-	public ContinuousQuery(User user, String query, Date timestamp, int days) {
+	public ContinuousQuery(String userName, String query, Date timestamp, int days) {
 		
-		this.user = user;
+		this.userName = userName;
 		this.query = query;
 		this.timestamp = timestamp;
 		this.days = days;
@@ -76,13 +76,13 @@ public class ContinuousQuery implements Serializable {
 		this.id = id;
 	}
 
-	public User getUser() {
+	/*public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
-	}
+	}*/
 
 	public String getQuery() {
 		return query;
@@ -106,6 +106,14 @@ public class ContinuousQuery implements Serializable {
 
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

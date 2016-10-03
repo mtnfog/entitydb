@@ -30,10 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.services.EntityAclService;
-import com.mtnfog.entitydb.services.EntityQueryService;
+import com.mtnfog.entitydb.model.services.EntityAclService;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
+import com.mtnfog.entitydb.model.status.Status;
+import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
+import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
@@ -48,6 +52,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 
 @RestController
@@ -60,10 +65,39 @@ public class EntityDbRestApiController {
 	private EntityQueryService entityQueryService;
 	
 	@Autowired
+	private SearchIndex searchIndex;
+	
+	@Autowired
 	private EntityAclService entityAclService;
 	
 	@Autowired
 	private QueuePublisher queuePublisher;
+	
+	@Autowired
+	public EntityStore<?> entityStore;
+	
+	/**
+	 * Gets the status.
+	 * @return The {@link Status status}.
+	 * @throws EntityStoreException Thrown if the entity store cannot get the number of stored entities.
+	 */
+	@RequestMapping(value = "/api/status", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody Status status() throws EntityStoreException {
+		
+		return new Status(searchIndex.getCount(), entityStore.getEntityCount());		
+		
+	}
+	
+	/**
+	 * Only returns HTTP 200 OK responses. This function is for application-level
+	 * monitoring by load balancers and other monitors.
+	 */
+	@RequestMapping(value = "/api/health", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public void health() {	
+		// Only returns HTTP OK to be used for application monitoring.
+	}
 					
 	/**
 	 * Queues an entities for ingest.
@@ -154,7 +188,7 @@ public class EntityDbRestApiController {
 	 * @throws BadRequestException Thrown if the EQL query is malformed.
 	 */
 	@RequestMapping(value = "/api/eql", method = RequestMethod.GET)
-	public @ResponseBody QueryResult eql(
+	public @ResponseBody ResponseEntity<QueryResult> eql(
 			@RequestParam(value = "query") String query,
 			@RequestParam(value = "continuous", required = false, defaultValue = "0") int continuous,
 			@RequestParam(value = "days", required = false, defaultValue = "90") int days,
@@ -163,7 +197,16 @@ public class EntityDbRestApiController {
 					
 		LOGGER.trace("Received EQL query: {}", query);
 				
-		return entityQueryService.eql(query, authorization, continuous, days);
+		QueryResult queryResult = entityQueryService.eql(query, authorization, continuous, days);
+		
+		// Return OK unless it is set to be a continuous query.
+		HttpStatus status = HttpStatus.OK;
+		
+		if(continuous != 0) {
+			status = HttpStatus.CREATED;
+		}
+		
+		return new ResponseEntity<QueryResult>(queryResult, status);
 		
 	}
 

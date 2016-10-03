@@ -29,11 +29,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-@Entity
-@Table(name="Groups")
+/*@Entity
+@Table(name="Groups")*/
 public class Group implements Serializable {
 
-	private static final long serialVersionUID = -525179305412047212L;
+	/*private static final long serialVersionUID = -525179305412047212L;
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -60,6 +60,6 @@ public class Group implements Serializable {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
-	}
+	}*/
 
 }

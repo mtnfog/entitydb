@@ -16,13 +16,21 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.model.search;
 
-import com.mtnfog.entitydb.model.datastore.entities.User;
+/**
+ * Interface for indexing entities into the search index.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public interface Indexer {
 
-//@Repository
-public interface UserRepository{ // extends CrudRepository<User, Long> {
+	/**
+	 * Index entities.
+	 * @param limit The batch size of entities to index. Entities will be indexed
+	 * in batches with size either equal to the limit or smaller.
+	 */
+	public void index(int limit);
 	
-	public User getByApiKey(String apiKey);
- 
 }

@@ -18,12 +18,9 @@
  */
 package com.mtnfog.entitydb.api.security;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
-import com.mtnfog.entitydb.model.users.User;
+import com.mtnfog.entitydb.model.services.UserService;
 
 /**
  * Provides API authentication for API requests.
@@ -46,7 +42,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	private static final Logger LOGGER = LogManager.getLogger(AuthenticationInterceptor.class);
 	
 	@Autowired
-	private List<User> users;
+	private UserService userService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

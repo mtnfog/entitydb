@@ -120,83 +120,71 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	public void consume() {
 		
 		// TODO: Also consume from the ACL updates queue.
+					
+		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest();
+		receiveMessageRequest.setQueueUrl(queueUrl);
+		receiveMessageRequest.setMaxNumberOfMessages(10);
+		receiveMessageRequest.setVisibilityTimeout(visibilityTimeout);
 		
-		//try {
-			
-		//while(consume == true) {
-			
-			ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest();
-			receiveMessageRequest.setQueueUrl(queueUrl);
-			receiveMessageRequest.setMaxNumberOfMessages(10);
-			receiveMessageRequest.setVisibilityTimeout(visibilityTimeout);
-			
-			// Have to specify the names of the attributes to receive. Can specify "All" to retrieve all attributes.
-			receiveMessageRequest.setMessageAttributeNames(Arrays.asList("All"));
-			
-			ReceiveMessageResult receiveMessageResult = client.receiveMessage(receiveMessageRequest);
-			
-			List<Message> messages = receiveMessageResult.getMessages();
+		// Have to specify the names of the attributes to receive. Can specify "All" to retrieve all attributes.
+		receiveMessageRequest.setMessageAttributeNames(Arrays.asList("All"));
 		
-			LOGGER.info("Consumed {} messages from the queue.", messages.size());
+		ReceiveMessageResult receiveMessageResult = client.receiveMessage(receiveMessageRequest);
+		
+		List<Message> messages = receiveMessageResult.getMessages();
+	
+		LOGGER.info("Consumed {} messages from the queue.", messages.size());
+		
+		for(Message message : messages) {
 			
-			for(Message message : messages) {
+			Entity entity = gson.fromJson(message.getBody(), Entity.class);
+			
+			final String acl = message.getMessageAttributes().get(ACL).getStringValue();
+			final String apiKey = message.getMessageAttributes().get(API_KEY).getStringValue();				
+			
+			try {
+			
+				LOGGER.debug("Received entity with ACL: {}", acl);
 				
-				Entity entity = gson.fromJson(message.getBody(), Entity.class);
+				boolean processed = ingestEntity(entity, new Acl(acl), apiKey);
 				
-				final String acl = message.getMessageAttributes().get(ACL).getStringValue();
-				final String apiKey = message.getMessageAttributes().get(API_KEY).getStringValue();				
+				if(processed) {
+			
+					DeleteMessageRequest deleteMessageRequest = new DeleteMessageRequest();
+					deleteMessageRequest.setReceiptHandle(message.getReceiptHandle());
+					deleteMessageRequest.setQueueUrl(queueUrl);
+					
+					client.deleteMessage(deleteMessageRequest);
+					
+					// The deleteMessageResult is not checked because if the delete fails
+					// the message will remain on the queue. The next time that message is
+					// received it will see that the entity already exists and it will
+					// attempt to delete the message again.
 				
-				try {
-				
-					LOGGER.debug("Received entity with ACL: {}", acl);
-					
-					boolean processed = ingestEntity(entity, new Acl(acl), apiKey);
-					
-					if(processed) {
-				
-						DeleteMessageRequest deleteMessageRequest = new DeleteMessageRequest();
-						deleteMessageRequest.setReceiptHandle(message.getReceiptHandle());
-						deleteMessageRequest.setQueueUrl(queueUrl);
-						
-						client.deleteMessage(deleteMessageRequest);
-						
-						// The deleteMessageResult is not checked because if the delete fails
-						// the message will remain on the queue. The next time that message is
-						// received it will see that the entity already exists and it will
-						// attempt to delete the message again.
-					
-					}
-				
-				} catch (MalformedAclException ex) {
-					
-					// This should never hapen since the ACL is validated before here
-					// so this error will not be rethrown.
-					
-					LOGGER.error("The received ACL " + acl + " is malformed.", ex);
-					
 				}
+			
+			} catch (MalformedAclException ex) {
+				
+				// This should never hapen since the ACL is validated before here
+				// so this error will not be rethrown.
+				
+				LOGGER.error("The received ACL " + acl + " is malformed.", ex);
 				
 			}
 			
-			if(getSize() <= 0) {
-			
-				try {
-					LOGGER.info("Queue processor thread {} is sleeping for {} seconds.", Thread.currentThread().getId(), sleepSeconds);
-					Thread.sleep(sleepSeconds * 1000);
-				} catch (InterruptedException e) {
-					// Ignoring.
-				}
-			
+		}
+		
+		if(getSize() <= 0) {
+		
+			try {
+				LOGGER.info("Queue processor thread {} is sleeping for {} seconds.", Thread.currentThread().getId(), sleepSeconds);
+				Thread.sleep(sleepSeconds * 1000);
+			} catch (InterruptedException e) {
+				// Ignoring.
 			}
-			
-		//}
 		
-	/*	} catch (Exception ex) {
-			
-			LOGGER.error("Unable to consume message from SQS queue.", ex);
-			
-		}*/
-		
+		}
+				
 	}
 	
 	/**

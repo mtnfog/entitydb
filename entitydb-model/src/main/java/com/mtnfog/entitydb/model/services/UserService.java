@@ -16,13 +16,23 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.model.services;
 
-import com.mtnfog.entitydb.model.datastore.entities.User;
+import com.mtnfog.entitydb.model.users.User;
 
-//@Repository
-public interface UserRepository{ // extends CrudRepository<User, Long> {
-	
-	public User getByApiKey(String apiKey);
- 
+/**
+ * Interface for user service.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public interface UserService {
+
+	/**
+	 * Gets a user given an API key.
+	 * @param apiKey The API key.
+	 * @return A {@link User user} or <code>null</code> if no user is found.
+	 */
+	public User getUserByApiKey(String apiKey);
+		
 }

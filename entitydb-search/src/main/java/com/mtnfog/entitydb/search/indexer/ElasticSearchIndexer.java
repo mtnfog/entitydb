@@ -29,15 +29,27 @@ import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
+import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 
-public class ElasticSearchIndexer {
+/**
+ * Implementation of {@link Indexer} that indexes entities in ElasticSearch.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class ElasticSearchIndexer implements Indexer {
 
 	private static final Logger LOGGER = LogManager.getLogger(ElasticSearchIndexer.class);
 
 	private SearchIndex searchIndex;
 	private EntityStore<?> entityStore;
 
+	/**
+	 * Creates a new ElasticSearch indexer.
+	 * @param searchIndex The search index.
+	 * @param entityStore The entity store.
+	 */
 	public ElasticSearchIndexer(SearchIndex searchIndex, EntityStore<?> entityStore) {
 		
 		this.searchIndex = searchIndex;
@@ -45,6 +57,10 @@ public class ElasticSearchIndexer {
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void index(int limit) {
 		
 		List<?> entities = entityStore.getNonIndexedEntities(limit);
@@ -60,14 +76,14 @@ public class ElasticSearchIndexer {
 				
 				try {
 				
-				IndexedEntity indexedEntity = ((AbstractStoredEntity) e).toIndexedEntity();
-				LOGGER.trace("Indexing entity {}.", indexedEntity.getEntityId());
-				entitiesToIndex.add(indexedEntity);
-				entityIds.add(indexedEntity.getEntityId());
+					IndexedEntity indexedEntity = ((AbstractStoredEntity) e).toIndexedEntity();
+					LOGGER.trace("Indexing entity {}.", indexedEntity.getEntityId());
+					entitiesToIndex.add(indexedEntity);
+					entityIds.add(indexedEntity.getEntityId());
 				
 				} catch (MalformedAclException ex) {
 					
-					LOGGER.error("The ACL for entity " + e + " is invalid. It will not be indexed.", ex);
+					LOGGER.error("The ACL for entity " + e + " is invalid. The entity will not be indexed.", ex);
 					
 				}
 				

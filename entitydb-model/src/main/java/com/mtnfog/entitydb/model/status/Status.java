@@ -16,13 +16,43 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
 
-import com.mtnfog.entitydb.model.datastore.entities.User;
+package com.mtnfog.entitydb.model.status;
 
-//@Repository
-public interface UserRepository{ // extends CrudRepository<User, Long> {
+import java.util.Date;
+
+/**
+ * The status of EntityDB.
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class Status {
+
+	private long indexed;
+	private long stored;
+	private long timestamp;
 	
-	public User getByApiKey(String apiKey);
- 
+	/**
+	 * Creates a new status.
+	 * @param indexed The number of indexed entities.
+	 * @param stored The number of stored entities.
+	 */
+	public Status(long indexed, long stored) {
+		this.indexed = indexed;
+		this.stored = stored;
+		this.timestamp = new Date().getTime();
+	}
+	
+	public long getIndexed() {
+		return indexed;
+	}
+	
+	public long getStored() {
+		return stored;
+	}
+	
+	public long getTimestamp() {
+		return timestamp;
+	}
+	
 }

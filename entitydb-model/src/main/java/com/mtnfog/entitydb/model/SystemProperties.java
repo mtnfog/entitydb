@@ -16,13 +16,24 @@
  *
  * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.model;
 
-import com.mtnfog.entitydb.model.datastore.entities.User;
+/**
+ * System properties that can change default values and behaviors. Refer to the
+ * project's wiki or documentation for information on each property.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class SystemProperties {
 
-//@Repository
-public interface UserRepository{ // extends CrudRepository<User, Long> {
+	private SystemProperties() {
+		// This class contains constants.
+	}
 	
-	public User getByApiKey(String apiKey);
- 
+	/**
+	 * The size of batch writes for RDBMS entity stores.
+	 */
+	public static final String RDBMS_ENTITY_STORE_BATCH_SIZE = "entitydb.rdbms.batchsize";
+	
 }
