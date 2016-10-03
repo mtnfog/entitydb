@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+ * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
 package com.mtnfog.entitydb.eql.filters;
 
