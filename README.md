@@ -18,6 +18,8 @@ The Rules Engine is executed for each ingested entity. Rules are user-defined an
 
 Early versions of EntityDB included its own custom data store for entities. We decided later on to let databases do what databases do best and instead provide an abstraction layer for multiple databases that give users a choice. We may revisit this decision in the future if there is a use-case where the optimal solution is a custom data store.
 
+A separate database, the data store, manages data such as users, groups, queries, and other information.
+
 ## Building
 
 During EntityDB's build tests will be run. Some of the unit tests are more like integration tests and this is an area for improvement.
