@@ -31,10 +31,10 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
+import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.eql.model.EntityOrder;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.eql.model.SortOrder;

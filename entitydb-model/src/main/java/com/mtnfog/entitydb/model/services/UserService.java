@@ -18,7 +18,7 @@
  */
 package com.mtnfog.entitydb.model.services;
 
-import com.mtnfog.entitydb.model.users.User;
+import com.mtnfog.entitydb.model.domain.User;
 
 /**
  * Interface for user service.
@@ -31,8 +31,15 @@ public interface UserService {
 	/**
 	 * Gets a user given an API key.
 	 * @param apiKey The API key.
-	 * @return A {@link User user} or <code>null</code> if no user is found.
+	 * @return A {@link UserEntity user} or <code>null</code> if no user is found.
 	 */
 	public User getUserByApiKey(String apiKey);
+	
+	/**
+	 * Authenticate the API key.
+	 * @param apiKey The API key.
+	 * @return <code>true</code> if the API key is valid for a user, otherwise <code>false</code>.
+	 */
+	public boolean authenticate(String apiKey);
 		
 }

@@ -23,14 +23,17 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="PersistentQueries")
-public class ContinuousQuery implements Serializable {
+public class ContinuousQueryEntity implements Serializable {
 
 	private static final long serialVersionUID = -525179305412047212L;
 
@@ -39,12 +42,9 @@ public class ContinuousQuery implements Serializable {
 	@Column(name = "ID")
     private long id;
 	
-	//@OneToOne(fetch=FetchType.EAGER)
-	//@JoinColumn(name="UserID")
-	//private User user;
-	
-	@Column(name="UserName")
-	private String userName;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="UserID")
+	private UserEntity user;
 	
 	@Column(name="Query")
 	private String query;
@@ -55,13 +55,13 @@ public class ContinuousQuery implements Serializable {
 	@Column(name="Days")
 	private int days;
 
-	public ContinuousQuery() {
+	public ContinuousQueryEntity() {
 		
 	}
 	
-	public ContinuousQuery(String userName, String query, Date timestamp, int days) {
+	public ContinuousQueryEntity(UserEntity user, String query, Date timestamp, int days) {
 		
-		this.userName = userName;
+		this.user = user;
 		this.query = query;
 		this.timestamp = timestamp;
 		this.days = days;
@@ -76,13 +76,13 @@ public class ContinuousQuery implements Serializable {
 		this.id = id;
 	}
 
-	/*public User getUser() {
+	public UserEntity getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
-	}*/
+	}
 
 	public String getQuery() {
 		return query;
@@ -106,14 +106,6 @@ public class ContinuousQuery implements Serializable {
 
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 }

@@ -18,26 +18,15 @@
  */
 package com.mtnfog.entitydb.services;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
-import org.aeonbits.owner.ConfigFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Sets;
-import com.mtnfog.entitydb.configuration.UserProperties;
+import com.mtnfog.entitydb.datastore.repository.UserRepository;
+import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
+import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.services.UserService;
-import com.mtnfog.entitydb.model.users.User;
 
 /**
  * Implementation of {@link UserService} for managing users. This implementation
@@ -51,71 +40,39 @@ public class DefaultUserService implements UserService {
 	
 	private static final Logger LOGGER = LogManager.getLogger(DefaultUserService.class);
 	
-	private static final UserProperties usersProperties = ConfigFactory.create(UserProperties.class);
-		
+	@Autowired
+	private UserRepository userRepository;
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public User getUserByApiKey(String apiKey) {
+				
+		UserEntity userEntity = userRepository.getByApiKey(apiKey);
 		
-		for(User user : getUsersAndGroups()) {
-			
-			if(StringUtils.equals(user.getApiKey(), apiKey)) {
-				
-				return user;
-				
-			}
-			
-		}
-		
-		return null;
-		
-	}
-		
-	private List<User> getUsersAndGroups() {
-		
-		List<User> users = new LinkedList<User>();
-		
-		InputStream input = null;
-
-		try {
-
-			Properties properties = new Properties();
-			input = new FileInputStream("users.properties");
-			properties.load(input);
-			
-			for(String username : usersProperties.getUsers().split(",")) {
-				
-				final String userApiKey = properties.getProperty("user." + username + ".apikey");				
-				final String userGroups = properties.getProperty("user." + username + ".groups");
-				
-				Set<String> groups = null;
-				
-				if(StringUtils.isNotEmpty(userGroups)) {	
-					
-					groups = Sets.newHashSet(userGroups.split(","));
-					
-				} else {
-					
-					groups = new HashSet<String>();
-					
-				}
-				
-				User user = new User(username, userApiKey, groups);
-				
-				users.add(user);
-				
-			}
-
-		} catch (IOException ex) {			
-			LOGGER.error("Unable to load user.properties.", ex);			
-		} finally {
-			IOUtils.closeQuietly(input);			
-		}
-		
-		return users;
+		return User.fromEntity(userEntity);
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean authenticate(String apiKey) {
+	
+		UserEntity userEntity = userRepository.getByApiKey(apiKey);
+		
+		if(userEntity != null) {
+			
+			return true;
+			
+		} else {
+			
+			return false;
+			
+		}
+		
+	}
+		
 }

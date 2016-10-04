@@ -21,9 +21,9 @@ package com.mtnfog.entitydb.datastore.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mtnfog.entitydb.model.datastore.entities.ContinuousQuery;
+import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
 
 @Repository
-public interface ContinuousQueryRepository extends CrudRepository<ContinuousQuery, Long> {
-    
+public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
+	
 }

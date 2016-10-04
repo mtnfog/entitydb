@@ -36,9 +36,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.search.ElasticSearchIndex;
 import com.mtnfog.entitydb.search.EmbeddedElasticsearchServer;
 import com.mtnfog.entitydb.eql.Eql;
@@ -313,7 +313,7 @@ public class ElasticSearchIndexTest {
 	@Test
 	public void queryForIndexedEntities6() throws Exception {
 		
-		// User has multiple groups.
+		// UserEntity has multiple groups.
 		
 		Entity entity1 = EntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
@@ -351,7 +351,7 @@ public class ElasticSearchIndexTest {
 	@Test
 	public void queryForIndexedEntities7() throws Exception {
 		
-		// User and entities have multiple groups.
+		// UserEntity and entities have multiple groups.
 		
 		Entity entity1 = EntityUtils.createRandomPersonEntity();
 		entity1.setText("john");

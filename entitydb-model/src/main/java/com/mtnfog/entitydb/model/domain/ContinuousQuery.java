@@ -16,36 +16,34 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.datastore.entities;
+package com.mtnfog.entitydb.model.domain;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+public class ContinuousQuery implements Serializable {
 
-/*@Entity
-@Table(name="Groups")*/
-public class Group implements Serializable {
+	private static final long serialVersionUID = -525179305412047212L;
 
-	/*private static final long serialVersionUID = -525179305412047212L;
-
-	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "ID")
     private long id;
-	
-	@Column(name="GroupName")
-	private String groupName;
-	
-	@ManyToMany(mappedBy = "groups")
-	private List<User> users;
+	private User user;
+	private String query;
+	private Date timestamp;
+	private int days;
+
+	public ContinuousQuery() {
 		
+	}
+	
+	public ContinuousQuery(User user, String query, Date timestamp, int days) {
+		
+		this.user = user;
+		this.query = query;
+		this.timestamp = timestamp;
+		this.days = days;
+		
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -54,12 +52,36 @@ public class Group implements Serializable {
 		this.id = id;
 	}
 
-	public String getGroupName() {
-		return groupName;
+	public User getUser() {
+		return user;
 	}
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}*/
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	public int getDays() {
+		return days;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
 
 }

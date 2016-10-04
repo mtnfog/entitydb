@@ -33,13 +33,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-/*@Entity
+@Entity
 @Table(name="Users", uniqueConstraints = {
 		@UniqueConstraint(columnNames = "ApiKey"),
-		@UniqueConstraint(columnNames = "UserName") })*/
-public class User implements Serializable {
+		@UniqueConstraint(columnNames = "UserName") })
+public class UserEntity implements Serializable {
 
-	/*private static final long serialVersionUID = -525179305412047212L;
+	private static final long serialVersionUID = -525179305412047212L;
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -53,11 +53,11 @@ public class User implements Serializable {
 	private String apiKey;
 	
 	@OneToMany(mappedBy="user")
-	private List<ContinuousQuery> continuousQueries;
+	private List<ContinuousQueryEntity> continuousQueries;
 	
     @ManyToMany
     @JoinTable(name = "Groups", joinColumns = @JoinColumn(name = "UserID"), inverseJoinColumns = @JoinColumn(name = "GroupID"))
-	private List<Group> groups;
+	private List<GroupEntity> groups;
 
 	public long getId() {
 		return id;
@@ -75,11 +75,11 @@ public class User implements Serializable {
 		this.userName = userName;
 	}
 
-	public List<ContinuousQuery> getContinuousQueries() {
+	public List<ContinuousQueryEntity> getContinuousQueries() {
 		return continuousQueries;
 	}
 
-	public void setContinuousQueries(List<ContinuousQuery> continuousQueries) {
+	public void setContinuousQueries(List<ContinuousQueryEntity> continuousQueries) {
 		this.continuousQueries = continuousQueries;
 	}
 
@@ -91,12 +91,12 @@ public class User implements Serializable {
 		this.apiKey = apiKey;
 	}
 
-	public List<Group> getGroups() {
+	public List<GroupEntity> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<Group> groups) {
+	public void setGroups(List<GroupEntity> groups) {
 		this.groups = groups;
-	}*/
+	}
 	
 }

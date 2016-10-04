@@ -24,12 +24,14 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.aeonbits.owner.ConfigFactory;
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -37,54 +39,54 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 
-/*
- * TODO: Is this going to be needed?
- * 
- * What needs persisted to the data store? Users and groups could be. Also rules.
- * All properties in this class need to be read from the properties file.
- * 
- */
-
 @Configuration
 @EnableTransactionManagement
-public class PersistenceJPAConfig {		
+public class PersistenceJPAConfig {
 	
-	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
+	private static final Logger LOGGER = LogManager.getLogger(PersistenceJPAConfig.class);
+	
+	private static final EntityDbProperties entityDbProperties = ConfigFactory.create(EntityDbProperties.class);
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {		
 
-		Properties properties = new Properties();
-		properties.setProperty("hibernate.hbm2ddl.auto", "create");
-		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-		//properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+		entityManager.setDataSource(dataSource());
+		entityManager.setPackagesToScan(new String[] { "com.mtnfog.entitydb.model.datastore.entities" });
 
-		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-		em.setDataSource(dataSource());
-		em.setPackagesToScan(new String[] { "com.mtnfog.entitydb" });
+		entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+		entityManager.setJpaProperties(getProperties());
 
-		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		em.setJpaVendorAdapter(vendorAdapter);
-		em.setJpaProperties(properties);
+		return entityManager;
 
-		return em;
-
-	}
+	}	
 
 	@Bean
 	public DataSource dataSource() {
 		
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		
-		dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-		dataSource.setUrl("jdbc:hsqldb:mem:entitydb-data-store");
-		dataSource.setUsername("sa");
-		dataSource.setPassword("");
+		if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "internal")) {
 		
-		/*dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost/entitydb?useSSL=false");
-		dataSource.setUsername("root");
-		dataSource.setPassword("root");*/
+			dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+			dataSource.setUrl("jdbc:hsqldb:mem:entitydb-data-store");
+			dataSource.setUsername("sa");
+			dataSource.setPassword("");
+		
+		} else if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "mysql")) {
+		
+			String jdbcUrl = entityDbProperties.getJdbcUrl();
+						
+			dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+			dataSource.setUrl(jdbcUrl);
+			dataSource.setUsername(entityDbProperties.getDataStoreUsername());
+			dataSource.setPassword(entityDbProperties.getDataStorePassword());
+			
+		} else {
+			
+			LOGGER.warn("Invalid datastore {}. Using the internal store.", entityDbProperties.getDataStoreDatabase());
+			
+		}
 
 		return dataSource;
 
@@ -103,6 +105,31 @@ public class PersistenceJPAConfig {
 	@Bean
 	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
 		return new PersistenceExceptionTranslationPostProcessor();
+	}
+	
+	private Properties getProperties() {
+		
+		Properties properties = new Properties();
+		
+		if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "internal")) {
+			
+			properties.setProperty("hibernate.hbm2ddl.auto", "create");
+			properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+			
+		} else if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "mysql")) {
+			
+			properties.setProperty("hibernate.hbm2ddl.auto", "validate");
+			properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+			
+		} else {
+			
+			properties.setProperty("hibernate.hbm2ddl.auto", "create");
+			properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+			
+		}
+		
+		return properties;
+		
 	}
 
 }

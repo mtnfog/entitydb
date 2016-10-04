@@ -31,7 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.mtnfog.entitydb.datastore.repository.UserRepository;
-import com.mtnfog.entitydb.model.datastore.entities.User;
+import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 
 @Ignore
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
@@ -44,7 +44,7 @@ public class UserServiceTest {
 	@Test
 	public void test() {
 			
-		User user = userRepository.getByApiKey("apikey");
+		UserEntity user = userRepository.getByApiKey("apikey");
 		assertNull(user);
     
 	}

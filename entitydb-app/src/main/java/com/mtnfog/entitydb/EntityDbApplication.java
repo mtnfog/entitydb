@@ -89,7 +89,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		return application.sources(EntityDbApplication.class);
 		
 	}
-	
+		
 	@Bean
 	public Indexer getIndexer() {
 		
@@ -314,7 +314,9 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 		} else {
 			
-			LOGGER.warn("Invalid queue: {}", queue);
+			LOGGER.warn("Invalid queue {}. Using internal queue.", queue);
+			
+			queuePublisher = new InternalQueuePublisher();
 			
 		}
 		
@@ -365,8 +367,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 		} else {
 			
-			LOGGER.warn("Invalid queue: {}", queue);
-			LOGGER.warn("Defaulting to the internal queue.");
+			LOGGER.warn("Invalid queue {}. Using the internal queue.", queue);
 			
 			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getQueueConsumerSleep());
 			

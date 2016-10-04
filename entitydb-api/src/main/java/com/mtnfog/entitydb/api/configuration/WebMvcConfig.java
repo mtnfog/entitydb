@@ -33,7 +33,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/api/**").excludePathPatterns("/dashboard/**");
+		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/health");
 	}
 
 }

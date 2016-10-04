@@ -109,15 +109,15 @@ public class DefaultEntityQueryServiceTest {
 	static class ContextConfiguration {
 
 		/*@Bean
-		public List<User> usersAndGroups() {
+		public List<UserEntity> usersAndGroups() {
 
-			List<User> users = new LinkedList<User>();
+			List<UserEntity> users = new LinkedList<UserEntity>();
 
 			Set<String> groups = new HashSet<String>();
 			groups.add("group1");
 			groups.add("group2");
 
-			User user = new User("username", "1234", groups);
+			UserEntity user = new UserEntity("username", "1234", groups);
 			users.add(user);
 
 			return users;

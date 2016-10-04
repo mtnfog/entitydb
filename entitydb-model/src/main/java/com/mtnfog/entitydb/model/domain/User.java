@@ -16,15 +16,16 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.users;
+package com.mtnfog.entitydb.model.domain;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import com.mtnfog.entitydb.model.datastore.entities.GroupEntity;
+import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 
 /**
- * A user of EntityDB's API.
+ * A user of EntityDB.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -49,26 +50,20 @@ public class User {
 				
 	}
 	
-	/**
-	 * Determine if a {@link User user} in the list has the given API key.
-	 * @param users A list of {@link User users}.
-	 * @param apiKey The API key.
-	 * @return <code>true</code> if the list of users contains a user that
-	 * has the given API key; otherwise <code>false</code>.
-	 */
-	public static boolean authenticate(List<User> users, String apiKey) {
+	public static User fromEntity(UserEntity userEntity) {
 		
-		for(User user : users) {
-			
-			if(StringUtils.equals(user.getApiKey(), apiKey)) {
-				
-				return true;
-				
-			}
+		Set<String> groups = new HashSet<String>();
+		
+		for(GroupEntity groupEntity : userEntity.getGroups()) {
+
+			groups.add(groupEntity.getGroupName());
 			
 		}
 		
-		return false;
+		
+		User user = new User(userEntity.getUserName(), userEntity.getApiKey(), groups);
+		
+		return user;
 		
 	}
 

@@ -18,11 +18,14 @@
  */
 package com.mtnfog.entitydb.datastore.repository;
 
-import com.mtnfog.entitydb.model.datastore.entities.User;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-//@Repository
-public interface UserRepository{ // extends CrudRepository<User, Long> {
+import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
+
+@Repository
+public interface UserRepository extends CrudRepository<UserEntity, Long> {
 	
-	public User getByApiKey(String apiKey);
+	public UserEntity getByApiKey(String apiKey);
  
 }

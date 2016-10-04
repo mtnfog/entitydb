@@ -28,10 +28,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
 import com.mtnfog.entitydb.model.services.UserService;
 
 /**
- * Provides API authentication for API requests.
+ * Performs API authorization for API requests.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -48,15 +49,12 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
-		LOGGER.info("Authenticating REST request.");
-return true;
-/*
 		boolean authorized = true;
 		
 		final String apiKey = request.getHeader("Authorization");
 		
 		// Is there a user that has this API key?
-		if(StringUtils.isNotEmpty(apiKey) && User.authenticate(users, apiKey)) {
+		if(userService.authenticate(apiKey)) {
 			
 			authorized = true;
 					
@@ -66,7 +64,7 @@ return true;
 			
 		}
 		
-		return authorized;*/
+		return authorized;
 		
 	}
 

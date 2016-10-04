@@ -21,8 +21,8 @@ package com.mtnfog.entitydb.model.search;
 import java.util.List;
 import java.util.Set;
 
+import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
-import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 /**
@@ -68,7 +68,7 @@ public interface SearchIndex {
 	/**
 	 * Execute a query against the index.
 	 * @param entityQuery The {@link EntityQuery query} to execute.
-	 * @param user The {@link User user} executing the query.
+	 * @param user The {@link UserEntity user} executing the query.
 	 * @return A list of entity IDs for the matching entities.
 	 * @throws InvalidQueryException Thrown if the query is invalid.
 	 */
@@ -77,7 +77,7 @@ public interface SearchIndex {
 	/**
 	 * Execute a query against the index.
 	 * @param entityQuery The {@link EntityQuery query} to execute.
-	 * @param user The {@link User user} executing the query.
+	 * @param user The {@link UserEntity user} executing the query.
 	 * @return A list of {@link IndexedEntity entities}.
 	 * @throws InvalidQueryException Thrown if the query is invalid.
 	 */

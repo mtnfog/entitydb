@@ -33,9 +33,12 @@ import org.springframework.stereotype.Component;
 
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.datastore.repository.ContinuousQueryRepository;
+import com.mtnfog.entitydb.datastore.repository.UserRepository;
 import com.mtnfog.entitydb.model.audit.AuditAction;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
-import com.mtnfog.entitydb.model.datastore.entities.ContinuousQuery;
+import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
+import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
+import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
@@ -44,8 +47,6 @@ import com.mtnfog.entitydb.model.exceptions.api.InternalServerErrorException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
-import com.mtnfog.entitydb.model.services.UserService;
-import com.mtnfog.entitydb.model.users.User;
 import com.mtnfog.entitydb.eql.Eql;
 import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
@@ -65,9 +66,9 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	
 	@Autowired
 	private ContinuousQueryRepository continuousQueryRepository;
-	
+		
 	@Autowired
-	private UserService userService;
+	private UserRepository userRepository;
 	
 	/**
 	 * {@inheritDoc}
@@ -86,22 +87,28 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				
 				if(auditResult) {
 				
-				// Get the user from the API key.
-				User user = userService.getUserByApiKey(apiKey);
+					// Get the user from the API key.					
+					UserEntity userEntity = userRepository.getByApiKey(apiKey);
+					
+					User user = User.fromEntity(userEntity);
+					
+					// Execute the query.
+					queryResult = executeQuery(entityQuery, user, apiKey);
+					
+					if(continuous > 0) {
+					
+						// The query was validated and executed successfully.
+						// If it is set to be continuous we can now persist it.
+						continuousQueryRepository.save(new ContinuousQueryEntity(userEntity, query, new Date(), days));
+					
+					}
 				
-				// Execute the query.
-				queryResult = executeQuery(entityQuery, user, apiKey);
-				
-				// The query was validated and executed successfully.
-				// If it is set to be continuous we can now persist it.
-				continuousQueryRepository.save(new ContinuousQuery(user.getUsername(), query, new Date(), days));
-			
-			} else {
-				
-				// The search could not be audited.
-				throw new InternalServerErrorException("Unable to audit query.");
-				
-			}
+				} else {
+					
+					// The search could not be audited.
+					throw new InternalServerErrorException("Unable to audit query.");
+					
+				}
 			
 		} catch (BadRequestException | QueryGenerationException | IllegalStateException ex) {
 			

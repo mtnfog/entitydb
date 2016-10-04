@@ -57,7 +57,7 @@ public interface EntityDbProperties extends Config {
 	@DefaultValue("localhost")
 	public String getAuditId();
 	
-	@Key("entitydb.database")
+	@Key("entitystore")
     @DefaultValue("internal")
     public String getDatabase();
 	
@@ -168,9 +168,27 @@ public interface EntityDbProperties extends Config {
 	
 	@Key("elasticsearch.password")
     public String getElasticsearchPassword();
-
+	
+	@Key("datastore")
+	@DefaultValue("internal")
+	public String getDataStoreDatabase();
+	
+	@Key("datastore.jdbc.url")
+	@DefaultValue("jdbc:mysql://localhost/entitydb?useSSL=false")
+	public String getJdbcUrl();
+	
+	@Key("datastore.username")
+	public String getDataStoreUsername();
+	
+	@Key("datastore.password")
+	public String getDataStorePassword();
+	
 	@Key("mask.entity.acl")
 	@DefaultValue("false")
 	public boolean isMaskEntityAcl();
+	
+	@Key("populate.test.data")
+	@DefaultValue("false")
+	public boolean isPopulateTestData();
 	
 }
