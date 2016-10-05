@@ -16,23 +16,33 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.model.notifications;
 
-import java.util.List;
+/**
+ * Types of notifications.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public enum NotificationType {
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
-import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
-
-@Repository
-public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
+	/**
+	 * A notification that was generated as a result of an entity match to a continuous query.
+	 */
+	CONTINUOUS_QUERY(1);
 	
-	 @Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days", nativeQuery=true)
-	 public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
-	 
-	 public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity);
-		
+	private int type;
+	
+	private NotificationType(int type) {
+		this.type = type;
+	}
+	
+	/**
+	 * Gets the integer value of the notification type.
+	 * @return The integer value of the notification type.
+	 */
+	public int getValue() {
+		return type;
+	}
+	
 }

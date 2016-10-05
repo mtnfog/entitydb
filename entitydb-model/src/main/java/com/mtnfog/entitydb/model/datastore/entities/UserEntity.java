@@ -33,6 +33,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+/**
+ * A persisted user.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 @Entity
 @Table(name="Users", uniqueConstraints = {
 		@UniqueConstraint(columnNames = "ApiKey"),
@@ -54,6 +60,15 @@ public class UserEntity implements Serializable {
 	
 	@OneToMany(mappedBy="user")
 	private List<ContinuousQueryEntity> continuousQueries;
+	
+	@OneToMany(mappedBy="user")
+	private List<NotificationEntity> notifications;
+	
+	@Column(name="Email", unique = false, nullable = false)
+	private String email;
+	
+	@Column(name="Mobile", unique = false, nullable = true)
+	private String mobile;
 	
     @ManyToMany
     @JoinTable(name = "Groups", joinColumns = @JoinColumn(name = "UserID"), inverseJoinColumns = @JoinColumn(name = "GroupID"))
@@ -97,6 +112,30 @@ public class UserEntity implements Serializable {
 
 	public void setGroups(List<GroupEntity> groups) {
 		this.groups = groups;
+	}
+
+	public List<NotificationEntity> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<NotificationEntity> notifications) {
+		this.notifications = notifications;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 	
 }

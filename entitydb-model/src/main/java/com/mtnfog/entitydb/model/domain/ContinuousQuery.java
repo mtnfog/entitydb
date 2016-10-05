@@ -18,12 +18,17 @@
  */
 package com.mtnfog.entitydb.model.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class ContinuousQuery implements Serializable {
+import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
 
-	private static final long serialVersionUID = -525179305412047212L;
+/**
+ * A continuous query.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class ContinuousQuery {
 
     private long id;
 	private User user;
@@ -31,16 +36,45 @@ public class ContinuousQuery implements Serializable {
 	private Date timestamp;
 	private int days;
 
+	/**
+	 * Creates a new continuous query.
+	 */
 	public ContinuousQuery() {
 		
 	}
 	
+	/**
+	 * Creates a new continuous query.
+	 * @param user The {@link User user} creating the continuous query.
+	 * @param query The (EQL) query.
+	 * @param timestamp A timestamp of when the query was created.
+	 * @param days The number of days after the timestamp in which the query is to be executed.
+	 */
 	public ContinuousQuery(User user, String query, Date timestamp, int days) {
 		
 		this.user = user;
 		this.query = query;
 		this.timestamp = timestamp;
 		this.days = days;
+		
+	}
+	
+	/**
+	 * Creates a {@link ContinuousQuery} from a {@link ContinuousQueryEntity}.
+	 * @param continuousQueryEntity A {@link ContinuousQueryEntity}.
+	 * @return A {@link ContinuousQuery}.
+	 */
+	public static ContinuousQuery fromEntity(ContinuousQueryEntity continuousQueryEntity) {
+		
+		ContinuousQuery continuousQuery = new ContinuousQuery();
+		
+		continuousQuery.setId(continuousQueryEntity.getId());
+		continuousQuery.setDays(continuousQueryEntity.getDays());
+		continuousQuery.setQuery(continuousQueryEntity.getQuery());
+		continuousQuery.setTimestamp(continuousQueryEntity.getTimestamp());
+		continuousQuery.setUser(User.fromEntity(continuousQueryEntity.getUser()));
+		
+		return continuousQuery;
 		
 	}
 	

@@ -141,7 +141,7 @@ public class ElasticSearchIndexTest {
 		Set<String> groups = new HashSet<String>();
 		groups.add("g1");
 		
-		User user = new User("user", "apikey", groups);
+		User user = new User(1, "user", "user@test-fake.com", "555-555-5555", "apikey", groups);
 		
 		List<IndexedEntity> indexedEntities = elasticSearchIndex.queryForIndexedEntities(entityQuery, user);
 				
@@ -186,7 +186,7 @@ public class ElasticSearchIndexTest {
 		Set<String> groups = new HashSet<String>();
 		groups.add("g1");
 		
-		User user = new User("user", "apikey", groups);
+		User user = new User(1, "user", "user@test-fake.com", "555-555-5555", "apikey", groups);
 		
 		List<IndexedEntity> indexedEntities = elasticSearchIndex.queryForIndexedEntities(entityQuery, user);
 		
@@ -228,7 +228,7 @@ public class ElasticSearchIndexTest {
 		Set<String> groups = new HashSet<String>();
 		groups.add("g1");
 		
-		User user = new User("user", "apikey", groups);
+		User user = new User(1, "user", "user@test-fake.com", "555-555-5555", "apikey", groups);
 		
 		List<IndexedEntity> indexedEntities = elasticSearchIndex.queryForIndexedEntities(entityQuery, user);
 		
@@ -265,7 +265,7 @@ public class ElasticSearchIndexTest {
 		Set<String> groups = new HashSet<String>();
 		groups.add("g1");
 		
-		User user = new User("user", "apikey", groups);
+		User user = new User(1, "user", "user@test-fake.com", "555-555-5555", "apikey", groups);
 		
 		List<IndexedEntity> indexedEntities = elasticSearchIndex.queryForIndexedEntities(entityQuery, user);
 		
@@ -302,7 +302,7 @@ public class ElasticSearchIndexTest {
 		Set<String> groups = new HashSet<String>();
 		groups.add("g1");
 		
-		User user = new User("user", "apikey", groups);
+		User user = new User(1, "user", "user@test-fake.com", "555-555-5555", "apikey", groups);
 		
 		List<IndexedEntity> indexedEntities = elasticSearchIndex.queryForIndexedEntities(entityQuery, user);
 		
@@ -340,7 +340,7 @@ public class ElasticSearchIndexTest {
 		groups.add("g1");
 		groups.add("g2");
 		
-		User user = new User("user", "apikey", groups);
+		User user = new User(1, "user", "user@test-fake.com", "555-555-5555", "apikey", groups);
 		
 		List<IndexedEntity> indexedEntities = elasticSearchIndex.queryForIndexedEntities(entityQuery, user);
 		
@@ -378,7 +378,7 @@ public class ElasticSearchIndexTest {
 		groups.add("g1");
 		groups.add("g2");
 		
-		User user = new User("user", "apikey", groups);
+		User user = new User(1, "user", "user@test-fake.com", "555-555-5555", "apikey", groups);
 		
 		List<IndexedEntity> indexedEntities = elasticSearchIndex.queryForIndexedEntities(entityQuery, user);
 		

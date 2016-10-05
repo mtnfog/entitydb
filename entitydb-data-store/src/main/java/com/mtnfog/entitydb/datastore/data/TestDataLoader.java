@@ -42,6 +42,8 @@ public class TestDataLoader implements ApplicationRunner {
 			
 			UserEntity userEntity = new UserEntity();
 			userEntity.setUserName("jsmith");
+			userEntity.setEmail("jsmith@test-email-fake.com");
+			userEntity.setMobile("555-555-5555");
 			userEntity.setApiKey("asdf1234");
 			userEntity.setGroups(new ArrayList<GroupEntity>());
 			

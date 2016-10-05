@@ -16,23 +16,32 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.services;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import com.mtnfog.entitydb.model.domain.ContinuousQuery;
+import com.mtnfog.entitydb.model.domain.User;
+import com.mtnfog.entitydb.model.services.NotificationService;
 
-import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
-import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
+@Component
+public class DefaultNotifcationService implements NotificationService {
 
-@Repository
-public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
-	
-	 @Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days", nativeQuery=true)
-	 public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
-	 
-	 public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity);
+	@Override
+	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery) {
+
+		// TODO: Notify the user of a match via the SNS topic.
 		
+	}
+	
+	@Override
+	public String createNotificationTopic(User user) {
+		
+		// TODO: Create the SNS topic and subscribe the user to the topic.
+		// TODO: Return the new topic's ARN.
+		
+		return null;
+		
+	}
+	
 }

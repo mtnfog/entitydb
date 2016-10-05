@@ -22,6 +22,12 @@ import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * User-configurable properties available through the entitydb.properties file.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 @Sources("file:entitydb.properties")
 public interface EntityDbProperties extends Config {
 

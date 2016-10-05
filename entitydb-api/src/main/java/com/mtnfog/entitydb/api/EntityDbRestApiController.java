@@ -34,7 +34,10 @@ import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityAclService;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
+import com.mtnfog.entitydb.model.services.UserService;
 import com.mtnfog.entitydb.model.status.Status;
+import com.mtnfog.entitydb.model.domain.ContinuousQuery;
+import com.mtnfog.entitydb.model.domain.Notification;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
@@ -47,6 +50,7 @@ import com.mtnfog.entitydb.model.exceptions.api.UnableToQueueEntitiesException;
 import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,6 +80,9 @@ public class EntityDbRestApiController {
 	@Autowired
 	public EntityStore<?> entityStore;
 	
+	@Autowired
+	public UserService userService;
+		
 	/**
 	 * Gets the status.
 	 * @return The {@link Status status}.
@@ -97,6 +104,50 @@ public class EntityDbRestApiController {
 	@ResponseStatus(HttpStatus.OK)
 	public void health() {	
 		// Only returns HTTP OK to be used for application monitoring.
+	}
+	
+	/**
+	 * Gets a list of notifications for a user.
+	 * @param authorization The user's API key.
+	 * @return A list of {@link Notification notifications}. 
+	 */
+	@RequestMapping(value = "/api/user/notifications", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody List<Notification> notifications(
+			@RequestHeader(value="Authorization", required=false) String authorization) {
+	
+		try {
+		
+			return userService.getUserNotifications(authorization);
+			
+		} catch (Exception ex) {
+			
+			throw new InternalServerErrorException("Unable to get user's notifications.", ex);
+			
+		}
+		
+	}
+	
+	/**
+	 * Gets the continuous queries for a user.
+	 * @param authorization The user's API key.
+	 * @return A list of {@link ContinuousQueries queries}.
+	 */
+	@RequestMapping(value = "/api/user/continuousqueries", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody List<ContinuousQuery> continuousQueries(
+			@RequestHeader(value="Authorization", required=false) String authorization) {
+	
+		try {
+		
+			return userService.getUserContinuousQueries(authorization);
+			
+		} catch (Exception ex) {
+			
+			throw new InternalServerErrorException("Unable to get user's continuous queries.", ex);
+			
+		}
+		
 	}
 					
 	/**
@@ -131,7 +182,7 @@ public class EntityDbRestApiController {
 			
 		}
 		
-		LOGGER.info("Successfully queued {} entities.", entities.size());
+		LOGGER.debug("Successfully queued {} entities.", entities.size());
 			
 	}
 	

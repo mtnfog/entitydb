@@ -20,19 +20,15 @@ package com.mtnfog.entitydb.datastore.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
+import com.mtnfog.entitydb.model.datastore.entities.NotificationEntity;
 import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 
 @Repository
-public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
+public interface NotificationRepository extends CrudRepository<NotificationEntity, Long> {
 	
-	 @Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days", nativeQuery=true)
-	 public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
-	 
-	 public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity);
-		
+	public List<NotificationEntity> findByUserOrderByIdDesc(UserEntity userEntity);
+	
 }

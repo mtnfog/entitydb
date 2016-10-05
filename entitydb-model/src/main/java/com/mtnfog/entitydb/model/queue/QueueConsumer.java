@@ -34,7 +34,7 @@ public interface QueueConsumer {
 	public int getSize();
 	
 	/**
-	 * Consume items from the queus.
+	 * Consume messages from the queue.
 	 */
 	public void consume();
 	

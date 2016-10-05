@@ -31,12 +31,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.datastore.repository.ContinuousQueryRepository;
+import com.mtnfog.entitydb.datastore.repository.NotificationRepository;
 import com.mtnfog.entitydb.datastore.repository.UserRepository;
 import com.mtnfog.entitydb.model.audit.AuditAction;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
+import com.mtnfog.entitydb.model.datastore.entities.NotificationEntity;
 import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
@@ -44,13 +47,22 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
 import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
 import com.mtnfog.entitydb.model.exceptions.api.InternalServerErrorException;
+import com.mtnfog.entitydb.model.notifications.NotificationType;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
+import com.mtnfog.entitydb.model.services.NotificationService;
 import com.mtnfog.entitydb.eql.Eql;
 import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
+import com.mtnfog.entitydb.eql.filters.EqlFilters;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 
+/**
+ * Default implementation of {@link EntityQueryService}.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 @Component
 public class DefaultEntityQueryService implements EntityQueryService {
 
@@ -69,6 +81,12 @@ public class DefaultEntityQueryService implements EntityQueryService {
 		
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private NotificationRepository notificationRepository;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	/**
 	 * {@inheritDoc}
@@ -93,13 +111,15 @@ public class DefaultEntityQueryService implements EntityQueryService {
 					User user = User.fromEntity(userEntity);
 					
 					// Execute the query.
-					queryResult = executeQuery(entityQuery, user, apiKey);
+					queryResult = executeQuery(entityQuery, user);
 					
 					if(continuous > 0) {
 					
+						String snsTopicArn = notificationService.createNotificationTopic(user);
+						
 						// The query was validated and executed successfully.
 						// If it is set to be continuous we can now persist it.
-						continuousQueryRepository.save(new ContinuousQueryEntity(userEntity, query, new Date(), days));
+						continuousQueryRepository.save(new ContinuousQueryEntity(userEntity, query, new Date(), days, snsTopicArn));
 					
 					}
 				
@@ -128,7 +148,40 @@ public class DefaultEntityQueryService implements EntityQueryService {
 		
 	}
 	
-	private QueryResult executeQuery(EntityQuery entityQuery, User user, String apiKey) throws QueryGenerationException, EntityStoreException, InvalidQueryException {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void executeContinuousQueries(Entity entity, String entityId) {
+		
+		List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
+		
+		for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
+									
+			boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
+			
+			if(match) {
+				
+				// If this is a match notify the owner of the continuous query.
+				
+				String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
+				
+				NotificationEntity notificationEntity = new NotificationEntity();
+				notificationEntity.setUser(continuousQueryEntity.getUser());
+				notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
+				notificationEntity.setNotification(notification);
+				
+				notificationRepository.save(notificationEntity);
+				
+				// TODO: Send a message to the continuous query's SNS topic.
+			
+			}
+						
+		}
+		
+	}
+	
+	private QueryResult executeQuery(EntityQuery entityQuery, User user) throws QueryGenerationException, EntityStoreException, InvalidQueryException {
 		
 		QueryResult queryResult = null;
 				
@@ -137,7 +190,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 		// Give an ID to this query.
 		String queryId = UUID.randomUUID().toString();
 		
-		// Execute the entity query against the search index..
+		// Execute the entity query against the search index.
 		List<IndexedEntity> indexedEntities = searchIndex.queryForIndexedEntities(entityQuery, user);
 				
 		if(CollectionUtils.isNotEmpty(indexedEntities)) {
@@ -153,7 +206,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				
 				if(properties.isAuditEnabled()) {
 				
-					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), apiKey, AuditAction.SEARCH_RESULT, properties.getAuditId());
+					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), user.getUsername(), AuditAction.SEARCH_RESULT, properties.getAuditId());
 					
 				}
 								

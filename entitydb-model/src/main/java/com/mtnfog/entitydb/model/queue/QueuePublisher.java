@@ -34,7 +34,7 @@ import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 public interface QueuePublisher {
 
 	/**
-	 * Put the entities on the queue.
+	 * Publish entities to the ingest queue.
 	 * @param entities A collection of {@link Entity entities}.
 	 * @param acl The entity's ACL.
 	 * @param apiKey The API key of the requester.
@@ -44,7 +44,7 @@ public interface QueuePublisher {
 	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException;
 	
 	/**
-	 * Put the request to update an entity's ACL on the queue.
+	 * Publish requests for entity ACL updates to the queue.
 	 * @param entityId The entity's ID.
 	 * @param acl The new ACL.
 	 * @param apiKey The API key of the requester.

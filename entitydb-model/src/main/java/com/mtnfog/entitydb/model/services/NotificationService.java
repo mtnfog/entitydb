@@ -16,23 +16,14 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.model.services;
 
-import java.util.List;
+import com.mtnfog.entitydb.model.domain.ContinuousQuery;
+import com.mtnfog.entitydb.model.domain.User;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+public interface NotificationService {
 
-import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
-import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
-
-@Repository
-public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
+	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery);
+	public String createNotificationTopic(User user);
 	
-	 @Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days", nativeQuery=true)
-	 public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
-	 
-	 public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity);
-		
 }

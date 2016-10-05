@@ -32,24 +32,37 @@ import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
  */
 public class User {
 
+	private long id;
 	private String username;
+	private String email;
+	private String mobile;
 	private String apiKey;
 	private Set<String> groups;
 	
 	/**
 	 * Creates a new user.
 	 * @param username The user's name.
+	 * @param email The user's email address. The email address is used for notifications. Cannot be <code>null</code>.
+	 * @param mobile The user's mobile phone number. The mobile phone number is used for notifications. Can be <code>null</code>.
 	 * @param apiKey The user's API key.
 	 * @param groups A list of the user's groups.
 	 */
-	public User(String username, String apiKey, Set<String> groups) {
+	public User(long id, String username, String email, String mobile, String apiKey, Set<String> groups) {
 		
-		this.username = username;
+		this.id = id;
+		this.username = username;		
+		this.email = email;
+		this.mobile = mobile;
 		this.apiKey = apiKey;
 		this.groups = groups;
 				
 	}
 	
+	/**
+	 * Creates a {@link User} from a {@link UserEntity}.
+	 * @param userEntity A {@link UserEntity}.
+	 * @return A {@link User}.
+	 */
 	public static User fromEntity(UserEntity userEntity) {
 		
 		Set<String> groups = new HashSet<String>();
@@ -61,7 +74,7 @@ public class User {
 		}
 		
 		
-		User user = new User(userEntity.getUserName(), userEntity.getApiKey(), groups);
+		User user = new User(userEntity.getId(), userEntity.getUserName(), userEntity.getEmail(), userEntity.getMobile(), userEntity.getApiKey(), groups);
 		
 		return user;
 		
@@ -89,6 +102,30 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 	
 }

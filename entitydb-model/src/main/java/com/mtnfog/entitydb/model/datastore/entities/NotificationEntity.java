@@ -32,14 +32,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * A persisted query that is executed continuously as entities are ingested.
+ * A persisted notification.
  * 
  * @author Mountain Fog, Inc.
  *
  */
 @Entity
-@Table(name="ContinuousQueries")
-public class ContinuousQueryEntity implements Serializable {
+@Table(name="Notifications")
+public class NotificationEntity implements Serializable {
 
 	private static final long serialVersionUID = -525179305412047212L;
 
@@ -52,32 +52,19 @@ public class ContinuousQueryEntity implements Serializable {
 	@JoinColumn(name="UserID")
 	private UserEntity user;
 	
-	@Column(name="Query")
-	private String query;
-	
 	@Column(name="Timestamp")
 	private Date timestamp;
 	
-	@Column(name="Days")
-	private int days;
+	@Column(name="Notification")
+	private String notification;
 	
-	@Column(name="snsTopicArn")
-	private String snsTopicArn;
+	@Column(name="Type")
+	private int type;
 
-	public ContinuousQueryEntity() {
+	public NotificationEntity() {
 		
 	}
-	
-	public ContinuousQueryEntity(UserEntity user, String query, Date timestamp, int days, String snsTopicArn) {
-		
-		this.user = user;
-		this.query = query;
-		this.timestamp = timestamp;
-		this.days = days;
-		this.snsTopicArn = snsTopicArn;
-		
-	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -94,20 +81,20 @@ public class ContinuousQueryEntity implements Serializable {
 		this.user = user;
 	}
 
-	public String getQuery() {
-		return query;
+	public String getNotification() {
+		return notification;
 	}
 
-	public void setQuery(String query) {
-		this.query = query;
+	public void setNotification(String notification) {
+		this.notification = notification;
 	}
 
-	public int getDays() {
-		return days;
+	public int getType() {
+		return type;
 	}
 
-	public void setDays(int days) {
-		this.days = days;
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public Date getTimestamp() {
@@ -117,13 +104,5 @@ public class ContinuousQueryEntity implements Serializable {
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
-
-	public String getSnsTopicArn() {
-		return snsTopicArn;
-	}
-
-	public void setSnsTopicArn(String snsTopicArn) {
-		this.snsTopicArn = snsTopicArn;
-	}
-
+	
 }

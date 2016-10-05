@@ -24,7 +24,6 @@ import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.model.audit.AuditAction;
@@ -37,6 +36,8 @@ import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.security.Acl;
+import com.mtnfog.entitydb.queues.InternalQueue;
+import com.mtnfog.entitydb.queues.messages.InternalQueueContinuousQueryMessage;
 
 /**
  * Abstract class for queue consumers that provides the functionality to process
@@ -128,17 +129,25 @@ public abstract class AbstractQueueConsumer {
 			try {	
 				
 				LOGGER.trace("Storing entity {}.", entityId);
-				entityStore.storeEntity(entity, acl.toString());
-							
-				LOGGER.trace("Writing entity {} to audit log.", entityId);
-				auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.STORED, properties.getAuditId());								
+				entityStore.storeEntity(entity, acl.toString());													
 				
 			} catch (EntityStoreException ex) {
 				
 				LOGGER.error("Unable to store entity: " + entity.toString(),  ex);
-				ingested = false;
 				
-				// This will leave this entity on the queue.
+				// This will leave the entity on the queue.
+				ingested = false;								
+				
+			}
+			
+			if(ingested) {
+			
+				// Audit this entity ingest.
+				LOGGER.trace("Writing entity {} to audit log.", entityId);
+				auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.STORED, properties.getAuditId());
+			
+				// Put this entity onto an internal queue for executing the continuous queries.
+				InternalQueue.getContinuousQueryQueue().add(new InternalQueueContinuousQueryMessage(entity, entityId));
 				
 			}
 			
@@ -147,7 +156,8 @@ public abstract class AbstractQueueConsumer {
 			LOGGER.info("Entity {} already exists in the entity store.", entityId);
 			auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.SKIPPED, properties.getAuditId());
 			
-			// We will want to return true here because the entity was successfully processed.
+			// We will want to return true here because the entity was successfully processed
+			// but there's no need to store the entity again.
 			
 		}				
 		

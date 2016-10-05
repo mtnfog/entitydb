@@ -18,10 +18,12 @@
  */
 package com.mtnfog.entitydb.model.services;
 
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 
 /**
- * Interface for an entity query service.
+ * Interface for the entity query service. Implementations of this interface
+ * provide the querying capabilities for EntityDB.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -37,5 +39,12 @@ public interface EntityQueryService {
 	 * @return The {@link ExternalQueryResult result}.
 	 */
 	public QueryResult eql(String query, String apiKey, int continuous, int days);
+	
+	/**
+	 * Executes all continuous queries against the entity.
+	 * @param entity The {@link Entity entity}.
+	 * @param entityId The ID of the entity.
+	 */
+	public void executeContinuousQueries(Entity entity, String entityId);
 	
 }

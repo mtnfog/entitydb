@@ -59,6 +59,10 @@ public enum AuditAction {
 		
 	}
 	
+	/**
+	 * Gets the name of the audit action.
+	 * @return The name of the audit action.
+	 */
 	@Override
 	public String toString() {
 		

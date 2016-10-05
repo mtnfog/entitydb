@@ -16,23 +16,34 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.repository;
+package com.mtnfog.entitydb.queues.messages;
 
-import java.util.List;
+import com.mtnfog.entity.Entity;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+public class InternalQueueContinuousQueryMessage {
 
-import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
-import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
-
-@Repository
-public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
+	private Entity entity;
+	private String entityId;
 	
-	 @Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days", nativeQuery=true)
-	 public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
-	 
-	 public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity);
-		
+	public InternalQueueContinuousQueryMessage(Entity entity, String entityId) {
+		this.entity = entity;
+		this.entityId = entityId;
+	}
+	
+	public Entity getEntity() {
+		return entity;
+	}
+	
+	public void setEntity(Entity entity) {
+		this.entity = entity;
+	}
+
+	public String getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(String entityId) {
+		this.entityId = entityId;
+	}
+	
 }

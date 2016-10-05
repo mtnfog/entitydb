@@ -82,9 +82,9 @@ public class FileAuditLogger implements AuditLogger {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean audit(String query, long timestamp, String userIdentifier, String entityDbId) {
+	public boolean audit(String query, long timestamp, String userName, String entityDbId) {
 		
-		final String data = String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"", query, timestamp, userIdentifier, AuditAction.QUERY, entityDbId);
+		final String data = String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"", query, timestamp, userName, AuditAction.QUERY, entityDbId);
 		
 		try {
 		

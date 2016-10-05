@@ -63,13 +63,13 @@ public class FluentdAuditLogger implements AuditLogger {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean audit(String query, long timestamp, String userIdentifier, String entityDbId) {
+	public boolean audit(String query, long timestamp, String userName, String entityDbId) {
 		
 		Map<String, Object> data = new HashMap<String, Object>();      		
 		
 		data.put("query", query);		
 		data.put("timestamp", timestamp);
-        data.put("userIdentifier", userIdentifier);
+        data.put("userName", userName);
         data.put("action", AuditAction.QUERY.toString());
         data.put("entityDbId", entityDbId);
         

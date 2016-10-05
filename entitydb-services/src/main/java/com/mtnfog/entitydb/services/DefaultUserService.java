@@ -18,13 +18,22 @@
  */
 package com.mtnfog.entitydb.services;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mtnfog.entitydb.datastore.repository.ContinuousQueryRepository;
+import com.mtnfog.entitydb.datastore.repository.NotificationRepository;
 import com.mtnfog.entitydb.datastore.repository.UserRepository;
+import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
+import com.mtnfog.entitydb.model.datastore.entities.NotificationEntity;
 import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
+import com.mtnfog.entitydb.model.domain.ContinuousQuery;
+import com.mtnfog.entitydb.model.domain.Notification;
 import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.services.UserService;
 
@@ -42,6 +51,12 @@ public class DefaultUserService implements UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private NotificationRepository notificationRepository;
+	
+	@Autowired
+	private ContinuousQueryRepository continuousQueryRepository;
 	
 	/**
 	 * {@inheritDoc}
@@ -73,6 +88,76 @@ public class DefaultUserService implements UserService {
 			
 		}
 		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Notification> getUserNotifications(String apiKey) {
+		
+		List<Notification> notifications = new LinkedList<Notification>();
+		
+		UserEntity userEntity = userRepository.getByApiKey(apiKey);
+				
+		// When coming through the API the user will exist because if not
+		// the AuthorizationInterceptor will deny the request.
+		
+		if(userEntity != null) {
+		
+			List<NotificationEntity> notificationEntities = notificationRepository.findByUserOrderByIdDesc(userEntity);
+			
+			for(NotificationEntity notificationEntity : notificationEntities) {
+				
+				Notification notification = Notification.fromEntity(notificationEntity);
+				
+				notifications.add(notification);
+				
+			}
+			
+		} else {
+			
+			LOGGER.debug("Unable to get notifications for nonexistant user having API key {}.", apiKey);
+			
+		}
+		
+		return notifications;
+					
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<ContinuousQuery> getUserContinuousQueries(String apiKey) {
+		
+		List<ContinuousQuery> continuousQueries = new LinkedList<ContinuousQuery>();
+		
+		UserEntity userEntity = userRepository.getByApiKey(apiKey);
+				
+		// When coming through the API the user will exist because if not
+		// the AuthorizationInterceptor will deny the request.
+		
+		if(userEntity != null) {
+		
+			List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.findByUserOrderByIdDesc(userEntity);
+			
+			for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
+				
+				ContinuousQuery continuousQuery = ContinuousQuery.fromEntity(continuousQueryEntity);
+				
+				continuousQueries.add(continuousQuery);
+				
+			}
+			
+		} else {
+			
+			LOGGER.debug("Unable to get continuous queries for nonexistant user having API key {}.", apiKey);
+			
+		}
+		
+		return continuousQueries;
+					
 	}
 		
 }

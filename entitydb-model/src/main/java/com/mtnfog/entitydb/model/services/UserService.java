@@ -18,6 +18,10 @@
  */
 package com.mtnfog.entitydb.model.services;
 
+import java.util.List;
+
+import com.mtnfog.entitydb.model.domain.ContinuousQuery;
+import com.mtnfog.entitydb.model.domain.Notification;
 import com.mtnfog.entitydb.model.domain.User;
 
 /**
@@ -42,4 +46,18 @@ public interface UserService {
 	 */
 	public boolean authenticate(String apiKey);
 		
+	/**
+	 * Gets all notifications for a user.
+	 * @param apiKey The user's API key.
+	 * @return A list of {@link Notification notifications}.
+	 */
+	public List<Notification> getUserNotifications(String apiKey);
+	
+	/**
+	 * Gets all continuous queries for a user.
+	 * @param apiKey The user's API key.
+	 * @return A list of {@link ContinuousQuery queries}.
+	 */
+	public List<ContinuousQuery> getUserContinuousQueries(String apiKey);
+	
 }

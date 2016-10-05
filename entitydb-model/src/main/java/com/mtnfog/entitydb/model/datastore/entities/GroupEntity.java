@@ -30,6 +30,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+/**
+ * A persisted group of users.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 @Entity
 @Table(name="Groups")
 public class GroupEntity implements Serializable {
