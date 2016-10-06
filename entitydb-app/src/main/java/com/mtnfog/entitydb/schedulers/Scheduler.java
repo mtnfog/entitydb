@@ -37,7 +37,7 @@ import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
-import com.mtnfog.entitydb.queues.InternalQueue;
+import com.mtnfog.entitydb.queues.continuousquery.ContinuousQueryQueue;
 import com.mtnfog.entitydb.queues.messages.InternalQueueContinuousQueryMessage;
 
 @Configuration
@@ -96,18 +96,20 @@ public class Scheduler {
 	}
 	
 	@Scheduled(fixedRate = 5000)
-	public void executeContinuousQueries() throws EntityStoreException {
+	public void executeContinuousQueries() {
 		
 		// TODO: This should be moved somewhere more appropriate.
 		
-		while(!InternalQueue.getContinuousQueryQueue().isEmpty()) {
+		while(ContinuousQueryQueue.getContinuousQueryQueue().size() > 0) {
 			
-			InternalQueueContinuousQueryMessage message = InternalQueue.getContinuousQueryQueue().poll();
+			InternalQueueContinuousQueryMessage message = ContinuousQueryQueue.getContinuousQueryQueue().peek();
 			
 			entityQueryService.executeContinuousQueries(message.getEntity(), message.getEntityId());
 			
+			ContinuousQueryQueue.getContinuousQueryQueue().remove();
+			
 		}
-		
+
 	}
 	
 }

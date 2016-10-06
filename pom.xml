@@ -87,6 +87,7 @@
 		<maven.compiler.version>3.2</maven.compiler.version>
 		<mockito.version>1.10.19</mockito.version>
 		<mongodb.client.version>3.3.0</mongodb.client.version>
+		<mysql.connector.version>5.1.39</mysql.connector.version>
 		<owasp.version>1.2.7</owasp.version>
 		<powermock.version>1.6.2</powermock.version>
 		<retrofit.version>1.9.0</retrofit.version>
@@ -95,6 +96,7 @@
 		<spring.boot.version>1.4.0.RELEASE</spring.boot.version>
 		<spring.version>4.3.2.RELEASE</spring.version>
 		<spring.security.version>4.1.1.RELEASE</spring.security.version>
+		<tape.version>1.2.3</tape.version>
 		<!-- Testing -->
 		<skipTests>false</skipTests>
 		<skipIntegrationTests>false</skipIntegrationTests>

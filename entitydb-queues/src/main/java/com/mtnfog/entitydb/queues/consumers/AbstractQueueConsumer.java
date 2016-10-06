@@ -36,7 +36,7 @@ import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.queues.InternalQueue;
+import com.mtnfog.entitydb.queues.continuousquery.ContinuousQueryQueue;
 import com.mtnfog.entitydb.queues.messages.InternalQueueContinuousQueryMessage;
 
 /**
@@ -147,7 +147,7 @@ public abstract class AbstractQueueConsumer {
 				auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.STORED, properties.getAuditId());
 			
 				// Put this entity onto an internal queue for executing the continuous queries.
-				InternalQueue.getContinuousQueryQueue().add(new InternalQueueContinuousQueryMessage(entity, entityId));
+				ContinuousQueryQueue.getContinuousQueryQueue().add(new InternalQueueContinuousQueryMessage(entity, entityId));
 				
 			}
 			
