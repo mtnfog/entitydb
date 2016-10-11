@@ -21,25 +21,31 @@ package com.mtnfog.entitydb.caching;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.aeonbits.owner.ConfigFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.mtnfog.entitydb.caching.memcached.MemcachedCache;
 import com.mtnfog.entitydb.caching.memcached.MemcachedCacheManager;
+import com.mtnfog.entitydb.configuration.EntityDbProperties;
 
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.MemcachedClient;
 
 /**
- * Implementation of Spring's {@link CachingConfigurer} that
- * provides a caching configuration for Memcached.
+ * This class provides the {@link CacheManager} that is used by
+ * EntityDB for caching entities and queries.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -50,55 +56,82 @@ public class CacheConfig extends CachingConfigurerSupport {
 	
 	private static final Logger LOGGER = LogManager.getLogger(CacheConfig.class);
 	
-	/*@Bean
-	@Override
-	public CacheManager cacheManager() {
-
-	     SimpleCacheManager cacheManager = new SimpleCacheManager();
-	     cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("entitydb")));
-
-	     return cacheManager;
-	     
-	}*/
+	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
 	
-	// TODO: Make these properties.
-	private String memcachedHost = "192.168.0.20:11211";
-	private int ttl = 3600;
-	private String memcachedUsername = "";
-	private String memcachedPassword = "";
-	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Depending on EntityDB's properties, this function will either configure and return
+	 * a {@link MemcachedCacheManager} or a {@link SimpleCacheManager}. If there is an error
+	 * configuring the {@link MemcachedCacheManager} the function will return <code>null</code>.
+	 * 
+	 */
 	@Bean
 	@Override
 	public CacheManager cacheManager() {
 		
 		CacheManager cacheManager = null;
 		
-		try {
-		
-			MemcachedClient memcachedClient = new MemcachedClient(
-					new ConnectionFactoryBuilder()
-						//.setTranscoder(new CustomSerializingTranscoder())
-						.setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
-						//.setAuthDescriptor(ad)
-						.build(),
-						AddrUtil.getAddresses(memcachedHost));
+		if(StringUtils.equalsIgnoreCase(properties.getCache(), "memcached")) {
 			
-			LOGGER.info("Created Memcached client for {}.", memcachedHost);
+			try {
+				
+				MemcachedClient memcachedClient = new MemcachedClient(
+						new ConnectionFactoryBuilder()
+							.setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
+							.build(),
+							AddrUtil.getAddresses(properties.getMemcachedHosts()));
+				
+				LOGGER.info("Created Memcached client for {}.", properties.getMemcachedHosts());
+				
+				final Collection<MemcachedCache> caches = new ArrayList<MemcachedCache>();
+				
+				for(String cacheName : getCacheNames()) {
+				
+					caches.add(new MemcachedCache(memcachedClient, cacheName, properties.getCacheTtl()));
+					
+				}
+				
+				return new MemcachedCacheManager(caches);
 			
-			final Collection<MemcachedCache> caches = new ArrayList<MemcachedCache>();
+			} catch (IOException ex) {
+				
+				LOGGER.error("Unable to create memcached client.", ex);
+				
+			}
 			
-			caches.add(new MemcachedCache(memcachedClient, "nonExpiredContinuousQueries", ttl));
-			caches.add(new MemcachedCache(memcachedClient, "continuousQueriesByUser", ttl));
+		} else {
 			
-			cacheManager = new MemcachedCacheManager(caches);
-		
-		} catch (IOException ex) {
+			LOGGER.info("Using internal cache.");
 			
-			LOGGER.error("Unable to create memcached client.", ex);
+			SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
 			
+			List<ConcurrentMapCache> caches = new LinkedList<ConcurrentMapCache>();
+			
+			for(String cacheName : getCacheNames()) {
+				
+				caches.add(new ConcurrentMapCache(cacheName));
+				
+			}
+			
+			simpleCacheManager.setCaches(caches);
+			
+			return cacheManager;
+
 		}
 		
-		return cacheManager;
+		return null;
+		
+	}
+	
+	private List<String> getCacheNames() {
+		
+		List<String> cacheNames = new LinkedList<String>();
+		cacheNames.add("nonExpiredContinuousQueries");
+		cacheNames.add("continuousQueriesByUser");
+		cacheNames.add("general");
+		
+		return cacheNames;
 		
 	}
 

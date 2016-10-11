@@ -42,6 +42,12 @@ public class MemcachedCache implements Cache {
 	private MemcachedClient client;		
 	private int ttl;
 	
+	/**
+	 * Creates a new implementation of {@link Cache} for memcached.
+	 * @param client A {@link MemcachedClient client}.
+	 * @param name The name of the cache.
+	 * @param ttl The TTL for cached items.
+	 */
 	public MemcachedCache(MemcachedClient client, String name, int ttl) {
 		
 		this.client = client;
@@ -66,16 +72,22 @@ public class MemcachedCache implements Cache {
 		Object value = null;
 		
 		try {
+			
 			value = client.get(key.toString());
+			
 		} catch (final Exception ex) {
-			LOGGER.warn(ex);
+			LOGGER.error("Unable to get item with key " + key.toString() + " from the cache.", ex);
 		}
 		
 		if (value == null) {
+			
 			return null;
-		}
+			
+		} else {
 		
-		return new SimpleValueWrapper(value);
+			return new SimpleValueWrapper(value);
+			
+		}
 		
 	}
 

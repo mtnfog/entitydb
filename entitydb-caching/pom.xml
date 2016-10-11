@@ -12,6 +12,11 @@
 	<name>entitydb-caching</name>
 	<dependencies>
 		<dependency>
+			<groupId>com.mtnfog.entitydb</groupId>
+			<artifactId>entitydb-configuration</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>net.spy</groupId>
 			<artifactId>spymemcached</artifactId>
 			<version>2.12.1</version>

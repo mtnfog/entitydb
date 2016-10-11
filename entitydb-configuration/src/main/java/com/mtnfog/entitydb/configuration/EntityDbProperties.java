@@ -119,11 +119,12 @@ public interface EntityDbProperties extends Config {
 	@DefaultValue("internal")
     public String getCache();
 	
-	@Key("cache.memcached.host")
-    public String getMemcachedHost();
-	
-	@Key("cache.memcached.port")
-    public int getMemcachedPor();
+	@Key("cache.memcached.hosts")
+    public String getMemcachedHosts();
+		
+	@Key("cache.ttl")
+	@DefaultValue("3600")
+	public int getCacheTtl();
 	
 	@Key("queue.provider")
 	@DefaultValue("internal")
@@ -188,7 +189,7 @@ public interface EntityDbProperties extends Config {
 	
 	@Key("datastore.password")
 	public String getDataStorePassword();
-	
+		
 	@Key("mask.entity.acl")
 	@DefaultValue("false")
 	public boolean isMaskEntityAcl();
