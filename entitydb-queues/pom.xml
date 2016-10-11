@@ -62,11 +62,6 @@
 			<version>${gson.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.squareup</groupId>
-			<artifactId>tape</artifactId>
-			<version>${tape.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>

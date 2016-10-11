@@ -51,6 +51,7 @@ import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.search.SearchIndex;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.consumers.InternalQueueConsumer;
 import com.mtnfog.entitydb.queues.publishers.InternalQueuePublisher;
 import com.mtnfog.entitydb.search.ElasticSearchIndex;
@@ -107,22 +108,14 @@ public class DefaultEntityQueryServiceTest {
 	@Configuration
 	@ComponentScan(basePackages = "com.mtnfog.entitydb")
 	static class ContextConfiguration {
-
-		/*@Bean
-		public List<UserEntity> usersAndGroups() {
-
-			List<UserEntity> users = new LinkedList<UserEntity>();
-
-			Set<String> groups = new HashSet<String>();
-			groups.add("group1");
-			groups.add("group2");
-
-			UserEntity user = new UserEntity("username", "1234", groups);
-			users.add(user);
-
-			return users;
-
-		}*/
+		
+		@Bean
+		public EntityQueryService getEntityQueryService() {
+			
+			// TODO: Fix these tests.
+			return null;
+			
+		}
 
 		@Bean
 		public AuditLogger getAuditLogger() throws IOException {
@@ -155,7 +148,7 @@ public class DefaultEntityQueryServiceTest {
 		@Bean
 		public QueueConsumer getQueueConsumer() throws IOException, URISyntaxException {
 
-			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), 5);
+			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getEntityQueryService(), 5);
 
 		}
 

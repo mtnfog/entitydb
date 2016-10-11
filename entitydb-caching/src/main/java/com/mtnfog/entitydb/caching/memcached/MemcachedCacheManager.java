@@ -16,34 +16,30 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.queues.messages;
+package com.mtnfog.entitydb.caching.memcached;
 
-import com.mtnfog.entity.Entity;
+import java.util.Collection;
 
-public class InternalQueueContinuousQueryMessage {
+import org.springframework.cache.Cache;
+import org.springframework.cache.support.AbstractCacheManager;
 
-	private Entity entity;
-	private String entityId;
-	
-	public InternalQueueContinuousQueryMessage(Entity entity, String entityId) {
-		this.entity = entity;
-		this.entityId = entityId;
-	}
-	
-	public Entity getEntity() {
-		return entity;
-	}
-	
-	public void setEntity(Entity entity) {
-		this.entity = entity;
-	}
-
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-	
+/**
+ * Managed the Memcached caches.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class MemcachedCacheManager extends AbstractCacheManager {
+    
+	private final Collection<MemcachedCache> internalCaches;
+ 
+    public MemcachedCacheManager(Collection<MemcachedCache> internalCaches) {
+        this.internalCaches = internalCaches;
+    }
+ 
+    @Override
+    protected Collection<? extends Cache> loadCaches() {
+        return internalCaches;
+    }
+    
 }

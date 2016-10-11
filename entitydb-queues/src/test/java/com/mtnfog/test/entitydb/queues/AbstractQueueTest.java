@@ -41,6 +41,7 @@ import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.test.entity.utils.EntityUtils;
 
 public abstract class AbstractQueueTest {
@@ -51,6 +52,7 @@ public abstract class AbstractQueueTest {
 	protected EntityStore<RdbmsStoredEntity> entityStore;
 	protected List<RulesEngine> rulesEngines;
 	protected AuditLogger auditLogger;
+	protected EntityQueryService entityQueryService;
 		
 	private final String jdbcDriver = "org.hsqldb.jdbcDriver";
 	private final String jdbcDialect = "org.hibernate.dialect.HSQLDialect";

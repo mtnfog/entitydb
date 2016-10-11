@@ -18,6 +18,7 @@
  */
 package com.mtnfog.entitydb.model.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.mtnfog.entitydb.model.datastore.entities.NotificationEntity;
@@ -28,7 +29,9 @@ import com.mtnfog.entitydb.model.datastore.entities.NotificationEntity;
  * @author Mountain Fog, Inc.
  *
  */
-public class Notification {
+public class Notification implements Serializable {
+	
+	private static final long serialVersionUID = 5833939084527987491L;
 	
 	private long id;
 	private User user;

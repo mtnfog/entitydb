@@ -36,8 +36,7 @@ import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.queues.continuousquery.ContinuousQueryQueue;
-import com.mtnfog.entitydb.queues.messages.InternalQueueContinuousQueryMessage;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
 
 /**
  * Abstract class for queue consumers that provides the functionality to process
@@ -55,13 +54,15 @@ public abstract class AbstractQueueConsumer {
 	private EntityStore<?> entityStore;
 	private List<RulesEngine> rulesEngines;
 	private AuditLogger auditLogger;	
-
+	private EntityQueryService entityQueryService;
+	
 	public AbstractQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService) {
 		
 		this.entityStore = entityStore;
 		this.rulesEngines = rulesEngines;
 		this.auditLogger = auditLogger;
+		this.entityQueryService = entityQueryService;
 		
 	}
 	
@@ -146,8 +147,8 @@ public abstract class AbstractQueueConsumer {
 				LOGGER.trace("Writing entity {} to audit log.", entityId);
 				auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.STORED, properties.getAuditId());
 			
-				// Put this entity onto an internal queue for executing the continuous queries.
-				ContinuousQueryQueue.getContinuousQueryQueue().add(new InternalQueueContinuousQueryMessage(entity, entityId));
+				// Execute the continuous queries against the entity.
+				entityQueryService.executeContinuousQueries(entity, entityId);
 				
 			}
 			

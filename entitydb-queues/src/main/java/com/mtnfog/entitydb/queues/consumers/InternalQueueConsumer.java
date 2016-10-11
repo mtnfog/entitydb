@@ -28,6 +28,7 @@ import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.InternalQueue;
 import com.mtnfog.entitydb.queues.messages.InternalQueueIngestMessage;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
@@ -53,9 +54,9 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @param searchIndex A {@link SearchIndex search index}.
 	 */
 	public InternalQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines, 
-			AuditLogger auditLogger, int sleepSeconds) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, int sleepSeconds) {
 		
-		super(entityStore, rulesEngines, auditLogger);
+		super(entityStore, rulesEngines, auditLogger, entityQueryService);
 		
 		this.sleepSeconds = sleepSeconds;
 		

@@ -27,6 +27,7 @@ import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
@@ -51,6 +52,7 @@ import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.consumers.ActiveMQQueueConsumer;
 import com.mtnfog.entitydb.queues.consumers.InternalQueueConsumer;
 import com.mtnfog.entitydb.queues.consumers.SqsQueueConsumer;
@@ -76,6 +78,9 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
 			
+	@Autowired
+	private EntityQueryService entityQueryService;
+	
 	public static void main(String[] args) throws Exception {
 						
 		// Start the REST service.
@@ -337,11 +342,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			if(StringUtils.isNotEmpty(properties.getSqsAccessKey())) {
 			
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
 				
 			} else {
 				
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
 				
 			}
 			
@@ -351,7 +356,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 						
 			try {
 			
-				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout());
+				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout());
 				
 			} catch (Exception ex) {
 				
@@ -363,13 +368,13 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Using internal queue.");
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getQueueConsumerSleep());
 			
 		} else {
 			
 			LOGGER.warn("Invalid queue {}. Using the internal queue.", queue);
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getQueueConsumerSleep());
 			
 		}
 		

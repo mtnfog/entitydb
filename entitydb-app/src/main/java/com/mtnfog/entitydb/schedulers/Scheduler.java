@@ -36,9 +36,6 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.services.EntityQueryService;
-import com.mtnfog.entitydb.queues.continuousquery.ContinuousQueryQueue;
-import com.mtnfog.entitydb.queues.messages.InternalQueueContinuousQueryMessage;
 
 @Configuration
 @EnableScheduling
@@ -59,13 +56,12 @@ public class Scheduler {
 	
 	@Autowired
 	private SearchIndex searchIndex;
-	
-	@Autowired
-	private EntityQueryService entityQueryService;
-	
+		
 	@Bean(destroyMethod = "shutdown")
     public Executor taskScheduler() {
+		
         return Executors.newScheduledThreadPool(5);
+        
     }
 	
 	@Scheduled(fixedRate = 5000)
@@ -75,7 +71,7 @@ public class Scheduler {
 		
 	}
 	
-	@Scheduled(fixedRate = 5000)
+	@Scheduled(fixedRate = 30000)
 	public void status() throws EntityStoreException {
 		
 		LOGGER.info("Stored entities: {}, Indexed entities: {}", entityStore.getEntityCount(), searchIndex.getCount());
@@ -93,23 +89,6 @@ public class Scheduler {
 			
 		}
 		
-	}
-	
-	@Scheduled(fixedRate = 5000)
-	public void executeContinuousQueries() {
-		
-		// TODO: This should be moved somewhere more appropriate.
-		
-		while(ContinuousQueryQueue.getContinuousQueryQueue().size() > 0) {
-			
-			InternalQueueContinuousQueryMessage message = ContinuousQueryQueue.getContinuousQueryQueue().peek();
-			
-			entityQueryService.executeContinuousQueries(message.getEntity(), message.getEntityId());
-			
-			ContinuousQueryQueue.getContinuousQueryQueue().remove();
-			
-		}
-
 	}
 	
 }

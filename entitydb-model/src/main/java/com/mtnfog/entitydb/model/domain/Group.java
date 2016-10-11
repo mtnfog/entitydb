@@ -18,6 +18,7 @@
  */
 package com.mtnfog.entitydb.model.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,8 +31,10 @@ import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
  * @author Mountain Fog, Inc.
  *
  */
-public class Group {
+public class Group implements Serializable {
 
+	private static final long serialVersionUID = 7032996772573941419L;
+	
 	private long id;
 	private String groupName;
 	private Set<String> users;

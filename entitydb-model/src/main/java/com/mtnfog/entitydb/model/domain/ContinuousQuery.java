@@ -18,6 +18,7 @@
  */
 package com.mtnfog.entitydb.model.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
@@ -28,9 +29,11 @@ import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
  * @author Mountain Fog, Inc.
  *
  */
-public class ContinuousQuery {
+public class ContinuousQuery implements Serializable {
 
-    private long id;
+	private static final long serialVersionUID = -7819227992158410058L;
+	
+	private long id;
 	private User user;
 	private String query;
 	private Date timestamp;

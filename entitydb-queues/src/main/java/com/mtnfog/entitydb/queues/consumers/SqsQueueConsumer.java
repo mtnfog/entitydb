@@ -43,6 +43,7 @@ import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.security.Acl;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -75,9 +76,9 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	private int visibilityTimeout;
 	
 	public SqsQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, String endpoint, String queueUrl, int sleepSeconds, int visibilityTimeout) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, String endpoint, String queueUrl, int sleepSeconds, int visibilityTimeout) {
 		
-		super(entityStore, rulesEngines,  auditLogger);
+		super(entityStore, rulesEngines,  auditLogger, entityQueryService);
 		
 		client = new AmazonSQSClient(getClientConfiguration());
 		client.setEndpoint(endpoint);
@@ -90,9 +91,9 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	}
 	
 	public SqsQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines, 
-			AuditLogger auditLogger, String endpoint, String queueUrl, String accessKey, String secretKey, int sleepSeconds, int visibilityTimeout) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, String endpoint, String queueUrl, String accessKey, String secretKey, int sleepSeconds, int visibilityTimeout) {
 			
-		super(entityStore, rulesEngines, auditLogger);
+		super(entityStore, rulesEngines, auditLogger, entityQueryService);
 		
 		client = new AmazonSQSClient(new BasicAWSCredentials(accessKey, secretKey), getClientConfiguration());
 		client.setEndpoint(endpoint);
