@@ -172,23 +172,21 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 
 		DynamoDBQueryExpression<DynamoDBStoredEntity> queryExpression = new DynamoDBQueryExpression<DynamoDBStoredEntity>()
 		        .withRangeKeyCondition(DynamoDBStoredEntity.FIELD_INDEXED, rangeKeyCondition);
-		
-		
+				
 		List<DynamoDBStoredEntity> nonIndexedEntities = mapper.query(DynamoDBStoredEntity.class, queryExpression);
 		
 		return nonIndexedEntities;*/
 		
+		// The following code gets the entities that are visible but not indexed
+		// from the DynamoDB table using a table scan. This is not ideal and should
+		// be changed.
+		
+		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();		
+		scanExpression.setConsistentRead(false);
+		
 		Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
-		Map<String, String> expressionAttributeNames = new HashMap<>();
-		
-		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-		
-		// TODO: Need to be consistent?
-		scanExpression.setConsistentRead(true);
-		
-		// TODO: How to limit the number of results?
-		// scanExpression.setLimit(limit);
-		
+		Map<String, String> expressionAttributeNames = new HashMap<>();				
+				
 		expressionAttributeNames.put("#indexed", DynamoDBStoredEntity.FIELD_INDEXED);			
 		expressionAttributeValues.put(":indexed", new AttributeValue().withN("0"));			
 		
@@ -201,7 +199,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		scanExpression.setExpressionAttributeNames(expressionAttributeNames);
 		
 		ScanResultPage<DynamoDBStoredEntity> scanPage = mapper.scanPage(DynamoDBStoredEntity.class, scanExpression);
-		
+				
 		return scanPage.getResults();
 		
 	}

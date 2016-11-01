@@ -8,7 +8,7 @@
 	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License 
 	for more details. You should have received a copy of the GNU Affero General 
 	Public License along with this program. If not, see <http://www.gnu.org/licenses/>. 
-	For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com. -->
+	For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com. -->
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -57,9 +57,9 @@
 			<version>${aws.sdk.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>${gson.version}</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -74,7 +74,7 @@
 		<dependency>
 			<groupId>org.elasticmq</groupId>
 			<artifactId>elasticmq-rest-sqs_2.11</artifactId>
-			<version>0.9.3</version>
+			<version>${elasticmq.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -18,40 +18,56 @@
  */
 package com.mtnfog.entitydb.queues.messages;
 
-import com.mtnfog.entity.Entity;
+/**
+ * A message that describes an update to an existing entity's
+ * ACL that is published to the internal ACl update queue.
+ * Note that not all queue implementations may use this class.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class QueueUpdateAclMessage extends QueueMessage {
 
-public class InternalQueueIngestMessage  {
-
-	private Entity entity;
+	private String entityId;
 	private String acl;
 	private String apiKey;
 	
-	public InternalQueueIngestMessage(Entity entity, String acl, String apiKey) {
+	/**
+	 * Creates a new message.
+	 * @param entityId The ID of the entity to update.
+	 * @param acl The new ACL for the entity.
+	 * @param apiKey The API key of the client ingesting the entity.
+	 */
+	public QueueUpdateAclMessage(String entityId, String acl, String apiKey) {
 		
-		this.entity = entity;
+		this.entityId = entityId;
 		this.acl = acl;
 		this.apiKey = apiKey;
 		
 	}
 
-	public Entity getEntity() {
-		return entity;
+	/**
+	 * Gets the ID of the entity.
+	 * @return The ID of the entity.
+	 */
+	public String getEntityId() {
+		return entityId;
 	}
 
+	/**
+	 * Gets the new ACL for the entity.
+	 * @return The new ACL for the entity.
+	 */
 	public String getAcl() {
 		return acl;
 	}
-
-	public void setAcl(String acl) {
-		this.acl = acl;
-	}
-
+	
+	/**
+	 * Gets the client's API key.
+	 * @return The client's API key.
+	 */
 	public String getApiKey() {
 		return apiKey;
-	}
-
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
 	}
 	
 }

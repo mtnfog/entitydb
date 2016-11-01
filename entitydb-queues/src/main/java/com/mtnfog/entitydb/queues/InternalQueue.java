@@ -20,36 +20,22 @@ package com.mtnfog.entitydb.queues;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.mtnfog.entitydb.queues.messages.InternalQueueIngestMessage;
-import com.mtnfog.entitydb.queues.messages.InternalQueueUpdateAclMessage;
+import com.mtnfog.entitydb.queues.messages.QueueMessage;
 
 public class InternalQueue {
 
-	private static ConcurrentLinkedQueue<InternalQueueIngestMessage> ingestQueue;
-	private static ConcurrentLinkedQueue<InternalQueueUpdateAclMessage> updateAclQueue;	
+	private static ConcurrentLinkedQueue<QueueMessage> queue;
 		
-	public static ConcurrentLinkedQueue<InternalQueueIngestMessage> getIngestQueue() {
+	public static ConcurrentLinkedQueue<QueueMessage> getQueue() {
 		
-		if(ingestQueue == null) {
+		if(queue == null) {
 			
-			ingestQueue = new ConcurrentLinkedQueue<InternalQueueIngestMessage>();
+			queue = new ConcurrentLinkedQueue<QueueMessage>();
 			
 		}
 		
-		return ingestQueue;
+		return queue;
 
 	}
-	
-	public static ConcurrentLinkedQueue<InternalQueueUpdateAclMessage> getUpdateAclQueue() {
-		
-		if(updateAclQueue == null) {
-			
-			updateAclQueue = new ConcurrentLinkedQueue<InternalQueueUpdateAclMessage>();
-			
-		}
-		
-		return updateAclQueue;
-
-	}	
 	
 }

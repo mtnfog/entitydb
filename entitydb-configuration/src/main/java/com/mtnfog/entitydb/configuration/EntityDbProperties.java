@@ -181,7 +181,7 @@ public interface EntityDbProperties extends Config {
 	public String getDataStoreDatabase();
 	
 	@Key("datastore.jdbc.url")
-	@DefaultValue("jdbc:mysql://localhost/entitydb?useSSL=false")
+	@DefaultValue("jdbc:mariadb://localhost/entitydb?useSSL=false")
 	public String getJdbcUrl();
 	
 	@Key("datastore.username")

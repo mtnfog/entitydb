@@ -30,7 +30,9 @@ import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.InternalQueue;
-import com.mtnfog.entitydb.queues.messages.InternalQueueIngestMessage;
+import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
+import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
+import com.mtnfog.entitydb.queues.messages.QueueMessage;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -76,17 +78,27 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	@Override
 	public void consume() {
 		
-		// TODO: Also consume from the ACL updates queue.
-				
-		while(InternalQueue.getIngestQueue().size() > 0 && consume == true) {
+		while(InternalQueue.getQueue().size() > 0 && consume == true) {
 		
-			InternalQueueIngestMessage message = InternalQueue.getIngestQueue().poll();	
+			QueueMessage message = InternalQueue.getQueue().poll();	
 		
 			if(message != null) {
 			
 				try {
+					
+					if(message instanceof QueueIngestMessage) {
 				
-					ingestEntity(message.getEntity(), new Acl(message.getAcl()), message.getApiKey());
+						QueueIngestMessage internalQueueIngestMessage = (QueueIngestMessage) message;
+						
+						ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+					
+					} else if(message instanceof QueueUpdateAclMessage) {
+						
+						QueueUpdateAclMessage internalQueueUpdateAclMessage = (QueueUpdateAclMessage) message;
+						
+						updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+						
+					}
 					
 				} catch (Exception ex) {
 					
@@ -97,7 +109,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 			}
 			
 			if(getSize() <= 0) {
-				
+
 				try {
 					LOGGER.info("Queue processor thread {} is sleeping for {} seconds.", Thread.currentThread().getId(), sleepSeconds);
 					Thread.sleep(sleepSeconds * 1000);
@@ -108,7 +120,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 			}
 			
 		}
-		
+				
 	}
 	
 	/**
@@ -117,7 +129,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	@Override
 	public int getSize() {
 		
-		return InternalQueue.getIngestQueue().size();
+		return InternalQueue.getQueue().size();
 		
 	}
 	

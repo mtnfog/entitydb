@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
@@ -16,9 +16,11 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+    For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
 
---><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mtnfog.entitydb</groupId>
 	<artifactId>entitydb</artifactId>
@@ -38,7 +40,7 @@
 			<name>GNU Affero General Public License (AGPL) version 3.0</name>
 			<url>https://www.gnu.org/licenses/agpl-3.0.en.html</url>
 			<distribution>manual</distribution>
-			<comments>Commercial licenses are available by contacting support@mtnfog.com.</comments>
+			<comments>Proprietary licenses are available by contacting support@mtnfog.com.</comments>
 		</license>
 	</licenses>
 	<properties>
@@ -47,11 +49,11 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Mountain Fog versions -->
 		<commons.version>1.0</commons.version>
-		<entity.model.version>1.0.8</entity.model.version>
-		<entitydb.client.version>1.0-SNAPSHOT</entitydb.client.version>
+		<entity.model.version>1.0.9</entity.model.version>
 		<!-- Artifact versions -->
-		<activemq.version>5.7.0</activemq.version>
-		<aws.sdk.version>1.11.22</aws.sdk.version>
+		<activemq.version>5.14.1</activemq.version>
+		<antlr.version>4.0</antlr.version>
+		<aws.sdk.version>1.11.49</aws.sdk.version>
 		<cassandra.version>3.7</cassandra.version>
 		<cassandra.datastax.version>3.1.0</cassandra.datastax.version>
 		<cassandra.unit.version>3.0.0.1</cassandra.unit.version>
@@ -59,34 +61,35 @@
 		<commons.codec.version>1.10</commons.codec.version>
 		<commons.collections.version>4.1</commons.collections.version>
 		<commons.configuration.version>2.0</commons.configuration.version>
-		<commons.io.version>2.4</commons.io.version>
-		<commons.lang.version>3.4</commons.lang.version>
+		<commons.io.version>2.5</commons.io.version>
+		<commons.lang.version>3.5</commons.lang.version>
 		<dbunit.version>2.5.0</dbunit.version>
 		<spring-test-dbunit.version>1.2.1</spring-test-dbunit.version>
-		<ehcache.version>2.10.1</ehcache.version>
+		<ehcache.version>2.10.3</ehcache.version>
+		<elasticmq.version>0.10.1</elasticmq.version>
 		<elasticsearch.version>2.3.4</elasticsearch.version>
 		<failsafe.version>2.18</failsafe.version>
 		<fluentd.logger.version>0.3.2</fluentd.logger.version>
-		<fongo.version>2.0.7</fongo.version>
-		<gson.version>2.7</gson.version>
+		<fongo.version>2.0.9</fongo.version>
+		<gson.version>2.8.0</gson.version>
+		<hamcrest.version>1.3</hamcrest.version>
 		<hibernate.version>5.1.0.Final</hibernate.version>
 		<hsqldb.version>2.3.4</hsqldb.version>
 		<httpclient.version>4.5</httpclient.version>
 		<jacoco.version>0.7.2.201409121644</jacoco.version>
 		<jackson.mapper.version>1.9.11</jackson.mapper.version>
+		<jackson.version>2.8.4</jackson.version>
 		<javax.persistence.version>2.1.1</javax.persistence.version>
 		<jest.version>2.0.3</jest.version>
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.12</junit.version>
-		<log4j.version>2.6.2</log4j.version>
+		<log4j.version>2.7</log4j.version>
 		<lucene.version>5.5.0</lucene.version>
+		<mariadb.java.client.version>1.5.4</mariadb.java.client.version>
 		<maven.compiler.version>3.2</maven.compiler.version>
 		<mockito.version>1.10.19</mockito.version>
 		<mongodb.client.version>3.3.0</mongodb.client.version>
-		<mysql.connector.version>5.1.39</mysql.connector.version>
-		<owasp.version>1.2.7</owasp.version>
-		<powermock.version>1.6.2</powermock.version>
-		<retrofit.version>1.9.0</retrofit.version>
+		<powermock.version>1.6.5</powermock.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<surefire.version>2.18</surefire.version>
 		<spring.boot.version>1.4.1.RELEASE</spring.boot.version>
@@ -144,13 +147,28 @@
 		<module>entitydb-data-store</module>
 		<module>entitydb-configuration</module>
 		<module>entitydb-services</module>
-    <module>entitydb-caching</module>
-  </modules>
+		<module>entitydb-caching</module>
+	</modules>
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>1.10</version>
+					<configuration>
+						<failIfWarning>false</failIfWarning>
+						<force>true</force>
+						<missingFile>THIRD-PARTY-missing.txt</missingFile>
+						<includeTransitiveDependencies>false</includeTransitiveDependencies>
+					</configuration>
+				</plugin>			
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.5.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>

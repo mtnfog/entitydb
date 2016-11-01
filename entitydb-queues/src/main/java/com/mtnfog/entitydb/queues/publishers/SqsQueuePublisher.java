@@ -35,8 +35,14 @@ import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.queues.consumers.SqsQueueConsumer;
+import com.mtnfog.entitydb.queues.QueueConstants;
 
+/**
+ * Implementation of {@link QueuePublisher} that publishes messages to an AWS SQS queue.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public class SqsQueuePublisher implements QueuePublisher {
 
 	private static final Logger LOGGER = LogManager.getLogger(SqsQueuePublisher.class);
@@ -78,9 +84,9 @@ public class SqsQueuePublisher implements QueuePublisher {
 			SendMessageRequest request = new SendMessageRequest();
 			
 			Map<String, MessageAttributeValue> attributes = new HashMap<String, MessageAttributeValue>();
-			attributes.put(SqsQueueConsumer.ACTION, new MessageAttributeValue().withDataType("String").withStringValue(SqsQueueConsumer.ACTION_UPDATE_ACL));
-			attributes.put(SqsQueueConsumer.ACL, new MessageAttributeValue().withDataType("String").withStringValue(acl));
-			attributes.put(SqsQueueConsumer.API_KEY, new MessageAttributeValue().withDataType("String").withStringValue(apiKey));
+			attributes.put(QueueConstants.ACTION, new MessageAttributeValue().withDataType("String").withStringValue(QueueConstants.ACTION_UPDATE_ACL));
+			attributes.put(QueueConstants.ACL, new MessageAttributeValue().withDataType("String").withStringValue(acl));
+			attributes.put(QueueConstants.API_KEY, new MessageAttributeValue().withDataType("String").withStringValue(apiKey));
 			
 			request.setQueueUrl(queueUrl);
 			request.setMessageBody(entityId);
@@ -119,9 +125,9 @@ public class SqsQueuePublisher implements QueuePublisher {
 				SendMessageRequest request = new SendMessageRequest();
 				
 				Map<String, MessageAttributeValue> attributes = new HashMap<String, MessageAttributeValue>();
-				attributes.put(SqsQueueConsumer.ACTION, new MessageAttributeValue().withDataType("String").withStringValue(SqsQueueConsumer.ACTION_INGEST));				
-				attributes.put(SqsQueueConsumer.ACL, new MessageAttributeValue().withDataType("String").withStringValue(acl));
-				attributes.put(SqsQueueConsumer.API_KEY, new MessageAttributeValue().withDataType("String").withStringValue(apiKey));
+				attributes.put(QueueConstants.ACTION, new MessageAttributeValue().withDataType("String").withStringValue(QueueConstants.ACTION_INGEST));				
+				attributes.put(QueueConstants.ACL, new MessageAttributeValue().withDataType("String").withStringValue(acl));
+				attributes.put(QueueConstants.API_KEY, new MessageAttributeValue().withDataType("String").withStringValue(apiKey));
 				
 				request.setQueueUrl(queueUrl);
 				request.setMessageBody(gson.toJson(entity));

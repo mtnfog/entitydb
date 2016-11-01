@@ -31,7 +31,7 @@ import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 public interface EntityAclService {
 
 	/**
-	 * Updates an entity's ACL.
+	 * Queues an update to an entity's ACL.
 	 * @param entityId The ID of the entity.
 	 * @param acl The new ACL for the entity.
 	 * @param apiKey The requesting user's API key.
@@ -39,6 +39,6 @@ public interface EntityAclService {
 	 * @throws NonexistantEntityException Thrown if the entity does not exist.
 	 * @throws EntityPublisherException Thrown if the request to update the entity's ACL cannot be published to the queue.
 	 */
-	public void updateEntityAcl(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException;
+	public void queueEntityAclUpdate(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException;
 	
 }

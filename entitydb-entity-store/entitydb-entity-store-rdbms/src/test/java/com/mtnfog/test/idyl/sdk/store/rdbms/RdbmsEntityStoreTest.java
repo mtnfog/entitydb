@@ -45,7 +45,7 @@ public class RdbmsEntityStoreTest extends AbstractEntityStoreTest<RdbmsStoredEnt
 	private final String jdbcPassword = "";
 	private final String schemaExport = "create-drop";
 	
-	/*private String jdbcUrl = "jdbc:mysql://ec2-52-3-144-172.compute-1.amazonaws.com/idyl";
+	/*private String jdbcUrl = "jdbc:mariadb://ec2-52-3-144-172.compute-1.amazonaws.com/idyl";
 	private String jdbcDriver = "com.mysql.jdbc.Driver";
 	private String jdbcDialect = "org.hibernate.dialect.MySQLInnoDBDialect";
 	private String jdbcUsername = "root";

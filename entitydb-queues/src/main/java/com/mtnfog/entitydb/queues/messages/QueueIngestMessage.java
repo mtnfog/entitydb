@@ -18,30 +18,58 @@
  */
 package com.mtnfog.entitydb.queues.messages;
 
-public class InternalQueueUpdateAclMessage {
+import com.mtnfog.entity.Entity;
 
-	private String entityId;
+/**
+ * A message that describes an entity for ingest that is
+ * placed on an ingest queue. Note that not all queue implementations
+ * may use this class.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class QueueIngestMessage extends QueueMessage {
+
+	private Entity entity;
 	private String acl;
 	private String apiKey;
 	
-	public InternalQueueUpdateAclMessage(String entityId, String acl, String apiKey) {
+	/**
+	 * Creates a new message.
+	 * @param entity The {@link Entity} to be ingested.
+	 * @param acl The ACL for the entity.
+	 * @param apiKey The API key of the client ingesting the entity.
+	 */
+	public QueueIngestMessage(Entity entity, String acl, String apiKey) {
 		
-		this.entityId = entityId;
+		this.entity = entity;
 		this.acl = acl;
 		this.apiKey = apiKey;
 		
 	}
 
-	public String getEntityId() {
-		return entityId;
+	/**
+	 * Gets the {@link Entity entity}.
+	 * @return The {@link Entity entity}.
+	 */
+	public Entity getEntity() {
+		return entity;
 	}
 
+	/**
+	 * Gets the entity's ACL.
+	 * @return The entity's ACL.
+	 */
 	public String getAcl() {
 		return acl;
 	}
 	
+	/**
+	 * Gets the client's API key.
+	 * @return The client's API key.
+	 */
 	public String getApiKey() {
 		return apiKey;
 	}
-	
+
 }

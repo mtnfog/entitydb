@@ -28,9 +28,16 @@ import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.InternalQueue;
-import com.mtnfog.entitydb.queues.messages.InternalQueueIngestMessage;
-import com.mtnfog.entitydb.queues.messages.InternalQueueUpdateAclMessage;
+import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
+import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
 
+/**
+ * Implementation of {@link QueuePublisher} that publishes messages to an internal queue
+ * held in memory.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public class InternalQueuePublisher implements QueuePublisher {
 
 	private static final Logger LOGGER = LogManager.getLogger(InternalQueuePublisher.class);
@@ -44,9 +51,9 @@ public class InternalQueuePublisher implements QueuePublisher {
 		
 		try {
 				
-			InternalQueueUpdateAclMessage message = new InternalQueueUpdateAclMessage(entityId, acl, apiKey);
+			QueueUpdateAclMessage message = new QueueUpdateAclMessage(entityId, acl, apiKey);
 			
-			InternalQueue.getUpdateAclQueue().add(message);
+			InternalQueue.getQueue().add(message);
 		
 		} catch (Exception ex) {
 			
@@ -69,14 +76,14 @@ public class InternalQueuePublisher implements QueuePublisher {
 		
 			for(Entity entity : entities) {
 			
-				InternalQueueIngestMessage message = new InternalQueueIngestMessage(entity, acl, apiKey);
+				QueueIngestMessage message = new QueueIngestMessage(entity, acl, apiKey);
 				
-				InternalQueue.getIngestQueue().add(message);
+				InternalQueue.getQueue().add(message);
 			
 			}
 						
 			LOGGER.info("Queued {} entities.", entities.size());
-			LOGGER.info("Queue size: {}", InternalQueue.getIngestQueue().size());
+			LOGGER.info("Queue size: {}", InternalQueue.getQueue().size());
 		
 		} catch (Exception ex) {
 			

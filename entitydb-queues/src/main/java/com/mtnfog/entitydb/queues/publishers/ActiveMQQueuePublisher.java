@@ -39,11 +39,12 @@ import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.queues.messages.InternalQueueIngestMessage;
-import com.mtnfog.entitydb.queues.messages.InternalQueueUpdateAclMessage;
+import com.mtnfog.entitydb.queues.QueueConstants;
+import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
+import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
 
 /**
- * Implementation of {@link QueuePublisher} that uses ActiveMQ.
+ * Implementation of {@link QueuePublisher} that publishes messages to an ActiveMQ queue.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -98,9 +99,10 @@ public class ActiveMQQueuePublisher implements QueuePublisher {
 	        producer.setDeliveryMode(DeliveryMode.PERSISTENT);
 			        
 	        // Create a message.
-        	InternalQueueUpdateAclMessage internalQueueMessage = new InternalQueueUpdateAclMessage(entityId, acl, apiKey);	     
+        	QueueUpdateAclMessage internalQueueMessage = new QueueUpdateAclMessage(entityId, acl, apiKey);	     
 	        TextMessage message = session.createTextMessage(gson.toJson(internalQueueMessage));	
-
+	        message.setStringProperty(QueueConstants.ACTION, QueueConstants.ACTION_UPDATE_ACL);
+	        
 	        producer.send(message);
 	                
 		} catch (Exception ex) {
@@ -130,9 +132,10 @@ public class ActiveMQQueuePublisher implements QueuePublisher {
 	        for(Entity entity : entities) {
 		        
 		        // Create a message.
-		        InternalQueueIngestMessage internalQueueIngestMessage = new InternalQueueIngestMessage(entity, acl, apiKey);	     
+		        QueueIngestMessage internalQueueIngestMessage = new QueueIngestMessage(entity, acl, apiKey);	     
 		        TextMessage message = session.createTextMessage(gson.toJson(internalQueueIngestMessage));	
-	
+		        message.setStringProperty(QueueConstants.ACTION, QueueConstants.ACTION_INGEST);
+		        
 		        // Put the message onto the queue.
 		        producer.send(message);
 	        

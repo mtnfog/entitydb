@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,10 +41,12 @@ import com.google.gson.Gson;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
+import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
+import com.mtnfog.entitydb.queues.QueueConstants;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -65,12 +68,6 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	private static final int DEFAULT_CONNECT_TIMEOUT  = (int)TimeUnit.SECONDS.toMillis(10);
 	private static final int DEFAULT_MAX_RETRIES  = (int)TimeUnit.SECONDS.toMillis(10);
 	private static final int DEFAULT_MAX_CONNECTIONS  = (int)TimeUnit.SECONDS.toMillis(10);
-	
-	public static final String ACL = "acl";
-	public static final String API_KEY = "apiKey";
-	public static final String ACTION = "action";	
-	public static final String ACTION_INGEST = "ingest";
-	public static final String ACTION_UPDATE_ACL = "updateAcl";
 	
 	private int sleepSeconds;
 	private int visibilityTimeout;
@@ -138,39 +135,68 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 		
 		for(Message message : messages) {
 			
-			Entity entity = gson.fromJson(message.getBody(), Entity.class);
+			boolean processed = false;
 			
-			final String acl = message.getMessageAttributes().get(ACL).getStringValue();
-			final String apiKey = message.getMessageAttributes().get(API_KEY).getStringValue();				
+			if(StringUtils.equalsIgnoreCase(message.getMessageAttributes().get(QueueConstants.ACTION).getStringValue(), QueueConstants.ACTION_INGEST)) {
 			
-			try {
-			
-				LOGGER.debug("Received entity with ACL: {}", acl);
+				// Ingest the entity.
 				
-				boolean processed = ingestEntity(entity, new Acl(acl), apiKey);
+				Entity entity = gson.fromJson(message.getBody(), Entity.class);
 				
-				if(processed) {
-			
-					DeleteMessageRequest deleteMessageRequest = new DeleteMessageRequest();
-					deleteMessageRequest.setReceiptHandle(message.getReceiptHandle());
-					deleteMessageRequest.setQueueUrl(queueUrl);
+				final String acl = message.getMessageAttributes().get(QueueConstants.ACL).getStringValue();
+				final String apiKey = message.getMessageAttributes().get(QueueConstants.API_KEY).getStringValue();				
+				
+				try {
+				
+					LOGGER.debug("Received entity with ACL: {}", acl);
 					
-					client.deleteMessage(deleteMessageRequest);
-					
-					// The deleteMessageResult is not checked because if the delete fails
-					// the message will remain on the queue. The next time that message is
-					// received it will see that the entity already exists and it will
-					// attempt to delete the message again.
+					processed = ingestEntity(entity, new Acl(acl), apiKey);					
 				
+				} catch (MalformedAclException ex) {
+					
+					// This should never hapen since the ACL is validated before here
+					// so this error will not be rethrown.
+					
+					LOGGER.error("The received ACL " + acl + " is malformed.", ex);
+					
 				}
 			
-			} catch (MalformedAclException ex) {
+			} else if(StringUtils.equalsIgnoreCase(message.getMessageAttributes().get(QueueConstants.ACTION).getStringValue(), QueueConstants.ACTION_UPDATE_ACL)) {
 				
-				// This should never hapen since the ACL is validated before here
-				// so this error will not be rethrown.
+				// Update the entity's ACL.
 				
-				LOGGER.error("The received ACL " + acl + " is malformed.", ex);
+				final String entityId = message.getBody();
+				final String acl = message.getMessageAttributes().get(QueueConstants.ACL).getStringValue();
 				
+				try {
+									
+					processed = updateEntityAcl(entityId, new Acl(acl));
+					
+				} catch (EntityStoreException ex) {
+					
+					LOGGER.error("Unable to update entity " + entityId + " to have ACL " + acl + ".", ex);
+					
+				} catch (MalformedAclException ex) {
+					
+					LOGGER.error("Unable to update entity " + entityId + " to have ACL " + acl + ". The ACL is malformed.", ex);
+					
+				}
+				
+			}
+			
+			if(processed) {
+				
+				DeleteMessageRequest deleteMessageRequest = new DeleteMessageRequest();
+				deleteMessageRequest.setReceiptHandle(message.getReceiptHandle());
+				deleteMessageRequest.setQueueUrl(queueUrl);
+				
+				client.deleteMessage(deleteMessageRequest);
+				
+				// The deleteMessageResult is not checked because if the delete fails
+				// the message will remain on the queue. The next time that message is
+				// received it will see that the entity already exists and it will
+				// attempt to delete the message again.
+			
 			}
 			
 		}

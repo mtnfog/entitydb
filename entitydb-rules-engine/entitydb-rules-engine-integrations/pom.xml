@@ -16,7 +16,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For commercial licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+    For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -135,16 +135,6 @@
 			<version>${commons.lang.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>javax.mail-api</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>${mockito.version}</version>
@@ -171,13 +161,13 @@
 		<dependency>
 			<groupId>org.elasticmq</groupId>
 			<artifactId>elasticmq-rest-sqs_2.11</artifactId>
-			<version>0.9.2</version>
+			<version>${elasticmq.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.elasticmq</groupId>
 			<artifactId>elasticmq-core_2.11</artifactId>
-			<version>0.9.2</version>
+			<version>${elasticmq.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

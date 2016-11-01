@@ -191,7 +191,7 @@ public class EntityDbRestApiController {
 	 * @param entityId The ID of the entity.
 	 * @param acl The updated ACL for the entity.
 	 * @param authorization An optional Authorization header.
-	 * @throws NonexistantEntityException Thrown if the entity ID is invalid.
+	 * @throws NonexistantEntityException Thrown if the entity having the entity ID does not exist.
 	 * @throws MalformedAclException Thrown if the ACL is invalid.
 	 * @throws InternalServerErrorException Thrown if the entity's ACL cannot
 	 * be updated for other reasons. Check the server log for more information on the cause.
@@ -206,7 +206,7 @@ public class EntityDbRestApiController {
 					
 		try {
 			
-			entityAclService.updateEntityAcl(entityId, acl, authorization);
+			entityAclService.queueEntityAclUpdate(entityId, acl, authorization);
 			
 		} catch (NonexistantEntityException ex) {
 			

@@ -47,9 +47,10 @@ public class DefaultEntityAclService implements EntityAclService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateEntityAcl(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException {
+	public void queueEntityAclUpdate(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException {
 		
-		// The entity just needs to exist here. The request to change the ACL will be put onto the queue.
+		// The entity needs to exist (in the search index). 
+		// The request to change the ACL will be put onto the queue.
 		
 		IndexedEntity indexedEntity = searchIndex.getEntity(entityId);
 		

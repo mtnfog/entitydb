@@ -460,8 +460,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		session.beginTransaction();	
 		
 		RdbmsStoredEntity entity = getEntityById(entityId);
-		
-				
+						
 		if(entity != null) {
 		
 			// Set the original entity as not visible and update it.

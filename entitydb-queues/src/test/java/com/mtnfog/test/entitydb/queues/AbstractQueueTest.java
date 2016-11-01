@@ -34,6 +34,7 @@ import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
+import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
@@ -81,7 +82,7 @@ public abstract class AbstractQueueTest {
 	}
 	
 	@Test
-	public void test1() throws MalformedAclException, EntityPublisherException, EntityStoreException {
+	public void queueAndConsumeIngest() throws MalformedAclException, EntityPublisherException, EntityStoreException {
 		
 		// Stored random number of entities.
 		
@@ -98,7 +99,7 @@ public abstract class AbstractQueueTest {
 	}
 	
 	@Test
-	public void test2() throws MalformedAclException, EntityPublisherException, EntityStoreException {
+	public void queueAndConsumeDuplicateIngest() throws MalformedAclException, EntityPublisherException, EntityStoreException {
 		
 		// Duplicate entities so only 1 should be stored.
 		
@@ -115,6 +116,50 @@ public abstract class AbstractQueueTest {
 		consumer.consume();
 		
 		assertEquals(1, entityStore.getEntityCount());
+		
+	}
+	
+	@Test
+	public void queueAndConsumeAclUpdate() throws MalformedAclException, EntityPublisherException, EntityStoreException {
+		
+		// Stored random number of entities.
+		
+		Collection<Entity> entities = EntityUtils.createRandomPersonEntities();
+		final String acl = "::1";
+		final String apiKey = "asdf1234";
+		final String originalEntityId = EntityIdGenerator.generateEntityId(entities.iterator().next(), acl);
+		
+		publisher.queueIngest(entities, acl, apiKey);
+		
+		consumer.consume();
+		
+		assertEquals(entities.size(), entityStore.getEntityCount());
+		
+		RdbmsStoredEntity storedEntity = entityStore.getEntityById(originalEntityId);
+		
+		assertEquals(acl, storedEntity.getAcl());
+		
+		// Make an update to an entity's ACL.
+		
+		final String newAcl = "::0";
+		final String entityId = EntityIdGenerator.generateEntityId(entities.iterator().next(), newAcl);
+		
+		publisher.queueUpdateAcl(originalEntityId, newAcl, apiKey);
+		
+		consumer.consume();
+		
+		// Verify that the entity's ACL was updated.
+		
+		RdbmsStoredEntity updatedEntity = entityStore.getEntityById(entityId);
+		
+		assertNotNull(updatedEntity);
+		assertEquals(newAcl, updatedEntity.getAcl());
+		
+		// Verify the original entity is no longer visible.
+		storedEntity = entityStore.getEntityById(originalEntityId);
+		
+		assertNotNull(storedEntity);
+		assertEquals(0, storedEntity.getVisible());
 		
 	}
 	

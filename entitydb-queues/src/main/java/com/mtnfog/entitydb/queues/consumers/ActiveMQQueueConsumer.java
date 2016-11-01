@@ -30,17 +30,22 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
+import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
+import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
-import com.mtnfog.entitydb.queues.messages.InternalQueueIngestMessage;
+import com.mtnfog.entitydb.queues.QueueConstants;
+import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
+import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -134,11 +139,8 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	@Override
 	public void consume() {
 		
-		// TODO: Also consume from the ACL updates queue.
-		
 		try {
 		
-			// Create a MessageConsumer from the Session to the Topic or Queue
 	        MessageConsumer consumer = session.createConsumer(destination);
 			
 	        while(consume == true) {
@@ -148,15 +150,58 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		
 		        if (message instanceof TextMessage) {
 		        	
-		            TextMessage textMessage = (TextMessage) message;
-		            InternalQueueIngestMessage internalQueueIngestMessage = gson.fromJson(textMessage.getText(), InternalQueueIngestMessage.class);
+		        	boolean processed = false;
+		        	
+		            TextMessage textMessage = (TextMessage) message;		            		            
 		            
-		            // Ingest the entity.
-		            boolean result = ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+		            if(StringUtils.equalsIgnoreCase(message.getStringProperty(QueueConstants.ACTION), QueueConstants.ACTION_INGEST)) {
 		            
-		            if(result) {
+		            	QueueIngestMessage internalQueueIngestMessage = gson.fromJson(textMessage.getText(), QueueIngestMessage.class);
 		            
+		            	try {
+		            	
+		            		// Ingest the entity.
+		            		processed = ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+								
+						} catch (MalformedAclException ex) {
+							
+							LOGGER.error("Unable to ingest entity " + internalQueueIngestMessage.getEntity().toString() + ".", ex);
+							
+						}
+			            		            
+		            } else if(StringUtils.equalsIgnoreCase(message.getStringProperty(QueueConstants.ACTION), QueueConstants.ACTION_UPDATE_ACL)) {		            	
+		        		
+		        		// Update the entity's ACL.
+		            	
+		            	QueueUpdateAclMessage internalQueueUpdateAclMessage = gson.fromJson(textMessage.getText(), QueueUpdateAclMessage.class);
+		            	
+		            	try {
+		            	
+		            		processed = updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+		            		
+						} catch (EntityStoreException ex) {
+							
+							LOGGER.error("Unable to update entity " + internalQueueUpdateAclMessage.getEntityId() + " to have ACL " + internalQueueUpdateAclMessage.getAcl() + ".", ex);
+							
+						} catch (MalformedAclException ex) {
+							
+							LOGGER.error("Unable to update entity " + internalQueueUpdateAclMessage.getEntityId() + " to have ACL " + internalQueueUpdateAclMessage.getAcl() + ". The ACL is malformed.", ex);
+							
+						}
+		            	
+		            } else {
+		            	
+		            	LOGGER.warn("Message on ActiveMQ queue has invalid type: {}", message.getStringProperty("type"));
+		            	
+		            }
+		            
+		            if(processed) {
+			            
 		            	message.acknowledge();
+		            	
+		            } else {
+		            	
+		            	LOGGER.warn("Unable to process message from ActiveMQ queue.");
 		            	
 		            }
 		            
@@ -168,7 +213,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		        
 	        }
         
-		} catch (Exception ex) {
+		} catch (JMSException ex) {
 			
 			try {
 			

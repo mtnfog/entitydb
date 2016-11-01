@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
@@ -33,26 +33,4 @@
 		<module>entitydb-eql-language</module>		
 		<module>entitydb-eql-filters</module>
 	</modules>
-	<properties>
-		<!-- Artifact versions -->
-		<antlr.version>4.0</antlr.version>
-		<commons.collections.version>4.0</commons.collections.version>
-		<commons.lang.version>3.4</commons.lang.version>
-		<entity.model.version>1.0.6</entity.model.version>
-		<failsafe.version>2.18</failsafe.version>
-		<jacoco.version>0.7.2.201409121644</jacoco.version>
-		<junit.version>4.12</junit.version>
-		<log4j.version>2.3</log4j.version>
-		<surefire.version>2.18</surefire.version>
-		<!-- Sonar properties -->
-		<sonar.jdbc.url>jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
-		<sonar.jdbc.username>sonar</sonar.jdbc.username>
-		<sonar.jdbc.password>sonar</sonar.jdbc.password>
-		<sonar.host.url>https://cm01.mtnfog.com/sonar/</sonar.host.url>
-		<sonar.jacoco.reportPath>target/coverage-reports/jacoco-ut.exec</sonar.jacoco.reportPath>
-		<sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
-		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-		<sonar.test.exclusions>**/test/*</sonar.test.exclusions>
-		<sonar.exclusions>**/test/**</sonar.exclusions>
-	</properties>	
 </project>
