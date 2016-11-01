@@ -38,6 +38,10 @@ mvn clean install
 
 Once successfully built, an `entitydb.jar` will be under `entitydb-app/target`. This is a runnable jar that can be started with `java -jar entitydb.jar`. By default, all components will use internal implementations but this can be changed in the `entitydb.properties`. See the [Documentation](https://github.com/mtnfog/entitydb/blob/master/documentation.md) for details on configuring the `entitydb.properties`.
 
+## Deploying
+
+Refer to the wiki for detailed deployment instructions. Scripts are included under the `scripts/packaging/` directory to create an AMI (Packer script) and a Docker container.
+
 ### Ingesting Entities
 
 #### Via the REST API
