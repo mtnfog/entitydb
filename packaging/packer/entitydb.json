@@ -1,0 +1,91 @@
+{
+	"variables": 
+	{
+		"ami_name": "",
+		"jar": "",
+		"license": "",
+		"readme": "",
+		"conf": "",
+		"props": "",
+		"mapping": ""
+	},
+	"builders": 
+	[
+		{
+			"type": "amazon-ebs",
+			"ami_name": "{{user `ami_name`}}",
+			"ami_description": "{{user `ami_name`}}",
+			"instance_type": "t2.nano",
+			"region": "us-east-1",
+			"run_tags": 
+			{
+				"Name": "Creating AMI {{user `ami_name`}}"
+			},
+			"source_ami": "ami-40d28157",
+			"ssh_username": "ubuntu",
+			"tags": 
+			{
+				"Name": "{{user `ami_name`}}"
+			},
+			"temporary_key_pair_name": "packer-temp-keypair",
+			"user_data_file": "{{template_dir}}/user-data",
+			"subnet_id": "subnet-a8c4e883",
+			"security_group_id": "sg-b24e96d6",
+			"vpc_id": "vpc-3da1cb58"
+		}
+	],
+	"provisioners": 
+	[
+		{
+			"type": "file",
+			"destination": "/opt/entitydb/{{user `jar`}}",
+			"source": "{{user `jar`}}"
+		},
+		{
+			"type": "file",
+			"destination": "/opt/entitydb/LICENSE",
+			"source": "{{user `license`}}"
+		},
+		{
+			"type": "file",
+			"destination": "/opt/entitydb/README.md",
+			"source": "{{user `readme`}}"
+		},
+		{
+			"type": "file",
+			"destination": "/opt/entitydb/entitydb.conf",
+			"source": "{{user `conf`}}"
+		},
+		{
+			"type": "file",
+			"destination": "/opt/entitydb/entitydb.properties",
+			"source": "{{user `props`}}"
+		},
+		{
+			"type": "file",
+			"destination": "/opt/entitydb/mapping.json",
+			"source": "{{user `mapping`}}"
+		},
+		{
+			"type": "shell",
+			"inline": 
+			[
+				"sleep 30",
+				"ln -s /opt/entitydb/{{user `jar`}} /etc/init.d/entitydb",
+				"sudo apt-get update",
+				"sudo apt-get -y upgrade",
+				"sudo apt-get -y dist-upgrade",
+				"sudo apt-get -y install openjdk-8-jre --force-yes",
+				"sudo apt-get autoremove",
+				"sudo sed -i 's/PermitRootLogin without-password/PermitRootLogin forced-commands-only/g' /etc/ssh/sshd_config",
+				"sudo passwd -l root",
+				"sudo shred -n 50 -fuzv /etc/ssh/*_key /etc/ssh/*_key.pub",
+				"sudo find /root/.ssh -type f -exec shred -n 30 -z -u {} \\;",
+				"sudo find /home/ubuntu/.ssh -type f -exec shred -n 30 -z -u {} \\;",
+				"sudo shred -n 50 -fuzv /var/log/wtmp",
+				"sudo shred -n 50 -fuzv /var/log/btmp",
+				"sudo shred -n 50 -fuzv /var/log/lastlog"
+			]
+		}
+	]
+}
