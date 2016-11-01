@@ -27,18 +27,25 @@
 			{
 				"Name": "{{user `ami_name`}}"
 			},
-			"temporary_key_pair_name": "packer-temp-keypair",
-			"user_data_file": "{{template_dir}}/user-data",
+			"security_group_id": "sg-61af691c",
 			"subnet_id": "subnet-a8c4e883",
-			"security_group_id": "sg-b24e96d6",
 			"vpc_id": "vpc-3da1cb58"
 		}
 	],
 	"provisioners": 
 	[
 		{
+			"type": "shell",
+			"inline": 
+			[
+				"sleep 30",
+				"sudo mkdir /opt/entitydb",
+				"sudo chown ubuntu:ubuntu /opt/entitydb"
+			]
+		},
+		{
 			"type": "file",
-			"destination": "/opt/entitydb/{{user `jar`}}",
+			"destination": "/opt/entitydb/entitydb.jar",
 			"source": "{{user `jar`}}"
 		},
 		{
@@ -70,8 +77,9 @@
 			"type": "shell",
 			"inline": 
 			[
-				"sleep 30",
-				"ln -s /opt/entitydb/{{user `jar`}} /etc/init.d/entitydb",
+				"chmod +x /opt/entitydb/entitydb.jar",
+				"ln -s /opt/entitydb/entitydb.jar /etc/init.d/entitydb",
+				"update-rc.d entitydb defaults 99",
 				"sudo apt-get update",
 				"sudo apt-get -y upgrade",
 				"sudo apt-get -y dist-upgrade",
