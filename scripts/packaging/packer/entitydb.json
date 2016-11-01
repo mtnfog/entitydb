@@ -78,8 +78,8 @@
 			"inline": 
 			[
 				"chmod +x /opt/entitydb/entitydb.jar",
-				"ln -s /opt/entitydb/entitydb.jar /etc/init.d/entitydb",
-				"update-rc.d entitydb defaults 99",
+				"sudo ln -s /opt/entitydb/entitydb.jar /etc/init.d/entitydb",
+				"sudo update-rc.d entitydb defaults 99",
 				"sudo apt-get update",
 				"sudo apt-get -y upgrade",
 				"sudo apt-get -y dist-upgrade",
