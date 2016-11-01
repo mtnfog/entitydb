@@ -128,7 +128,7 @@
 				<skipTests>true</skipTests>
 				<skipITs>true</skipITs>
 				<!-- Set the paths. -->
-				<rules.directory>/usr/share/entitydb/rules/</rules.directory>
+				<rules.directory>/opt/entitydb/rules/</rules.directory>
 				<log.file>/var/log/entitydb.log</log.file>
 			</properties>
 		</profile>
