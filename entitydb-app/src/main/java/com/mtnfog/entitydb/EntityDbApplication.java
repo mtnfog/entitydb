@@ -46,8 +46,10 @@ import com.mtnfog.entitydb.audit.FluentdAuditLogger;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
+import com.mtnfog.entitydb.metrics.InfluxDbMetricReporter;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.search.Indexer;
@@ -379,6 +381,18 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		}
 		
 		return queueConsumer;			
+		
+	}
+	
+	@Bean
+	public MetricReporter getMetricReporter() {
+		
+		final String endpoint = "http://localhost:8086";
+		final String username = "root";
+		final String password = "root";
+		final String database = "entitydb";		
+		
+		return new InfluxDbMetricReporter(endpoint, username, password, database);
 		
 	}
 			

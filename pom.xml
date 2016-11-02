@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
@@ -18,9 +18,7 @@
 
     For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
 
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mtnfog.entitydb</groupId>
 	<artifactId>entitydb</artifactId>
@@ -76,6 +74,7 @@
 		<hibernate.version>5.1.0.Final</hibernate.version>
 		<hsqldb.version>2.3.4</hsqldb.version>
 		<httpclient.version>4.5</httpclient.version>
+		<influxdb.version>2.4</influxdb.version>
 		<jacoco.version>0.7.2.201409121644</jacoco.version>
 		<jackson.mapper.version>1.9.11</jackson.mapper.version>
 		<jackson.version>2.8.4</jackson.version>
@@ -148,7 +147,8 @@
 		<module>entitydb-configuration</module>
 		<module>entitydb-services</module>
 		<module>entitydb-caching</module>
-	</modules>
+    <module>entitydb-metrics</module>
+  </modules>
 	<build>
 		<pluginManagement>
 			<plugins>
