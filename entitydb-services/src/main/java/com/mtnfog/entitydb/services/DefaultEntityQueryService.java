@@ -47,6 +47,7 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
 import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
 import com.mtnfog.entitydb.model.exceptions.api.InternalServerErrorException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.notifications.NotificationType;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
@@ -87,6 +88,9 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private MetricReporter metricReporter;
 	
 	/**
 	 * {@inheritDoc}
@@ -154,29 +158,33 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	@Override
 	public void executeContinuousQueries(Entity entity, String entityId) {
 		
-		List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
+		if(continuousQueryRepository != null) {
 		
-		for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
-									
-			boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
+			List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
 			
-			if(match) {
+			for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
+										
+				boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
 				
-				// If this is a match notify the owner of the continuous query.
+				if(match) {
+					
+					// If this is a match notify the owner of the continuous query.
+					
+					String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
+					
+					NotificationEntity notificationEntity = new NotificationEntity();
+					notificationEntity.setUser(continuousQueryEntity.getUser());
+					notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
+					notificationEntity.setNotification(notification);
+					
+					notificationRepository.save(notificationEntity);
+					
+					// TODO: Send a message to the continuous query's SNS topic.
 				
-				String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
-				
-				NotificationEntity notificationEntity = new NotificationEntity();
-				notificationEntity.setUser(continuousQueryEntity.getUser());
-				notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
-				notificationEntity.setNotification(notification);
-				
-				notificationRepository.save(notificationEntity);
-				
-				// TODO: Send a message to the continuous query's SNS topic.
-			
+				}
+							
 			}
-						
+		
 		}
 		
 	}

@@ -90,6 +90,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.mtnfog.entitydb</groupId>
+			<artifactId>entitydb-metrics</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.mtnfog</groupId>
 			<artifactId>entity-model</artifactId>
 			<version>${entity.model.version}</version>

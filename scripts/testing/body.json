@@ -1,1 +1,1 @@
-[{"text":"George Washington","confidence":0.7883777879039289,"span":"[3, 5)","type":"person","enrichments":{},"languageCode":"en"}]
+[{"text":"George Washington","confidence":90.0,"span":{"tokenStart":0,"tokenEnd":1,"characterStart":0,"characterEnd":1},"type":"person","enrichments":{},"context":"context","extractionDate":0}]

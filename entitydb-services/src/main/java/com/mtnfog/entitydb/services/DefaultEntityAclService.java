@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
@@ -42,6 +43,9 @@ public class DefaultEntityAclService implements EntityAclService {
 	
 	@Autowired
 	private QueuePublisher queuePublisher;
+	
+	@Autowired
+	private MetricReporter metricReporter;
 	
 	/**
 	 * {@inheritDoc}

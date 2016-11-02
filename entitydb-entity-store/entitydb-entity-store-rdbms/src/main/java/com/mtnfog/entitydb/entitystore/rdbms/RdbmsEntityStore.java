@@ -74,9 +74,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 
 	private SessionFactory sessionFactory;
 	private String jdbcUrl;
-	
-	//private Session session;
-	
+		
 	/**
 	 * Creates a connection to a SQL Server entity store.
 	 * The JDBC driver jar must be on the classpath.

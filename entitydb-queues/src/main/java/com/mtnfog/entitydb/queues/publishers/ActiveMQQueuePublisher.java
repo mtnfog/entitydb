@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.QueueConstants;
@@ -60,14 +61,17 @@ public class ActiveMQQueuePublisher implements QueuePublisher {
 	private Connection connection;
 	private Session session;
 		
+	private MetricReporter metricReporter;
+	
 	/**
 	 * Creates a new ActiveMQ publisher.
 	 * @param brokerURL The broker URL.
 	 * @param queueName The name of the queue.
 	 * @throws JMSException Thrown if the queue publisher cannot be created.
 	 */
-	public ActiveMQQueuePublisher(String brokerURL, String queueName) throws JMSException {
+	public ActiveMQQueuePublisher(String brokerURL, String queueName, MetricReporter metricReporter) throws JMSException {
 		
+		this.metricReporter = metricReporter;
 		gson = new Gson();
 		
 		// Create a ConnectionFactory

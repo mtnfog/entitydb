@@ -41,7 +41,7 @@ public class InfluxDbMetricReporter implements MetricReporter {
 		this.database = database;
 		
 		influxDB = InfluxDBFactory.connect(endpoint, username, password);
-		//influxDB.createDatabase(database);		
+		influxDB.createDatabase(database);		
 
 		// Flush every 2000 Points, at least every 100ms
 		//influxDB.enableBatch(10, 100, TimeUnit.MILLISECONDS);
@@ -64,6 +64,32 @@ public class InfluxDbMetricReporter implements MetricReporter {
 		Point point = builder.build();
 		
 		influxDB.write(database, RETENTION, point);
+		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void report(String measurement, String field, long value) {
+		
+		Builder builder = Point.measurement(measurement)
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+			.addField(field, value);			
+		
+		Point point = builder.build();
+		
+		influxDB.write(database, RETENTION, point);
+		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void reportElapsedTime(String measurement, String field, long startTime) {
+		
+		report(measurement, field, System.currentTimeMillis() - startTime);
 		
 	}
 	

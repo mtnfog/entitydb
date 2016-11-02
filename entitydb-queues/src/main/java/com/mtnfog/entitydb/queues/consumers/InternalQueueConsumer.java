@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
@@ -46,6 +47,8 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 
 	private static final Logger LOGGER = LogManager.getLogger(InternalQueueConsumer.class);
 	
+	private MetricReporter metricReporter;
+	
 	private int sleepSeconds;
 	private boolean consume = true;
 	
@@ -56,10 +59,11 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @param searchIndex A {@link SearchIndex search index}.
 	 */
 	public InternalQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines, 
-			AuditLogger auditLogger, EntityQueryService entityQueryService, int sleepSeconds) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter, int sleepSeconds) {
 		
-		super(entityStore, rulesEngines, auditLogger, entityQueryService);
+		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter);
 		
+		this.metricReporter = metricReporter;
 		this.sleepSeconds = sleepSeconds;
 		
 	}
@@ -90,13 +94,25 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 				
 						QueueIngestMessage internalQueueIngestMessage = (QueueIngestMessage) message;
 						
-						ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+						boolean successful = ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+						
+						if(successful) {
+							
+							metricReporter.reportElapsedTime("queue", "EntityIngestQueueMessageTimeToProcess", internalQueueIngestMessage.getTimestamp());
+							
+						}
 					
 					} else if(message instanceof QueueUpdateAclMessage) {
 						
 						QueueUpdateAclMessage internalQueueUpdateAclMessage = (QueueUpdateAclMessage) message;
 						
-						updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+						boolean successful = updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+						
+						if(successful) {
+							
+							metricReporter.reportElapsedTime("queue", "EntityAclQueueMessageTimeToProcess", internalQueueUpdateAclMessage.getTimestamp());
+							
+						}
 						
 					}
 					

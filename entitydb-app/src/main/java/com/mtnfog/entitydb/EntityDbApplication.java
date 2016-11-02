@@ -46,6 +46,7 @@ import com.mtnfog.entitydb.audit.FluentdAuditLogger;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
+import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.metrics.InfluxDbMetricReporter;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
@@ -291,11 +292,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			if(StringUtils.isNotEmpty(properties.getSqsAccessKey())) {
 			
-				queuePublisher = new SqsQueuePublisher(properties.getSqsQueueUrl(), properties.getSqsEndpoint(), properties.getSqsAccessKey(), properties.getSqsSecretKey());
+				queuePublisher = new SqsQueuePublisher(properties.getSqsQueueUrl(), properties.getSqsEndpoint(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), getMetricReporter());
 				
 			} else {
 				
-				queuePublisher = new SqsQueuePublisher(properties.getSqsQueueUrl(), properties.getSqsEndpoint());
+				queuePublisher = new SqsQueuePublisher(properties.getSqsQueueUrl(), properties.getSqsEndpoint(), getMetricReporter());
 				
 			}
 			
@@ -305,7 +306,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 						
 			try {
 			
-				queuePublisher = new ActiveMQQueuePublisher(properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName());
+				queuePublisher = new ActiveMQQueuePublisher(properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), getMetricReporter());
 				
 			} catch (Exception ex) {
 				
@@ -317,13 +318,13 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Using internal queue.");
 			
-			queuePublisher = new InternalQueuePublisher();
+			queuePublisher = new InternalQueuePublisher(getMetricReporter());
 			
 		} else {
 			
 			LOGGER.warn("Invalid queue {}. Using internal queue.", queue);
 			
-			queuePublisher = new InternalQueuePublisher();
+			queuePublisher = new InternalQueuePublisher(getMetricReporter());
 			
 		}
 		
@@ -344,11 +345,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			if(StringUtils.isNotEmpty(properties.getSqsAccessKey())) {
 			
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
 				
 			} else {
 				
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
 				
 			}
 			
@@ -358,7 +359,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 						
 			try {
 			
-				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout());
+				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout());
 				
 			} catch (Exception ex) {
 				
@@ -370,13 +371,13 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Using internal queue.");
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep());
 			
 		} else {
 			
 			LOGGER.warn("Invalid queue {}. Using the internal queue.", queue);
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep());
 			
 		}
 		
@@ -387,12 +388,16 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	@Bean
 	public MetricReporter getMetricReporter() {
 		
-		final String endpoint = "http://localhost:8086";
+		// TODO: Put these in the properties file.
+		
+		/*final String endpoint = "http://10.0.0.20:8086";
 		final String username = "root";
 		final String password = "root";
 		final String database = "entitydb";		
 		
-		return new InfluxDbMetricReporter(endpoint, username, password, database);
+		return new InfluxDbMetricReporter(endpoint, database, username, password);*/
+		
+		return new DefaultMetricReporter();
 		
 	}
 			

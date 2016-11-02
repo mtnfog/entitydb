@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.InternalQueue;
@@ -42,6 +43,14 @@ public class InternalQueuePublisher implements QueuePublisher {
 
 	private static final Logger LOGGER = LogManager.getLogger(InternalQueuePublisher.class);
 	
+	private MetricReporter metricReporter;
+	
+	public InternalQueuePublisher(MetricReporter metricReporter) {
+		
+		this.metricReporter = metricReporter;
+		
+	}
+	
 	@Override
 	public void queueUpdateAcl(String entityId, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 		
@@ -49,11 +58,15 @@ public class InternalQueuePublisher implements QueuePublisher {
 			throw new MalformedAclException("The ACL [" + acl + "] is malformed.");
 		}
 		
+		long startTime = System.currentTimeMillis();
+		
 		try {
 				
 			QueueUpdateAclMessage message = new QueueUpdateAclMessage(entityId, acl, apiKey);
 			
 			InternalQueue.getQueue().add(message);
+			
+			metricReporter.reportElapsedTime("QueueAcl", "time", startTime);
 		
 		} catch (Exception ex) {
 			
@@ -72,6 +85,8 @@ public class InternalQueuePublisher implements QueuePublisher {
 			throw new MalformedAclException("The ACL [" + acl + "] is malformed.");
 		}
 		
+		long startTime = System.currentTimeMillis();
+		
 		try {
 		
 			for(Entity entity : entities) {
@@ -82,8 +97,10 @@ public class InternalQueuePublisher implements QueuePublisher {
 			
 			}
 						
-			LOGGER.info("Queued {} entities.", entities.size());
-			LOGGER.info("Queue size: {}", InternalQueue.getQueue().size());
+			LOGGER.debug("Queued {} entities.", entities.size());
+			LOGGER.debug("Queue size: {}", InternalQueue.getQueue().size());
+			
+			metricReporter.reportElapsedTime("QueueIngest", "time", startTime);
 		
 		} catch (Exception ex) {
 			

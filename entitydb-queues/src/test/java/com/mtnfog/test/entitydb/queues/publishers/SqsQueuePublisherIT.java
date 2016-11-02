@@ -24,12 +24,15 @@ import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.publishers.SqsQueuePublisher;
 import com.mtnfog.test.entity.utils.EntityUtils;
@@ -39,6 +42,15 @@ public class SqsQueuePublisherIT {
 	private static final Logger LOGGER = LogManager.getLogger(SqsQueuePublisherIT.class);
 	
 	private final String ENDPOINT = "sqs.us-east-1.amazonaws.com";
+	
+	private MetricReporter metricReporter;
+	
+	@Before
+	public void before() {
+		
+		metricReporter = new DefaultMetricReporter();
+		
+	}
 	
 	@Test
 	public void json() {
@@ -68,7 +80,7 @@ public class SqsQueuePublisherIT {
 		Acl acl = new Acl(users, groups, false);
 		String apiKey = "apikey";
 		
-		SqsQueuePublisher sqsQueue = new SqsQueuePublisher("https://sqs.us-east-1.amazonaws.com/341239660749/entitydb-entities", ENDPOINT);
+		SqsQueuePublisher sqsQueue = new SqsQueuePublisher("https://sqs.us-east-1.amazonaws.com/341239660749/entitydb-entities", ENDPOINT, metricReporter);
 		sqsQueue.queueIngest(entities, acl.toString(), apiKey);
 		
 	}
@@ -83,7 +95,7 @@ public class SqsQueuePublisherIT {
 		String acl = "1234:0";
 		String apiKey = "apikey";
 		
-		SqsQueuePublisher sqsQueue = new SqsQueuePublisher("https://sqs.us-east-1.amazonaws.com/341239660749/entitydb-entities", ENDPOINT);
+		SqsQueuePublisher sqsQueue = new SqsQueuePublisher("https://sqs.us-east-1.amazonaws.com/341239660749/entitydb-entities", ENDPOINT, metricReporter);
 		sqsQueue.queueIngest(entities, acl, apiKey);
 		
 	}

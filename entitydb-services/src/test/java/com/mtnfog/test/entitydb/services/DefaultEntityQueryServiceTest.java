@@ -43,10 +43,12 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
+import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
@@ -110,6 +112,13 @@ public class DefaultEntityQueryServiceTest {
 	static class ContextConfiguration {
 		
 		@Bean
+		public MetricReporter getMetricReporter() {
+			
+			return new DefaultMetricReporter();
+			
+		}
+		
+		@Bean
 		public EntityQueryService getEntityQueryService() {
 			
 			// TODO: Fix these tests.
@@ -134,7 +143,7 @@ public class DefaultEntityQueryServiceTest {
 		@Bean
 		public QueuePublisher getQueuePublisher() {
 
-			return new InternalQueuePublisher();
+			return new InternalQueuePublisher(getMetricReporter());
 
 		}
 
@@ -148,7 +157,7 @@ public class DefaultEntityQueryServiceTest {
 		@Bean
 		public QueueConsumer getQueueConsumer() throws IOException, URISyntaxException {
 
-			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getEntityQueryService(), 5);
+			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getEntityQueryService(), getMetricReporter(), 5);
 
 		}
 

@@ -47,8 +47,8 @@ public class SqsQueueTest extends AbstractQueueTest {
 		final String queueUrl = "http://localhost:9324/queue";
 		final int visibilityTimeout = 10;
 		
-		consumer = new SqsQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, endpoint, queueUrl, sleepSeconds, visibilityTimeout);
-		publisher = new SqsQueuePublisher(queueUrl, endpoint);				
+		consumer = new SqsQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, endpoint, queueUrl, sleepSeconds, visibilityTimeout);
+		publisher = new SqsQueuePublisher(queueUrl, endpoint, metricReporter);				
 		
 	}
 	

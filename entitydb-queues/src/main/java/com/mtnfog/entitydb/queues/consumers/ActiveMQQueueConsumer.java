@@ -39,6 +39,7 @@ import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
@@ -66,6 +67,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	private Destination destination;	
 	private int timeout;
 	
+	private MetricReporter metricReporter;
 	private boolean consume = true;
 	
 	/**
@@ -81,10 +83,10 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @throws JMSException Thrown if the ActiveMQ consumer cannot be created.
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, EntityQueryService entityQueryService, String brokerURL,
-			String queueName, int timeout) throws JMSException {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter,
+			String brokerURL, String queueName, int timeout) throws JMSException {
 		
-		super(entityStore, rulesEngines, auditLogger, entityQueryService);
+		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter);
 
 		gson = new Gson();
 		
@@ -101,6 +103,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
         // Create the destination (Topic or Queue)
         destination = session.createQueue(queueName);
         
+        this.metricReporter = metricReporter;
         this.timeout = timeout;
         
 	}
@@ -117,9 +120,9 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
 			AuditLogger auditLogger, EntityQueryService entityQueryService,
-			String brokerURL, String queueName) throws JMSException {
+			MetricReporter metricReporter, String brokerURL, String queueName) throws JMSException {
 	
-		this(entityStore, rulesEngines, auditLogger, entityQueryService, brokerURL, queueName, DEFAULT_TIMEOUT);
+		this(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, brokerURL, queueName, DEFAULT_TIMEOUT);
 		
 	}
 	
@@ -150,7 +153,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		
 		        if (message instanceof TextMessage) {
 		        	
-		        	boolean processed = false;
+		        	boolean successful = false;
 		        	
 		            TextMessage textMessage = (TextMessage) message;		            		            
 		            
@@ -161,8 +164,14 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		            	try {
 		            	
 		            		// Ingest the entity.
-		            		processed = ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+		            		successful = ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
 								
+		            		if(successful) {
+								
+								metricReporter.reportElapsedTime("queue", "EntityIngestQueueMessageTimeToProcess", internalQueueIngestMessage.getTimestamp());
+								
+							}
+		            		
 						} catch (MalformedAclException ex) {
 							
 							LOGGER.error("Unable to ingest entity " + internalQueueIngestMessage.getEntity().toString() + ".", ex);
@@ -170,14 +179,19 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 						}
 			            		            
 		            } else if(StringUtils.equalsIgnoreCase(message.getStringProperty(QueueConstants.ACTION), QueueConstants.ACTION_UPDATE_ACL)) {		            	
-		        		
-		        		// Update the entity's ACL.
-		            	
+		        				        		            
 		            	QueueUpdateAclMessage internalQueueUpdateAclMessage = gson.fromJson(textMessage.getText(), QueueUpdateAclMessage.class);
 		            	
 		            	try {
 		            	
-		            		processed = updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+		            		// Update the entity's ACL.
+		            		successful = updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+		            		
+		            		if(successful) {
+								
+								metricReporter.reportElapsedTime("queue", "EntityAclQueueMessageTimeToProcess", internalQueueUpdateAclMessage.getTimestamp());
+								
+							}
 		            		
 						} catch (EntityStoreException ex) {
 							
@@ -195,7 +209,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		            	
 		            }
 		            
-		            if(processed) {
+		            if(successful) {
 			            
 		            	message.acknowledge();
 		            	

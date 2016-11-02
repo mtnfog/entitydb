@@ -33,12 +33,14 @@ import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
+import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
@@ -54,6 +56,8 @@ public abstract class AbstractQueueTest {
 	protected List<RulesEngine> rulesEngines;
 	protected AuditLogger auditLogger;
 	protected EntityQueryService entityQueryService;
+	
+	protected MetricReporter metricReporter;
 		
 	private final String jdbcDriver = "org.hsqldb.jdbcDriver";
 	private final String jdbcDialect = "org.hibernate.dialect.HSQLDialect";
@@ -69,6 +73,8 @@ public abstract class AbstractQueueTest {
 		entityStore = new RdbmsEntityStore(getJdbcUrl(), jdbcDriver, jdbcUsername, jdbcPassword, jdbcDialect, schemaExport);
 		rulesEngines = new LinkedList<RulesEngine>();
 		auditLogger = new FileAuditLogger();
+		
+		metricReporter = new DefaultMetricReporter();
 		
 	}
 	

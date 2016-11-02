@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.QueueConstants;
@@ -49,21 +50,24 @@ public class SqsQueuePublisher implements QueuePublisher {
 	
 	private AmazonSQSClient client;
 	private Gson gson;
+	private MetricReporter metricReporter;
 
 	private String queueUrl;
 	
-	public SqsQueuePublisher(String queueUrl, String endpoint) {
+	public SqsQueuePublisher(String queueUrl, String endpoint, MetricReporter metricReporter) {
 
 		this.queueUrl = queueUrl;
+		this.metricReporter = metricReporter;
 		
 		client = new AmazonSQSClient();
 		gson = new Gson();
 
 	}
 	
-	public SqsQueuePublisher(String queueUrl, String endpoint, String accessKey, String secretKey) {
+	public SqsQueuePublisher(String queueUrl, String endpoint, String accessKey, String secretKey, MetricReporter metricReporter) {
 
 		this.queueUrl = queueUrl;
+		this.metricReporter = metricReporter;
 		
 		client = new AmazonSQSClient(new BasicAWSCredentials(accessKey, secretKey));
 		client.setEndpoint(endpoint);

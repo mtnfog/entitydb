@@ -33,6 +33,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
@@ -57,6 +58,9 @@ public class Scheduler {
 	@Autowired
 	private SearchIndex searchIndex;
 		
+	@Autowired
+	private MetricReporter metricReporter;
+	
 	@Bean(destroyMethod = "shutdown")
     public Executor taskScheduler() {
 		
@@ -71,17 +75,21 @@ public class Scheduler {
 		
 	}
 	
-	@Scheduled(fixedRate = 30000)
+	@Scheduled(fixedRate = 60000)
 	public void status() throws EntityStoreException {
 		
-		LOGGER.info("Stored entities: {}, Indexed entities: {}", entityStore.getEntityCount(), searchIndex.getCount());
+		long stored = entityStore.getEntityCount();
+		long indexed = searchIndex.getCount();
+		
+		LOGGER.info("Stored entities: {}, Indexed entities: {}", stored, indexed);
+		
+		metricReporter.report("Entities", "stored", stored);
+		metricReporter.report("Entities", "indexed", indexed);
 		
 	}
 	
 	@Scheduled(fixedRate = 5000)
 	public void index() throws EntityStoreException {
-		
-		LOGGER.info("Stored entities: {}, Indexed entities: {}", entityStore.getEntityCount(), searchIndex.getCount());
 		
 		if(properties.isIndexerEnabled()) {
 			

@@ -33,6 +33,7 @@ import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.security.Acl;
@@ -55,14 +56,16 @@ public abstract class AbstractQueueConsumer {
 	private List<RulesEngine> rulesEngines;
 	private AuditLogger auditLogger;	
 	private EntityQueryService entityQueryService;
+	private MetricReporter metricReporter;
 	
 	public AbstractQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, EntityQueryService entityQueryService) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter) {
 		
 		this.entityStore = entityStore;
 		this.rulesEngines = rulesEngines;
 		this.auditLogger = auditLogger;
 		this.entityQueryService = entityQueryService;
+		this.metricReporter = metricReporter;
 		
 	}
 	
@@ -81,7 +84,7 @@ public abstract class AbstractQueueConsumer {
 		
 		try {
 		
-			entityStore.updateAcl(entityId, acl.toString());
+			entityStore.updateAcl(entityId, acl.toString());						
 			
 		} catch (NonexistantEntityException ex) {
 			
@@ -106,7 +109,9 @@ public abstract class AbstractQueueConsumer {
 	 */
 	protected boolean ingestEntity(Entity entity, Acl acl, String apiKey) throws MalformedAclException {
 			
-		boolean ingested = true;				
+		long startTime = System.currentTimeMillis();
+		
+		boolean ingested = true;
 		
 		// The ACL was validated when it was received through the API.
 		// There is no need to validate it again here.		
@@ -137,7 +142,9 @@ public abstract class AbstractQueueConsumer {
 				LOGGER.error("Unable to store entity: " + entity.toString(),  ex);
 				
 				// This will leave the entity on the queue.
-				ingested = false;								
+				ingested = false;
+				
+				metricReporter.report("Ingest", "ingestException", 1L);
 				
 			}
 			
@@ -150,6 +157,8 @@ public abstract class AbstractQueueConsumer {
 				// Execute the continuous queries against the entity.
 				entityQueryService.executeContinuousQueries(entity, entityId);
 				
+				metricReporter.reportElapsedTime("Ingest", "time",startTime);
+				
 			}
 			
 		} else {
@@ -159,6 +168,8 @@ public abstract class AbstractQueueConsumer {
 			
 			// We will want to return true here because the entity was successfully processed
 			// but there's no need to store the entity again.
+			
+			metricReporter.report("Ingest", "duplicateEntity", 1L);
 			
 		}				
 		
@@ -174,6 +185,8 @@ public abstract class AbstractQueueConsumer {
 	private String executeRulesEngine(Entity entity) {
 		
 		LOGGER.trace("Evaluating the entity against the rules.");
+		
+		long startTime = System.currentTimeMillis();
 				
 		String acl = StringUtils.EMPTY;
 		
@@ -187,6 +200,8 @@ public abstract class AbstractQueueConsumer {
 			}
 		
 		}	
+		
+		metricReporter.reportElapsedTime("RulesEngine", "time", startTime);
 		
 		return acl;
 		
