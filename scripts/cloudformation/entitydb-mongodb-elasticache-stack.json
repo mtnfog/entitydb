@@ -19,6 +19,31 @@
 			"AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
 			"ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
 		},
+		"TICKInstanceType": {
+			"Description": "The instance type for the TICK instance.",
+			"Type": "String",
+			"Default": "t2.medium"
+		},
+		"EntityDBInstanceType": {
+			"Description": "The instance type for the EntityDB instance(s).",
+			"Type": "String",
+			"Default": "t2.medium"
+		},
+		"MongoDBInstanceType": {
+			"Description": "The instance type for the MongoDB instance.",
+			"Type": "String",
+			"Default": "t2.medium"
+		},
+		"ElasticsearchInstanceType": {
+			"Description": "The instance type for the Elasticsearch instance.",
+			"Type": "String",
+			"Default": "t2.micro.elasticsearch"
+		},
+		"ElasticsearchDomainName": {
+			"Description": "The name of the Elasticsearch domain.",
+			"Type": "String",
+			"Default": "entitydb"
+		},
 		"AMI":
 		{
 			"Description": "The AMI (must be Ubuntu).",
@@ -213,7 +238,7 @@
 			"Type": "AWS::Elasticsearch::Domain",
 			"Properties":
 			{
-				"DomainName": "entitydb",
+				"DomainName": {"Ref": "ElasticsearchDomainName"},
 				"EBSOptions":
 				{
 					"EBSEnabled": "true",
@@ -226,7 +251,7 @@
 					"DedicatedMasterEnabled": "false",
 					"InstanceCount": "1",
 					"ZoneAwarenessEnabled": "false",
-					"InstanceType": "t2.micro.elasticsearch"
+					"InstanceType": {"Ref": "ElasticsearchInstanceType"}
 				}
 			}
 		},
@@ -244,7 +269,7 @@
 				{
 					"Ref": "AMI"
 				},
-				"InstanceType": "t2.nano",
+				"InstanceType": {"Ref": "TICKInstanceType"},
 				"SecurityGroupIds":
 				[
 					{
@@ -279,11 +304,13 @@
 							"",
 							[
 								"#!/bin/bash -xe\n",
+								"curl -sL https://repos.influxdata.com/influxdb.key | apt-key add -\n",
+								"source /etc/lsb-release\n",
+								"echo \"deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable\" | tee -a /etc/apt/sources.lis\n",
 								"apt-get update\n",
 								"apt-get upgrade -y\n",
-								"wget https://dl.influxdata.com/influxdb/releases/influxdb_1.0.2_amd64.deb\n",
-								"wget https://dl.influxdata.com/chronograf/releases/chronograf_1.0.0_amd64.deb\n",
-								"dpkg -i ./*.deb\n",
+								"apt-get install influxdb\n",
+								"apt-get install chronograf\n",
 								"service influxdb start\n",
 								"service chronograf start\n"
 							]
@@ -334,7 +361,7 @@
 					{
 						"IpProtocol": "tcp",
 						"FromPort": "8086",
-						"ToPort": "27019",
+						"ToPort": "8086",
 						"SourceSecurityGroupId":
 						{
 							"Ref": "EntityDBSecurityGroup"
@@ -357,7 +384,7 @@
 				{
 					"Ref": "AMI"
 				},
-				"InstanceType": "t2.nano",
+				"InstanceType": {"Ref": "MongoDBInstanceType"},
 				"SecurityGroupIds":
 				[
 					{
@@ -496,21 +523,7 @@
 				{
 					"Ref": "KeyName"
 				},
-				"InstanceType": "t2.nano",
-				"Tags":
-				[
-					{
-						"Key": "Application",
-						"Value":
-						{
-							"Ref": "AWS::StackId"
-						}
-					},
-					{
-						"Key": "Name",
-						"Value": "EntityDB"
-					}
-				],
+				"InstanceType": {"Ref": "EntityDBInstanceType"},
 				"UserData":
 				{
 					"Fn::Base64":
@@ -519,7 +532,10 @@
 						[
 							"",
 							[
-								"#!/bin/bash -xe\n"
+								"#!/bin/bash -xe\n",
+								"apt-get update\n",
+								"apt-get upgrade -y\n",
+								"apt-get install openjdk-8-jre\n"
 							]
 						]
 					}
