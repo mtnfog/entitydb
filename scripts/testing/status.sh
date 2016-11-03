@@ -1,2 +1,2 @@
 #!/bin/bash
-curl -vvvv http://localhost:8080/api/status -H "Authorization: asdf1234"
+curl -vvvv http://$1:8080/api/status -H "Authorization: asdf1234"
