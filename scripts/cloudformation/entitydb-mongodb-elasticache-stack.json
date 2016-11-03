@@ -456,8 +456,8 @@
 					},
 					{
 						"IpProtocol": "tcp",
-						"FromPort": "27019",
-						"ToPort": "27019",
+						"FromPort": "27017",
+						"ToPort": "27017",
 						"SourceSecurityGroupId":
 						{
 							"Ref": "EntityDBSecurityGroup"
