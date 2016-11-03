@@ -45,6 +45,7 @@ import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.audit.FluentdAuditLogger;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
+import com.mtnfog.entitydb.entitystore.mongodb.MongoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.metrics.InfluxDbMetricReporter;
@@ -172,6 +173,25 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				} else {
 					
 					entityStore = new DynamoDBEntityStore(properties.getDynamoDBEndpoint(), properties.getDynamoDBTable());
+					
+				}
+				
+			} else if("mongodb".equalsIgnoreCase(entitydb)) {
+				
+				final String mongoDbHost = properties.getMongoDBHost();
+				final int mongoDbPort = properties.getMongoDBPort();
+				final String mongoDbDatabase = properties.getMongoDBDatabase();
+				final String mongoDbCollection = properties.getMongoDBCollection();
+				final String mongoDbUsername = properties.getMongoDBUsername();
+				final String mongoDbPassword = properties.getMongoDBPassword();
+				
+				if(StringUtils.isEmpty(mongoDbUsername)) {
+				
+					entityStore = new MongoDBEntityStore(mongoDbHost, mongoDbPort, mongoDbDatabase, mongoDbCollection);
+					
+				} else {
+					
+					entityStore = new MongoDBEntityStore(mongoDbHost, mongoDbPort, mongoDbUsername, mongoDbPassword, mongoDbDatabase, mongoDbCollection);
 					
 				}
 				
