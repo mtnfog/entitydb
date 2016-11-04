@@ -364,8 +364,12 @@ public class ElasticSearchIndex implements SearchIndex {
 			sb.append(String.format("[,]?%s[,]?|", group));
 		}
 		
-		// Remove the last pipe in the regex.
-		String groupRegEx = sb.toString().subSequence(0, sb.toString().length() - 1).toString();
+		String groupRegEx = StringUtils.EMPTY;
+		
+		if(sb.toString().length() > 0) {
+			// Remove the last pipe in the regex.
+			groupRegEx = sb.toString().subSequence(0, sb.toString().length() - 1).toString();
+		}
 		
 		// Set the ACL based on the user's permissions.
 		qb.must(QueryBuilders.boolQuery()
