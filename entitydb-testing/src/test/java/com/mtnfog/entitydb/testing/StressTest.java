@@ -24,13 +24,17 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import retrofit.client.Response;
+
+import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.driver.EntityDbClient;
 import com.mtnfog.test.entity.utils.EntityUtils;
 
 public class StressTest {
 	
 	private static final Logger LOGGER = LogManager.getLogger(StressTest.class);
 	
-	/*public static void main(String[] args) {		
+	public static void main(String[] args) {		
 		
 		final String host = args[0];
 		final String port = args[1];
@@ -51,7 +55,7 @@ public class StressTest {
 	
 	public void run(String endpoint, String apiKey, int count) {
 		
-		EntityDbApiClient client = new EntityDbApiClient(endpoint, apiKey);
+		EntityDbClient client = new EntityDbClient(endpoint, apiKey);
 		
 		String context = "context1";
 		String documentId = "documentId1";
@@ -62,11 +66,11 @@ public class StressTest {
 		while(sent < count) {
 			
 			// Make a random number of entities.
-			int randomEntityCount = RandomUtils.nextInt(1, 9);
+			int randomEntityCount = RandomUtils.nextInt(1, 19);
 			
 			sent += randomEntityCount;
 			
-			LOGGER.info("Sending {} entities to EntityDB. Total = {}", randomEntityCount, sent);
+			LOGGER.info("Sending {} entities to EntityDB. Total sent = {}", randomEntityCount, sent);
 			
 			Collection<Entity> entities = EntityUtils.createRandomPersonEntities(randomEntityCount);						
 			
@@ -76,6 +80,6 @@ public class StressTest {
 			
 		}		
 		
-	}*/
+	}
 	
 }

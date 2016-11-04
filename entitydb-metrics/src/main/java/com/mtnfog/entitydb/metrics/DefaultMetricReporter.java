@@ -7,6 +7,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
 
+/**
+ * Implementation of {@link MetricReporter} that outputs the metrics
+ * to the enabled loggers.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public class DefaultMetricReporter implements MetricReporter {
 
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMetricReporter.class);

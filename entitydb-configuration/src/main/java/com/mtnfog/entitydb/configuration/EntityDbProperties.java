@@ -189,6 +189,22 @@ public interface EntityDbProperties extends Config {
 	
 	@Key("datastore.password")
 	public String getDataStorePassword();
+	
+	@Key("metrics.provider")
+	@DefaultValue("internal")
+	public String getMetricsProvider();
+	
+	@Key("metrics.influxdb.endpoint")
+	public String getInfluxDbEndpoint();
+	
+	@Key("metrics.influxdb.database")
+	public String getInfluxDbDatabase();
+	
+	@Key("metrics.influxdb.username")
+	public String getInfluxDbUsername();
+	
+	@Key("metrics.influxdb.password")
+	public String getInfluxDbPassword();
 		
 	@Key("mask.entity.acl")
 	@DefaultValue("false")

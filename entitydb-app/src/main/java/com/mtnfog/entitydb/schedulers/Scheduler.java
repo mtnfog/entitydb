@@ -68,14 +68,14 @@ public class Scheduler {
         
     }
 	
-	@Scheduled(fixedRate = 5000)
+	@Scheduled(fixedDelay = 5000)
 	public void consume() throws EntityStoreException {
 		
 		queueConsumer.consume();
 		
 	}
 	
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedDelay = 60000)
 	public void status() throws EntityStoreException {
 		
 		long stored = entityStore.getEntityCount();
@@ -88,7 +88,7 @@ public class Scheduler {
 		
 	}
 	
-	@Scheduled(fixedRate = 5000)
+	@Scheduled(fixedDelay = 5000)
 	public void index() throws EntityStoreException {
 		
 		if(properties.isIndexerEnabled()) {

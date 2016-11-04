@@ -60,6 +60,11 @@
 	</build>
 	<dependencies>
 		<dependency>
+			<groupId>com.mtnfog.entitydb</groupId>
+			<artifactId>entitydb-java-driver</artifactId>
+			<version>1.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<version>${elasticsearch.version}</version>
@@ -104,6 +109,11 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mtnfog</groupId>
+			<artifactId>entity-model</artifactId>
+			<version>${entity.model.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mtnfog</groupId>

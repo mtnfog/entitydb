@@ -95,12 +95,7 @@ public class ElasticSearchIndexer implements Indexer {
 			long indexed = entityStore.markEntitiesAsIndexed(entityIds);
 			
 			LOGGER.debug("Marked {} entities as indexed.", indexed);
-			
-			// If there are more to process don't sleep.
-			if(entities.size() > 0) {
-				index(limit);
-			}
-			
+						
 		}
 	
 	}

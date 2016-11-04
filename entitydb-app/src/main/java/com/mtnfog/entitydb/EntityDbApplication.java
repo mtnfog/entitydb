@@ -408,16 +408,17 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	@Bean
 	public MetricReporter getMetricReporter() {
 		
-		// TODO: Put these in the properties file.
-		
-		/*final String endpoint = "http://10.0.0.20:8086";
-		final String username = "root";
-		final String password = "root";
-		final String database = "entitydb";		
-		
-		return new InfluxDbMetricReporter(endpoint, database, username, password);*/
-		
-		return new DefaultMetricReporter();
+		if("influxdb".equalsIgnoreCase(properties.getMetricsProvider())) {
+			
+			LOGGER.info("Using InfluxDB at {} and database {}.", properties.getInfluxDbDatabase(), properties.getInfluxDbDatabase());
+			
+			return new InfluxDbMetricReporter(properties.getInfluxDbEndpoint(), properties.getInfluxDbDatabase(), properties.getInfluxDbUsername(), properties.getInfluxDbPassword());
+			
+		} else {
+			
+			return new DefaultMetricReporter();
+
+		}
 		
 	}
 			

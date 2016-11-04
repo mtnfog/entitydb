@@ -100,7 +100,7 @@ public class EntityDbRestApiController {
 	 * Only returns HTTP 200 OK responses. This function is for application-level
 	 * monitoring by load balancers and other monitors.
 	 */
-	@RequestMapping(value = "/api/health", method = RequestMethod.GET)
+	@RequestMapping(value = {"/", "/api/health"}, method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public void health() {	
 		// Only returns HTTP OK to be used for application monitoring.

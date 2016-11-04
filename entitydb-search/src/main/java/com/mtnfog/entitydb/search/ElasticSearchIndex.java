@@ -458,7 +458,13 @@ public class ElasticSearchIndex implements SearchIndex {
 	                .addIndex(INDEX_NAME)
 	                .build());
 
-		 	count = result.getCount().longValue();
+		 	Double c = result.getCount();
+		 	
+		 	if(c != null) {
+		 		count = 0;
+		 	} else {
+		 		count = c.longValue();
+		 	}
 		 
 		} catch (IOException ex) {		
 			

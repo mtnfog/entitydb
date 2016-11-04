@@ -55,7 +55,8 @@ public interface SearchIndex {
 	
 	/**
 	 * Gets a count of indexed entities.
-	 * @return Count of indexed entities.
+	 * @return Count of indexed entities, or <code>-1</code> if an error occurred
+	 * while trying to get the count of indexed entities.
 	 */
 	public long getCount();
 	
