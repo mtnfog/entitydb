@@ -158,33 +158,29 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	@Override
 	public void executeContinuousQueries(Entity entity, String entityId) {
 		
-		if(continuousQueryRepository != null) {
+		List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
 		
-			List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
+		for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
+									
+			boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
 			
-			for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
-										
-				boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
+			if(match) {
 				
-				if(match) {
-					
-					// If this is a match notify the owner of the continuous query.
-					
-					String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
-					
-					NotificationEntity notificationEntity = new NotificationEntity();
-					notificationEntity.setUser(continuousQueryEntity.getUser());
-					notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
-					notificationEntity.setNotification(notification);
-					
-					notificationRepository.save(notificationEntity);
-					
-					// TODO: Send a message to the continuous query's SNS topic.
+				// If this is a match notify the owner of the continuous query.
 				
-				}
-							
+				String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
+				
+				NotificationEntity notificationEntity = new NotificationEntity();
+				notificationEntity.setUser(continuousQueryEntity.getUser());
+				notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
+				notificationEntity.setNotification(notification);
+				
+				notificationRepository.save(notificationEntity);
+				
+				// TODO: Send a message to the continuous query's SNS topic.
+			
 			}
-		
+						
 		}
 		
 	}

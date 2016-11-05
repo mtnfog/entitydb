@@ -38,19 +38,19 @@ import com.mtnfog.test.entitydb.entitystore.AbstractEntityStoreTest;
 
 public class RdbmsEntityStoreTest extends AbstractEntityStoreTest<RdbmsStoredEntity> {
 
-	//private final String jdbcUrl = "jdbc:hsqldb:mem:idylstore";
 	private final String jdbcDriver = "org.hsqldb.jdbcDriver";
 	private final String jdbcDialect = "org.hibernate.dialect.HSQLDialect";
 	private final String jdbcUsername = "sa";
 	private final String jdbcPassword = "";
 	private final String schemaExport = "create-drop";
 	
-	/*private String jdbcUrl = "jdbc:mariadb://ec2-52-3-144-172.compute-1.amazonaws.com/idyl";
+	/*
 	private String jdbcDriver = "com.mysql.jdbc.Driver";
 	private String jdbcDialect = "org.hibernate.dialect.MySQLInnoDBDialect";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
-	private String schemaExport = "validate";*/
+	private String schemaExport = "validate";
+	*/
 	
 	private String getJdbcUrl() {
 		
@@ -58,6 +58,9 @@ public class RdbmsEntityStoreTest extends AbstractEntityStoreTest<RdbmsStoredEnt
 		String databaseName = RandomStringUtils.randomAlphabetic(10);
 		
 		return "jdbc:hsqldb:mem:" + databaseName;
+		
+		// To use a MariaDB / MySQL database for the tests:
+		// return "jdbc:mariadb://localhost/entitydb";
 		
 	}
 	

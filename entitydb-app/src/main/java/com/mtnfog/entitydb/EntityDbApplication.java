@@ -36,13 +36,19 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.audit.FluentdAuditLogger;
+import com.mtnfog.entitydb.caching.memcached.MemcachedCache;
+import com.mtnfog.entitydb.caching.memcached.MemcachedCacheManager;
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.mongodb.MongoDBEntityStore;
@@ -68,6 +74,11 @@ import com.mtnfog.entitydb.rulesengine.xml.XmlRulesEngine;
 import com.mtnfog.entitydb.search.ElasticSearchIndex;
 import com.mtnfog.entitydb.search.EmbeddedElasticsearchServer;
 import com.mtnfog.entitydb.search.indexer.ElasticSearchIndexer;
+
+import net.spy.memcached.AddrUtil;
+import net.spy.memcached.ConnectionFactoryBuilder;
+import net.spy.memcached.MemcachedClient;
+
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
 
@@ -83,6 +94,7 @@ import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
  */
 @SpringBootApplication(exclude = { JacksonAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class })
 @PropertySource(value = {"file:entitydb.properties"}, ignoreResourceNotFound = false)
+@Configuration
 public class EntityDbApplication extends SpringBootServletInitializer {
 	
 	private static final String INTERNAL = "internal";
@@ -442,6 +454,72 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 
 		return new HttpMessageConverters(true, messageConverters);
 
+	}
+	
+	@Bean
+	public CacheManager cacheManager() {
+		
+		LOGGER.info("Creating cache manager.");
+		
+		List<String> cacheNames = new LinkedList<String>();
+		
+		cacheNames.add("nonExpiredContinuousQueries");
+		cacheNames.add("continuousQueriesByUser");
+		cacheNames.add("general");
+		
+		CacheManager cacheManager = null;
+		
+		if(StringUtils.equalsIgnoreCase(properties.getCache(), "memcached")) {
+			
+			try {
+				
+				MemcachedClient memcachedClient = new MemcachedClient(
+						new ConnectionFactoryBuilder()
+							.setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
+							.build(),
+						AddrUtil.getAddresses(properties.getMemcachedHosts()));
+				
+				LOGGER.info("Created Memcached client for {}.", properties.getMemcachedHosts());
+				
+				final Collection<MemcachedCache> caches = new ArrayList<MemcachedCache>();
+				
+				for(String cacheName : cacheNames) {
+				
+					caches.add(new MemcachedCache(memcachedClient, cacheName, properties.getCacheTtl()));
+					
+				}
+				
+				return new MemcachedCacheManager(caches);
+			
+			} catch (IOException ex) {
+				
+				LOGGER.error("Unable to create memcached client.", ex);
+				
+			}
+			
+		} else {
+			
+			LOGGER.info("Using internal cache.");
+			
+			SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
+			
+			List<ConcurrentMapCache> caches = new LinkedList<ConcurrentMapCache>();
+			
+			for(String cacheName : cacheNames) {
+				
+				caches.add(new ConcurrentMapCache(cacheName));
+				
+			}
+			
+			simpleCacheManager.setCaches(caches);
+			simpleCacheManager.afterPropertiesSet();
+			
+			return cacheManager;
+
+		}
+		
+		return null;
+		
 	}
 
 }
