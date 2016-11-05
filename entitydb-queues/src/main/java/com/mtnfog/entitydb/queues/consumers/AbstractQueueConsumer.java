@@ -167,7 +167,7 @@ public abstract class AbstractQueueConsumer {
 			auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.SKIPPED, properties.getAuditId());
 			
 			// We will want to return true here because the entity was successfully processed
-			// but there's no need to store the entity again.
+			// but there's no need to store the entity again. So don't set ingested = false.
 			
 			metricReporter.report("Ingest", "duplicateEntity", 1L);
 			

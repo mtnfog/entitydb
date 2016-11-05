@@ -18,10 +18,14 @@
  */
 package com.mtnfog.entitydb.schedulers;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -56,6 +60,13 @@ public class Scheduler {
 		
 	@Autowired
 	private MetricReporter metricReporter;
+	
+	@Bean(destroyMethod = "shutdown")
+    public Executor taskScheduler() {
+		
+        return Executors.newScheduledThreadPool(5);
+        
+    }
 	
 	@Scheduled(fixedDelay = 5000)
 	public void consume() throws EntityStoreException {

@@ -119,15 +119,14 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	 */
 	@Override
 	public void consume() {
-		
-		// TODO: Also consume from the ACL updates queue.
 					
 		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest();
 		receiveMessageRequest.setQueueUrl(queueUrl);
 		receiveMessageRequest.setMaxNumberOfMessages(10);
 		receiveMessageRequest.setVisibilityTimeout(visibilityTimeout);
 		
-		// Have to specify the names of the attributes to receive. Can specify "All" to retrieve all attributes.
+		// Have to specify the names of the attributes to receive.
+		// Can specify "All" to retrieve all attributes.
 		receiveMessageRequest.setMessageAttributeNames(Arrays.asList("All"));
 		
 		ReceiveMessageResult receiveMessageResult = client.receiveMessage(receiveMessageRequest);
@@ -140,7 +139,9 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 			
 			boolean processed = false;
 			
-			if(StringUtils.equalsIgnoreCase(message.getMessageAttributes().get(QueueConstants.ACTION).getStringValue(), QueueConstants.ACTION_INGEST)) {
+			final String action = message.getMessageAttributes().get(QueueConstants.ACTION).getStringValue();
+			
+			if(StringUtils.equalsIgnoreCase(action, QueueConstants.ACTION_INGEST)) {
 			
 				// Ingest the entity.
 				
@@ -164,7 +165,7 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 					
 				}
 			
-			} else if(StringUtils.equalsIgnoreCase(message.getMessageAttributes().get(QueueConstants.ACTION).getStringValue(), QueueConstants.ACTION_UPDATE_ACL)) {
+			} else if(StringUtils.equalsIgnoreCase(action, QueueConstants.ACTION_UPDATE_ACL)) {
 				
 				// Update the entity's ACL.
 				
@@ -185,9 +186,15 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 					
 				}
 				
+			} else {
+				
+				LOGGER.warn("Consumed message had invalid action: {}", action);
+				
 			}
 			
 			if(processed) {
+				
+				LOGGER.debug("Message was consumed from SQS queue.");
 				
 				DeleteMessageRequest deleteMessageRequest = new DeleteMessageRequest();
 				deleteMessageRequest.setReceiptHandle(message.getReceiptHandle());
@@ -200,6 +207,10 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 				// received it will see that the entity already exists and it will
 				// attempt to delete the message again.
 			
+			} else {
+				
+				LOGGER.debug("Message was not consumed from SQS queue.");
+				
 			}
 			
 		}

@@ -436,12 +436,5 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		return new HttpMessageConverters(true, messageConverters);
 
 	}
-	
-	@Bean(destroyMethod = "shutdown")
-    public Executor taskScheduler() {
-		
-        return Executors.newScheduledThreadPool(5);
-        
-    }
 
 }
