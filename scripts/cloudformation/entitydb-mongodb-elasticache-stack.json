@@ -793,10 +793,19 @@
 			"Description": "The Elasticsearch endpoint.",
 			"Value":
 			{
-				"Fn::GetAtt":
+				"Fn::Join":
 				[
-					"ElasticsearchDomain",
-					"DomainEndpoint"
+					"",
+					[
+						"https://",
+						{
+							"Fn::GetAtt":
+							[
+								"ElasticsearchDomain",
+								"DomainEndpoint"
+							]
+						}
+					]
 				]
 			}
 		},

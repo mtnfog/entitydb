@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -433,5 +436,12 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		return new HttpMessageConverters(true, messageConverters);
 
 	}
+	
+	@Bean(destroyMethod = "shutdown")
+    public Executor taskScheduler() {
+		
+        return Executors.newScheduledThreadPool(5);
+        
+    }
 
 }

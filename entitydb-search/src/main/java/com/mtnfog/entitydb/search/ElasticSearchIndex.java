@@ -18,12 +18,14 @@
  */
 package com.mtnfog.entitydb.search;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,6 +60,7 @@ import io.searchbox.core.Update;
 import io.searchbox.core.search.aggregation.MaxAggregation;
 import io.searchbox.core.search.sort.Sort;
 import io.searchbox.indices.CreateIndex;
+import io.searchbox.indices.aliases.GetAliases;
 
 /**
  * Implementation of {@link SearchIndex} that uses Elasticsearch.
@@ -97,6 +100,8 @@ public class ElasticSearchIndex implements SearchIndex {
 		factory.setHttpClientConfig(clientConfig);
 	
 		jestClient = factory.getObject();
+		
+		createIndex();
 				
 	}
 	
@@ -123,6 +128,8 @@ public class ElasticSearchIndex implements SearchIndex {
 	
 		jestClient = factory.getObject();
 				
+		createIndex();
+		
 	}
 	
 	/**
@@ -637,28 +644,58 @@ public class ElasticSearchIndex implements SearchIndex {
         }
 		
 	}
+
+	private boolean indexExists() throws IOException {
+		
+		GetAliases getAliases = new GetAliases.Builder().build();
+		
+		JestResult jestResult = jestClient.execute(getAliases);
+		
+		int count = jestResult.getJsonObject().getAsJsonObject(INDEX_NAME).getAsJsonObject("aliases").entrySet().size();
+		
+		if(count == 0) {
+			
+			return false;
+			
+		} else {
+			
+			return true;
+			
+		}
+		
+	}
 	
 	/**
 	 * Create the index on Elasticsearch.
 	 * @return <code>true</code> if the index was created or if the index already exists; otherwise <code>false</code>.
 	 */
-	private boolean createIndex(String settings) {
+	private boolean createIndex() {
 				
 		boolean result = true;
 		
 		try {
 			
-			LOGGER.info("Creating Elasticsearch index: {}", INDEX_NAME);
+			if(!indexExists()) {
 			
-			CreateIndex createIndex = new CreateIndex.Builder(INDEX_NAME)
-					.settings(settings)
-	                .build();
+				LOGGER.info("Creating Elasticsearch index: {}", INDEX_NAME);
+				
+				final String settings = getSettings();
+				
+				CreateIndex createIndex = new CreateIndex.Builder(INDEX_NAME)
+						.settings(settings)
+		                .build();
+				
+				JestResult jestResult = jestClient.execute(createIndex);
+				
+				result = jestResult.isSucceeded();
+				
+				LOGGER.info("Elasticsearch index creation status: " + jestResult.getJsonString());
 			
-			JestResult jestResult = jestClient.execute(createIndex);
-			
-			result = jestResult.isSucceeded();
-			
-			LOGGER.info("Elasticsearch index creation status: " + jestResult.getJsonString());
+			} else {
+				
+				LOGGER.info("Elasticsearch index {} exists.", INDEX_NAME);
+				
+			}
 						
 		} catch (IOException ex) {
 			
@@ -667,6 +704,24 @@ public class ElasticSearchIndex implements SearchIndex {
 		}
 		
 		return result;
+		
+	}
+	
+	private String getSettings() {
+		
+		String settings = null;
+		
+		try {
+		
+			settings = FileUtils.readFileToString(new File("mapping.json"));
+			
+		} catch (IOException ex) {
+			
+			LOGGER.error("Unable to read Elasticsearch settings file.", ex);
+			
+		}
+		
+		return settings;
 		
 	}
 	
