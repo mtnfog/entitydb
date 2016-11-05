@@ -51,7 +51,7 @@
 		<!-- Artifact versions -->
 		<activemq.version>5.7.0</activemq.version>
 		<antlr.version>4.0</antlr.version>
-		<aws.sdk.version>1.11.22</aws.sdk.version>
+		<aws.sdk.version>1.11.49</aws.sdk.version>
 		<cassandra.version>3.7</cassandra.version>
 		<cassandra.datastax.version>3.1.0</cassandra.datastax.version>
 		<cassandra.unit.version>3.0.0.1</cassandra.unit.version>

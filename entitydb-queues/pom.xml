@@ -1,14 +1,24 @@
 <?xml version="1.0"?>
-<!-- Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com) This program 
-	is free software: you can redistribute it and/or modify it under the terms 
-	of the GNU Affero General Public License as published by the Free Software 
-	Foundation, either version 3 of the License, or (at your option) any later 
-	version. This program is distributed in the hope that it will be useful, 
-	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License 
-	for more details. You should have received a copy of the GNU Affero General 
-	Public License along with this program. If not, see <http://www.gnu.org/licenses/>. 
-	For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com. -->
+<!--
+
+    Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+
+-->
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -25,11 +35,14 @@
 			<groupId>com.mtnfog.entitydb</groupId>
 			<artifactId>entitydb-model</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-search</artifactId>
-			<version>${project.version}</version>
+			<exclusions>
+				<!-- Excluded due to Jackson in spring-boot-starter-web
+				in entitydb-model conflicts with Jackson in the AWS SDK. -->
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.mtnfog.entitydb</groupId>
@@ -55,11 +68,6 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-sqs</artifactId>
 			<version>${aws.sdk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
