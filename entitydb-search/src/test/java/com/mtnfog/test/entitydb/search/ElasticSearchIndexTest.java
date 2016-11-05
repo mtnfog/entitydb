@@ -58,6 +58,7 @@ public class ElasticSearchIndexTest {
 	public void before() throws IOException {
 	
 		server = new EmbeddedElasticsearchServer();
+		server.start();
 		
 	}
 	
