@@ -90,7 +90,8 @@ public class EntityDbRestApiController {
 	 */
 	@RequestMapping(value = "/api/status", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody Status status() throws EntityStoreException {
+	@ResponseBody
+	public Status status() throws EntityStoreException {
 		
 		return new Status(searchIndex.getCount(), entityStore.getEntityCount());		
 		
@@ -113,7 +114,8 @@ public class EntityDbRestApiController {
 	 */
 	@RequestMapping(value = "/api/user/notifications", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody List<Notification> notifications(
+	@ResponseBody
+	public List<Notification> notifications(
 			@RequestHeader(value="Authorization", required=false) String authorization) {
 	
 		try {
@@ -135,7 +137,8 @@ public class EntityDbRestApiController {
 	 */
 	@RequestMapping(value = "/api/user/continuousqueries", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody List<ContinuousQuery> continuousQueries(
+	@ResponseBody
+	public List<ContinuousQuery> continuousQueries(
 			@RequestHeader(value="Authorization", required=false) String authorization) {
 	
 		try {
@@ -165,8 +168,7 @@ public class EntityDbRestApiController {
 	public void store(
 			@RequestBody Collection<Entity> entities, 
 			@RequestParam(value="acl", required=false, defaultValue=Acl.WORLD) String acl,
-			@RequestHeader(value="Authorization", required=false) String authorization)
-			throws MalformedAclException, Exception {
+			@RequestHeader(value="Authorization", required=false) String authorization) {
 					
 		try {
 						
@@ -201,8 +203,7 @@ public class EntityDbRestApiController {
 	public void store(
 			@PathVariable String entityId,
 			@RequestParam(value="acl", required=true) String acl,
-			@RequestHeader(value="Authorization", required=false) String authorization)
-			throws NonexistantEntityException, MalformedAclException, InternalServerErrorException {
+			@RequestHeader(value="Authorization", required=false) String authorization) {
 					
 		try {
 			
@@ -239,12 +240,12 @@ public class EntityDbRestApiController {
 	 * @throws BadRequestException Thrown if the EQL query is malformed.
 	 */
 	@RequestMapping(value = "/api/eql", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<QueryResult> eql(
+	@ResponseBody
+	public ResponseEntity<QueryResult> eql(
 			@RequestParam(value = "query") String query,
 			@RequestParam(value = "continuous", required = false, defaultValue = "0") int continuous,
 			@RequestParam(value = "days", required = false, defaultValue = "90") int days,
-			@RequestHeader(value = "Authorization", required = false) String authorization)			
-		throws UnauthorizedException, BadRequestException {			
+			@RequestHeader(value = "Authorization", required = false) String authorization)	{			
 					
 		LOGGER.trace("Received EQL query: {}", query);
 				

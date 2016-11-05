@@ -549,6 +549,8 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 				
 			} catch (MalformedAclException ex) {
 				
+				LOGGER.error("The ACL for entity " + entity.getId() + " is malformed.", ex);
+				
 				throw new EntityStoreException("The ACL for entity " + entity.getId() + " is malformed.");
 				
 			}

@@ -323,6 +323,8 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 				
 			} catch (MalformedAclException ex) {
 				
+				LOGGER.error("The ACL for entity " + mongoDBStoredEntity.getId() + " is malformed.", ex);
+				
 				throw new EntityStoreException("The ACL for entity " + mongoDBStoredEntity.getId() + " is malformed.");
 				
 			}

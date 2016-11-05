@@ -272,7 +272,7 @@ public class Eql {
 	            			if(operator.equals("=")) {
 	            				entityQuery.setText(ctx.STRING(0).getText());
 	            			} else {
-	            				entityQuery.setText(ctx.STRING(0).getText());
+	            				entityQuery.setNotText(ctx.STRING(0).getText());
 	            			}
 	            			
 	            		} else if(ctx.STRING_FIELD().getText().equalsIgnoreCase(TYPE)) {
@@ -280,7 +280,7 @@ public class Eql {
 	            			if(operator.equals("=")) {
 	            				entityQuery.setType(ctx.STRING(0).getText());
 	            			} else {
-	            				entityQuery.setType(ctx.STRING(0).getText());
+	            				entityQuery.setNotType(ctx.STRING(0).getText());
 	            			}
 	            					            			
 	            		} else if(ctx.STRING_FIELD().getText().equalsIgnoreCase(LANGUAGE)) {
@@ -288,7 +288,7 @@ public class Eql {
 	            			if(operator.equals("=")) {
 	            				entityQuery.setLanguageCode(ctx.STRING(0).getText());
 	            			} else {
-	            				entityQuery.setLanguageCode(ctx.STRING(0).getText());
+	            				entityQuery.setNotLanguageCode(ctx.STRING(0).getText());
 	            			}
 	            			
 	            		} else if(ctx.STRING_FIELD().getText().equalsIgnoreCase(URI)) {
@@ -296,12 +296,8 @@ public class Eql {
 	            			if(operator.equals("=")) {
 	            				entityQuery.setUri(ctx.STRING(0).getText());
 	            			} else {
-	            				entityQuery.setUri(ctx.STRING(0).getText());
+	            				entityQuery.setNotUri(ctx.STRING(0).getText());
 	            			}
-	            			
-	            		} else if(ctx.STRING_FIELD().getText().equalsIgnoreCase(URI)) {
-	            			
-	            			entityQuery.setUri(ctx.STRING(0).getText());
 	            			
 	            		}
 	            		

@@ -414,7 +414,7 @@ public class EntityQuery {
 		return notLanguageCode;
 	}
 
-	public void setNotLanguage(String notLanguage) {
+	public void setNotLanguageCode(String notLanguage) {
 		this.notLanguageCode = notLanguage;
 	}
 	

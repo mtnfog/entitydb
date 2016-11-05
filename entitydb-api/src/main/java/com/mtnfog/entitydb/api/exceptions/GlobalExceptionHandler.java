@@ -44,7 +44,8 @@ public class GlobalExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(value = {BadRequestException.class, InvalidQueryException.class, IllegalArgumentException.class, HttpMessageNotReadableException.class})
-	public @ResponseBody String handleBaseException(Exception ex) {
+	@ResponseBody
+	public String handleBaseException(Exception ex) {
 		
 		LOGGER.warn(ex.getMessage());
 		
@@ -54,7 +55,8 @@ public class GlobalExceptionHandler {
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(value = NotFoundException.class)
-	public @ResponseBody String handleBaseException(NotFoundException ex) {
+	@ResponseBody
+	public String handleBaseException(NotFoundException ex) {
 		
 		LOGGER.warn(ex.getMessage());
 		
@@ -64,7 +66,8 @@ public class GlobalExceptionHandler {
 	
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(value = UnauthorizedException.class)
-	public @ResponseBody String handleBaseException(UnauthorizedException ex) {
+	@ResponseBody
+	public String handleBaseException(UnauthorizedException ex) {
 		
 		LOGGER.warn(ex.getMessage());
 		
@@ -74,7 +77,8 @@ public class GlobalExceptionHandler {
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(value = {UnableToQueueEntitiesException.class, EntityStoreException.class})
-	public @ResponseBody String handleBaseException(UnableToQueueEntitiesException ex) {
+	@ResponseBody
+	public String handleBaseException(UnableToQueueEntitiesException ex) {
 		
 		LOGGER.error(ex.getMessage(), ex);
 		
@@ -84,7 +88,8 @@ public class GlobalExceptionHandler {
 	
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(value = Exception.class)	
-	public @ResponseBody String handleException(Exception ex) {
+	@ResponseBody
+	public String handleException(Exception ex) {
 		
 		LOGGER.error(ex.getMessage(), ex);
 		

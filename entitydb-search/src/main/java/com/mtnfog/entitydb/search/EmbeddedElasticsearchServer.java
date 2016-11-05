@@ -34,8 +34,12 @@ public class EmbeddedElasticsearchServer {
 
 	private Node node;
 	
-    public EmbeddedElasticsearchServer() throws IOException {
+    public EmbeddedElasticsearchServer() {
 
+    }
+    
+    public void start() throws IOException {
+    	
         Settings.Builder elasticsearchSettings = Settings.builder()
                 .put("http.enabled", "true")
                 .put("http.port", "9200")
@@ -57,7 +61,7 @@ public class EmbeddedElasticsearchServer {
 						.endObject()
 						.endObject()
 					.endObject();
-
+		
 		Client client = node.client();
 
 		CreateIndexRequest indexRequest = new CreateIndexRequest("entities");
@@ -65,7 +69,7 @@ public class EmbeddedElasticsearchServer {
 
 		client.admin().indices().preparePutMapping("entities").setType("entity").setSource(builder).execute()
 				.actionGet();
-
+		
     }
     
     public void close() {

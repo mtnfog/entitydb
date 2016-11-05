@@ -39,7 +39,7 @@ public class FluentdAuditLogger implements AuditLogger {
 	
 	private static final Logger LOGGER = LogManager.getLogger(FluentdAuditLogger.class);
 
-	private static FluentLogger LOG = FluentLogger.getLogger("entitydb");
+	private static final FluentLogger FLUENT_LOGGER = FluentLogger.getLogger("entitydb");
 	
 	/**
 	 * {@inheritDoc}
@@ -55,7 +55,7 @@ public class FluentdAuditLogger implements AuditLogger {
         data.put("action", auditAction.toString());
         data.put("entityDbId", entityDbId);
         
-        return LOG.log("follow", data);
+        return FLUENT_LOGGER.log("follow", data);
 		
 	}
 	
@@ -73,7 +73,7 @@ public class FluentdAuditLogger implements AuditLogger {
         data.put("action", AuditAction.QUERY.toString());
         data.put("entityDbId", entityDbId);
         
-        return LOG.log("follow", data);
+        return FLUENT_LOGGER.log("follow", data);
 		
 	}
 	
@@ -83,7 +83,7 @@ public class FluentdAuditLogger implements AuditLogger {
 	@Override
 	public void close() {
 		
-		LOG.close();
+		FLUENT_LOGGER.close();
 		
 	}
  

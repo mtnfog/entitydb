@@ -23,9 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -77,10 +74,19 @@ import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
 // Auto-configuration for MongoDB: http://stackoverflow.com/a/34415014/1428388
 // Auto-configuration for Jackson: http://www.leveluplunch.com/java/tutorials/023-configure-integrate-gson-spring-boot/
 
+/**
+ * The EntityDB application. EntityDB uses Spring Boot and
+ * builds as a runnable jar.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 @SpringBootApplication(exclude = { JacksonAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class })
 @PropertySource(value = {"file:entitydb.properties"}, ignoreResourceNotFound = false)
 public class EntityDbApplication extends SpringBootServletInitializer {
 	
+	private static final String INTERNAL = "internal";
+
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbApplication.class);
 		
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
@@ -88,7 +94,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	@Autowired
 	private EntityQueryService entityQueryService;
 	
-	public static void main(String[] args) throws Exception {
+	/**
+	 * The EntityDB main function.
+	 * @param args Command line arguments. (None are required.)
+	 */
+	public static void main(String[] args) {
 						
 		// Start the REST service.
 		SpringApplication.run(EntityDbApplication.class, args);
@@ -198,7 +208,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 					
 				}
 				
-			} else if("internal".equalsIgnoreCase(entitydb)) {
+			} else if(INTERNAL.equalsIgnoreCase(entitydb)) {
 				
 				LOGGER.warn("A temporary, internal entity store will be used. Its contents are not retained across restarts.");
 				
@@ -230,14 +240,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		SearchIndex searchIndex = null;
 		
 		try {
-			
-			/*settings = 
-				 FileUtils.readFileToString(
-				  new File("mapping.json"));*/
 		
-			if("internal".equalsIgnoreCase(properties.getSearchIndexProvider())) {
+			if(INTERNAL.equalsIgnoreCase(properties.getSearchIndexProvider())) {
 				
-				EmbeddedElasticsearchServer s = new EmbeddedElasticsearchServer();
+				EmbeddedElasticsearchServer embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
+				embeddedElasticsearchServer.start();
 				
 				LOGGER.warn("Using the internal search index is not recommended for production systems.");
 							
@@ -264,7 +271,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 		} catch (IOException ex) {
 			
-			LOGGER.error("Unable to configure Elasticsearch client.");
+			LOGGER.error("Unable to configure Elasticsearch client.", ex);
 			
 		}
 									
@@ -337,7 +344,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 			}
 			
-		} else if("internal".equalsIgnoreCase(queue)) {
+		} else if(INTERNAL.equalsIgnoreCase(queue)) {
 			
 			LOGGER.info("Using internal queue.");
 			
@@ -390,7 +397,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 			}
 			
-		} else if("internal".equalsIgnoreCase(queue)) {
+		} else if(INTERNAL.equalsIgnoreCase(queue)) {
 			
 			LOGGER.info("Using internal queue.");
 			

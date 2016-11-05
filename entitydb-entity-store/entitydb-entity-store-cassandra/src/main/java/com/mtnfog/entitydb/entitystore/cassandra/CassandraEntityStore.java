@@ -577,6 +577,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 				
 			} catch (MalformedAclException ex) {
 				
+				LOGGER.error("The ACL for entity " + cassandraStoredEntity.getId() + " is malformed.", ex);
+				
 				throw new EntityStoreException("The ACL for entity " + cassandraStoredEntity.getId() + " is malformed.");
 				
 			}

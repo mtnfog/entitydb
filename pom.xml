@@ -97,6 +97,13 @@
 		<!-- Testing -->
 		<skipTests>false</skipTests>
 		<skipIntegrationTests>false</skipIntegrationTests>
+		<!-- Sonar properties -->
+		<sonar.host.url>http://jenkins:9000</sonar.host.url>
+		<sonar.jacoco.reportPath>target/coverage-reports/jacoco-ut.exec</sonar.jacoco.reportPath>
+		<sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.test.exclusions>**/test/*</sonar.test.exclusions>
+		<sonar.exclusions>**/test/**</sonar.exclusions>
 		<!-- Put these in profiles. -->
 		<datastore>internal</datastore>
 		<entitystore>internal</entitystore>
