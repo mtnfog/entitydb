@@ -97,7 +97,7 @@ public class EqlFiltersTest {
 		
 		Collection<Entity> matchedEntities = EqlFilters.filterEntities(entities, eqlStatement);
 		
-		assertEquals(1, matchedEntities.size());
+		assertEquals(0, matchedEntities.size());
 		
 	}
 	
