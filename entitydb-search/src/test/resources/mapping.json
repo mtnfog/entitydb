@@ -5,13 +5,10 @@
 	"mappings": {
 		"entity": {
 			"properties": {
-				"context": {
+				"id": {
 					"type": "string"
 				},
 				"text": {
-					"type": "string"
-				},
-				"id": {
 					"type": "string"
 				}
 			}

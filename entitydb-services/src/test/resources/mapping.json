@@ -5,7 +5,7 @@
 	"mappings": {
 		"entity": {
 			"properties": {
-				"context": {
+				"id": {
 					"type": "string"
 				},
 				"text": {
