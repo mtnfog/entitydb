@@ -92,6 +92,8 @@ public class ActiveMQQueuePublisher implements QueuePublisher {
 		if(!Acl.validate(acl)) {
 			throw new MalformedAclException("The ACL [" + acl + "] is malformed.");
 		}
+		
+		long startTime = System.currentTimeMillis();
 				
 		try {
 			
@@ -108,6 +110,8 @@ public class ActiveMQQueuePublisher implements QueuePublisher {
 	        message.setStringProperty(QueueConstants.ACTION, QueueConstants.ACTION_UPDATE_ACL);
 	        
 	        producer.send(message);
+	        
+	        metricReporter.reportElapsedTime("QueueIngest", "time", startTime);
 	                
 		} catch (Exception ex) {
 			

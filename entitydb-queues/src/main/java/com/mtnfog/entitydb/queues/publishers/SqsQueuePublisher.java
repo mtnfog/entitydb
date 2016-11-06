@@ -20,6 +20,8 @@ package com.mtnfog.entitydb.queues.publishers;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
+import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.gson.Gson;
 import com.mtnfog.entity.Entity;
@@ -122,24 +125,31 @@ public class SqsQueuePublisher implements QueuePublisher {
 			throw new MalformedAclException("The ACL [" + acl + "] is malformed.");
 		}
 		
+		long startTime = System.currentTimeMillis();
+		
 		try {
+			
+			List<SendMessageBatchRequestEntry> entries = new LinkedList<SendMessageBatchRequestEntry>();
 		
 			for (Entity entity : entities) {
 	
-				SendMessageRequest request = new SendMessageRequest();
-				
 				Map<String, MessageAttributeValue> attributes = new HashMap<String, MessageAttributeValue>();
 				attributes.put(QueueConstants.ACTION, new MessageAttributeValue().withDataType("String").withStringValue(QueueConstants.ACTION_INGEST));				
 				attributes.put(QueueConstants.ACL, new MessageAttributeValue().withDataType("String").withStringValue(acl));
 				attributes.put(QueueConstants.API_KEY, new MessageAttributeValue().withDataType("String").withStringValue(apiKey));
 				
-				request.setQueueUrl(queueUrl);
-				request.setMessageBody(gson.toJson(entity));
-				request.setMessageAttributes(attributes);
+				SendMessageBatchRequestEntry entry = new SendMessageBatchRequestEntry();
+				
+				entry.setMessageBody(gson.toJson(entity));
+				entry.setMessageAttributes(attributes);
 	
-				client.sendMessage(request);
+				entries.add(entry);
 	
 			}
+			
+			client.sendMessageBatch(queueUrl, entries);
+			
+			metricReporter.reportElapsedTime("QueueIngest", "time", startTime);
 
 		} catch (Exception ex) {
 			

@@ -32,6 +32,16 @@
 	<name>entitydb-testing</name>
 	<build>
 		<finalName>entitydb-testing</finalName>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>${basedir}/files</directory>
+				<targetPath>${project.build.directory}</targetPath>
+				<includes>
+					<include>mapping.json</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>

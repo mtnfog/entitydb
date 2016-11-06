@@ -67,7 +67,7 @@ public class ElasticSearchIndexer implements Indexer {
 					
 		if(CollectionUtils.isNotEmpty(entities)) {
 			
-			LOGGER.info("Got {} entities to index.", entities.size());
+			LOGGER.debug("Got {} entities to index.", entities.size());
 			
 			Set<IndexedEntity> entitiesToIndex = new LinkedHashSet<IndexedEntity>();
 			Set<String> entityIds = new LinkedHashSet<String>();
@@ -83,7 +83,7 @@ public class ElasticSearchIndexer implements Indexer {
 				
 				} catch (MalformedAclException ex) {
 					
-					LOGGER.error("The ACL for entity " + e.toString() + " is invalid. The entity will not be indexed.", ex);
+					LOGGER.error("The ACL for entity " + e.toString() + " is invalid. Entity [" + e.toString() + "] will not be indexed.", ex);
 					
 				}
 				

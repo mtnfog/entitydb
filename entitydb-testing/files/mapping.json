@@ -1,0 +1,17 @@
+{
+	"settings": {
+		"number_of_shards": 1
+	},
+	"mappings": {
+		"entity": {
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"text": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
