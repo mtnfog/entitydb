@@ -53,6 +53,7 @@ import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.mongodb.MongoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
+import com.mtnfog.entitydb.metrics.CloudWatchMetricReporter;
 import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.metrics.InfluxDbMetricReporter;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
@@ -433,6 +434,12 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			LOGGER.info("Using InfluxDB at {} and database {}.", properties.getInfluxDbDatabase(), properties.getInfluxDbDatabase());
 			
 			return new InfluxDbMetricReporter(properties.getInfluxDbEndpoint(), properties.getInfluxDbDatabase(), properties.getInfluxDbUsername(), properties.getInfluxDbPassword());
+			
+		} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.CLOUDWATCH, properties.getMetricsProvider())) {
+									
+			return new CloudWatchMetricReporter(properties.getSystemId(), properties.getCloudWatchNamespace(), 
+					properties.getCloudWatchAccessKey(), properties.getCloudWatchSecretKey(), properties.getCloudWatchEndpoint());
+			
 			
 		} else {
 			

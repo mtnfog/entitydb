@@ -18,6 +18,8 @@
  */
 package com.mtnfog.entitydb.configuration;
 
+import java.util.UUID;
+
 import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
 
@@ -43,6 +45,14 @@ public interface EntityDbProperties extends Config {
 	public static final String SQS = "sqs";
 	
 	public static final String INFLUXDB = "influxdb";
+	public static final String CLOUDWATCH = "cloudwatch";
+	
+	/**
+	 * Gets the ID of the system.
+	 * @return The ID of the system.
+	 */
+	@Key("system.id")
+	public String getSystemId();
 	
 	/**
 	 * Gets if the indexer is enabled.
@@ -86,14 +96,6 @@ public interface EntityDbProperties extends Config {
 	@Key("audit.logger")
     @DefaultValue("tempfile")
     public String getAuditLogger();
-	
-	/**
-	 * Gets the ID of the system. Used by the Fluent audit provider.
-	 * @return The ID of the system.
-	 */
-	@Key("audit.id")
-	@DefaultValue("localhost")
-	public String getAuditId();
 	
 	/**
 	 * Gets the provider of the entity store.
@@ -416,6 +418,39 @@ public interface EntityDbProperties extends Config {
 	@Key("metrics.provider")
 	@DefaultValue("internal")
 	public String getMetricsProvider();
+	
+	/**
+	 * Gets the CloudWatch namespace. If not specified in the
+	 * properties then <code>entitydb</code> will be returned.
+	 * @return The CloudWatch namespace.
+	 */
+	@Key("metrics.cloudwatch.namespace")
+	@DefaultValue("entitydb")
+	public String getCloudWatchNamespace();
+	
+	/**
+	 * Gets the CloudWatch endpoint. If not specified in the
+	 * properties then <code>https://monitoring.us-east-1.amazonaws.com</code>
+	 * will be returned.
+	 * @return The CloudWatch endpoint.
+	 */
+	@Key("metrics.cloudwatch.endpoint")
+	@DefaultValue("https://monitoring.us-east-1.amazonaws.com")
+	public String getCloudWatchEndpoint();
+	
+	/**
+	 * Gets the CloudWatch access key.
+	 * @return The CloudWatch access key.
+	 */
+	@Key("metrics.cloudwatch.accesskey")
+	public String getCloudWatchAccessKey();
+	
+	/**
+	 * Gets the CloudWatch secret key.
+	 * @return The CloudWatch secret key.
+	 */
+	@Key("metrics.cloudwatch.secretkey")
+	public String getCloudWatchSecretKey();
 	
 	/**
 	 * Gets the InfluxDB endpoint.

@@ -77,7 +77,7 @@
 			"type": "shell",
 			"inline": 
 			[
-				"chmod +x /opt/entitydb/entitydb.jar",
+				"sudo chmod +x /opt/entitydb/entitydb.jar",
 				"sudo ln -s /opt/entitydb/entitydb.jar /etc/init.d/entitydb",
 				"sudo update-rc.d entitydb defaults 99",
 				"sudo apt-get update",

@@ -1,6 +1,24 @@
+/**
+ * Copyright © 2016 Mountain Fog, Inc. (support@mtnfog.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
+ */
 package com.mtnfog.entitydb.metrics;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +28,7 @@ import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Point.Builder;
 
+import com.mtnfog.entitydb.model.metrics.Metric;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
 
 /**
@@ -19,7 +38,7 @@ import com.mtnfog.entitydb.model.metrics.MetricReporter;
  * @author Mountain Fog, Inc.
  *
  */
-public class InfluxDbMetricReporter implements MetricReporter {
+public class InfluxDbMetricReporter extends AbstractMetricReporter implements MetricReporter {
 
 	private static final Logger LOGGER = LogManager.getLogger(InfluxDbMetricReporter.class);
 	
@@ -52,13 +71,13 @@ public class InfluxDbMetricReporter implements MetricReporter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void report(String measurement, Map<String, Long> metrics) {
+	public void report(String measurement, List<Metric> metrics) {
 		
 		Builder builder = Point.measurement(measurement)
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 		
-		for(String field : metrics.keySet()) {		
-			builder.addField(field, metrics.get(field));			
+		for(Metric metric : metrics) {		
+			builder.addField(metric.getName(), metric.getValue());			
 		}
 		
 		Point point = builder.build();

@@ -60,7 +60,6 @@ import io.searchbox.core.Update;
 import io.searchbox.core.search.aggregation.MaxAggregation;
 import io.searchbox.core.search.sort.Sort;
 import io.searchbox.indices.CreateIndex;
-import io.searchbox.indices.aliases.GetAliases;
 
 /**
  * Implementation of {@link SearchIndex} that uses Elasticsearch.
@@ -88,6 +87,10 @@ public class ElasticSearchIndex implements SearchIndex {
 	 */
 	public ElasticSearchIndex(String host) {
 		
+		if(host.endsWith("/")) {
+			host = host.substring(0, host.length() -1);
+		}
+		
 		this.host = host;
 		
 		HttpClientConfig clientConfig = new HttpClientConfig.Builder(host)
@@ -113,6 +116,10 @@ public class ElasticSearchIndex implements SearchIndex {
 	 * @password The Elasticsearch password.
 	 */
 	public ElasticSearchIndex(String host, String username, String password) {
+		
+		if(host.endsWith("/")) {
+			host = host.substring(0, host.length() -1);
+		}
 		
 		this.host = host;
 		
@@ -468,8 +475,6 @@ public class ElasticSearchIndex implements SearchIndex {
 		 	Double c = result.getCount();
 		 	
 		 	if(c != null) {
-		 		count = 0;
-		 	} else {
 		 		count = c.longValue();
 		 	}
 		 
@@ -647,7 +652,9 @@ public class ElasticSearchIndex implements SearchIndex {
 
 	private boolean indexExists() throws IOException {
 		
-		GetAliases getAliases = new GetAliases.Builder().build();
+		return false;
+		
+		/*GetAliases getAliases = new GetAliases.Builder().build();
 		
 		JestResult jestResult = jestClient.execute(getAliases);
 		
@@ -661,7 +668,7 @@ public class ElasticSearchIndex implements SearchIndex {
 			
 			return true;
 			
-		}
+		}*/
 		
 	}
 	
@@ -671,13 +678,13 @@ public class ElasticSearchIndex implements SearchIndex {
 	 */
 	private boolean createIndex() {
 				
+		LOGGER.info("Creating Elasticsearch index: {}", INDEX_NAME);
+		
 		boolean result = true;
 		
 		try {
 			
-			if(!indexExists()) {
-			
-				LOGGER.info("Creating Elasticsearch index: {}", INDEX_NAME);
+			if(!indexExists()) {							
 				
 				final String settings = getSettings();
 				
@@ -714,7 +721,7 @@ public class ElasticSearchIndex implements SearchIndex {
 		try {
 		
 			settings = FileUtils.readFileToString(new File("mapping.json"));
-			
+		
 		} catch (IOException ex) {
 			
 			LOGGER.error("Unable to read Elasticsearch settings file.", ex);

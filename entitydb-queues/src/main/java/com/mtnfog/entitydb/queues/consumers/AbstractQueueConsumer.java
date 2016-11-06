@@ -152,7 +152,7 @@ public abstract class AbstractQueueConsumer {
 			
 				// Audit this entity ingest.
 				LOGGER.trace("Writing entity {} to audit log.", entityId);
-				auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.STORED, properties.getAuditId());
+				auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.STORED, properties.getSystemId());
 			
 				// Execute the continuous queries against the entity.
 				entityQueryService.executeContinuousQueries(entity, entityId);
@@ -164,7 +164,7 @@ public abstract class AbstractQueueConsumer {
 		} else {
 			
 			LOGGER.info("Entity {} already exists in the entity store.", entityId);
-			auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.SKIPPED, properties.getAuditId());
+			auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.SKIPPED, properties.getSystemId());
 			
 			// We will want to return true here because the entity was successfully processed
 			// but there's no need to store the entity again. So don't set ingested = false.

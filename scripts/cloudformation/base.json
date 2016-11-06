@@ -25,12 +25,6 @@
 			"Type": "String",
 			"Default": "t2.nano"
 		},
-		"EntityDBInstanceType":
-		{
-			"Description": "The instance type for the EntityDB instance(s).",
-			"Type": "String",
-			"Default": "t2.nano"
-		},
 		"MongoDBInstanceType":
 		{
 			"Description": "The instance type for the MongoDB instance.",
@@ -48,111 +42,10 @@
 			"Description": "The AMI (must be Ubuntu).",
 			"Type": "String",
 			"Default": "ami-40d28157"
-		},
-		"EntityDBAMI":
-		{
-			"Description": "The EntityDB AMI.",
-			"Type": "String",
-			"Default": "ami-40d28157"
-		},
-		"InstanceCount":
-		{
-			"Description": "Desired number of EntityDB instances.",
-			"Type": "Number",
-			"Default": "1"
 		}
 	},
 	"Resources":
 	{
-		"EntityDBInstanceProfile":
-		{
-			"Type": "AWS::IAM::InstanceProfile",
-			"Properties":
-			{
-				"Path": "/",
-				"Roles":
-				[
-					{
-						"Ref": "EntityDBRole"
-					}
-				]
-			}
-		},
-		"EntityDBPolicy":
-		{
-			"Type": "AWS::IAM::Policy",
-			"Properties":
-			{
-				"PolicyDocument":
-				{
-					"Statement":
-					[
-						{
-							"Effect": "Allow",
-							"Action":
-							[
-								"sqs:*"
-							],
-							"Resource":
-							{
-								"Fn::GetAtt":
-								[
-									"Queue",
-									"Arn"
-								]
-							}
-						}
-					]
-				},
-				"PolicyName":
-				{
-					"Fn::Join":
-					[
-						"",
-						[
-							{
-								"Ref": "AWS::StackName"
-							},
-							"-entitydb-policy"
-						]
-					]
-				},
-				"Roles":
-				[
-					{
-						"Ref": "EntityDBRole"
-					}
-				]
-			}
-		},
-		"EntityDBRole":
-		{
-			"Type": "AWS::IAM::Role",
-			"Properties":
-			{
-				"AssumeRolePolicyDocument":
-				{
-					"Statement":
-					[
-						{
-							"Effect": "Allow",
-							"Principal":
-							{
-								"Service":
-								[
-									"ec2.amazonaws.com"
-								]
-							},
-							"Action":
-							[
-								"sts:AssumeRole"
-							]
-						}
-					]
-				},
-				"Path": "/"
-			}
-		},
 		"Queue":
 		{
 			"Type": "AWS::SQS::Queue",
@@ -354,7 +247,7 @@
 		{
 			"Type": "AWS::Elasticsearch::Domain",
 			"Properties":
-			{
+			{				
 				"EBSOptions":
 				{
 					"EBSEnabled": "true",
@@ -431,8 +324,9 @@
 								"echo \"deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable\" | tee -a /etc/apt/sources.lis\n",
 								"apt-get update\n",
 								"apt-get upgrade -y\n",
-								"apt-get install influxdb\n",
-								"apt-get install chronograf\n",
+								"apt-get install -y ntp\n",
+								"apt-get install -y influxdb\n",
+								"apt-get install -y chronograf\n",
 								"service influxdb start\n",
 								"service chronograf start\n"
 							]
@@ -535,7 +429,7 @@
 								"apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927\n",
 								"echo \"deb http://repo.mongodb.org/apt/ubuntu \"$(lsb_release -sc)\"/mongodb-org/3.2 multiverse\" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list\n",
 								"apt-get update\n",
-								"apt-get install -y mongodb-org\n",
+								"apt-get install -y mongodb-org ntp\n",
 								"sed -i 's/bindIp/#bindIp/g' /etc/mongod.conf\n",
 								"service mongod start\n"
 							]
@@ -556,170 +450,6 @@
 						"Value": "MongoDB"
 					}
 				]
-			}
-		},
-		"MongoDBInstanceSecurityGroup":
-		{
-			"Type": "AWS::EC2::SecurityGroup",
-			"Properties":
-			{
-				"VpcId":
-				{
-					"Ref": "VPC"
-				},
-				"GroupDescription": "Enable SSH access via port 22",
-				"SecurityGroupIngress":
-				[
-					{
-						"IpProtocol": "tcp",
-						"FromPort": "22",
-						"ToPort": "22",
-						"CidrIp":
-						{
-							"Ref": "SSHLocation"
-						}
-					},
-					{
-						"IpProtocol": "tcp",
-						"FromPort": "27017",
-						"ToPort": "27017",
-						"SourceSecurityGroupId":
-						{
-							"Ref": "EntityDBSecurityGroup"
-						}
-					}
-				]
-			}
-		},
-		"EntityDBGroup":
-		{
-			"Type": "AWS::AutoScaling::AutoScalingGroup",
-			"DependsOn":
-			[
-				"Queue",
-				"ElasticLoadBalancer"
-			],
-			"Properties":
-			{
-				"AvailabilityZones":
-				[
-					"us-east-1d",
-					"us-east-1e"
-				],
-				"VPCZoneIdentifier":
-				[
-					{
-						"Ref": "Subnet1"
-					},
-					{
-						"Ref": "Subnet2"
-					}
-				],
-				"LaunchConfigurationName":
-				{
-					"Ref": "LaunchConfig"
-				},
-				"MinSize": "1",
-				"MaxSize": "10",
-				"DesiredCapacity":
-				{
-					"Ref": "InstanceCount"
-				},
-				"LoadBalancerNames":
-				[
-					{
-						"Ref": "ElasticLoadBalancer"
-					}
-				]
-			}
-		},
-		"LaunchConfig":
-		{
-			"Type": "AWS::AutoScaling::LaunchConfiguration",
-			"Properties":
-			{
-				"AssociatePublicIpAddress": "true",
-				"ImageId":
-				{
-					"Ref": "EntityDBAMI"
-				},
-				"IamInstanceProfile":
-				{
-					"Fn::GetAtt":
-					[
-						"EntityDBInstanceProfile",
-						"Arn"
-					]
-				},
-				"SecurityGroups":
-				[
-					{
-						"Ref": "EntityDBSecurityGroup"
-					}
-				],
-				"KeyName":
-				{
-					"Ref": "KeyName"
-				},
-				"InstanceType":
-				{
-					"Ref": "EntityDBInstanceType"
-				},
-				"UserData":
-				{
-					"Fn::Base64":
-					{
-						"Fn::Join":
-						[
-							"",
-							[
-								"#!/bin/bash -xe\n",
-								"apt-get update\n",
-								"apt-get upgrade -y\n",
-								"apt-get install -y openjdk-8-jre\n"
-							]
-						]
-					}
-				}
-			}
-		},
-		"ElasticLoadBalancer":
-		{
-			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
-			"Properties":
-			{
-				"CrossZone": "true",
-				"SecurityGroups":
-				[
-					{
-						"Ref": "LoadBalancerSecurityGroup"
-					}
-				],
-				"Subnets":
-				[
-					{
-						"Ref": "Subnet1"
-					},
-					{
-						"Ref": "Subnet2"
-					}
-				],
-				"Listeners":
-				[
-					{
-						"LoadBalancerPort": "8080",
-						"InstancePort": "8080",
-						"Protocol": "HTTP"
-					}
-				],
-				"HealthCheck":
-				{
-					"Target": "HTTP:8080/api/health",
-					"HealthyThreshold": "3",
-					"UnhealthyThreshold": "5",
-					"Interval": "30",
-					"Timeout": "25"
-				}
 			}
 		},
 		"LoadBalancerSecurityGroup":
@@ -784,6 +514,39 @@
 					}
 				]
 			}
+		},
+		"MongoDBInstanceSecurityGroup":
+		{
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties":
+			{
+				"VpcId":
+				{
+					"Ref": "VPC"
+				},
+				"GroupDescription": "Enable SSH access via port 22",
+				"SecurityGroupIngress":
+				[
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "22",
+						"ToPort": "22",
+						"CidrIp":
+						{
+							"Ref": "SSHLocation"
+						}
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "27017",
+						"ToPort": "27017",
+						"SourceSecurityGroupId":
+						{
+							"Ref": "EntityDBSecurityGroup"
+						}
+					}
+				]
+			}
 		}
 	},
 	"Outputs":
@@ -817,26 +580,63 @@
 				"Ref": "Queue"
 			}
 		},
-		"URL":
+		"QueueARN":
 		{
-			"Description": "URL of the website",
+			"Description": "The queue ARN.",
 			"Value":
 			{
-				"Fn::Join":
+				"Fn::GetAtt":
 				[
-					"",
-					[
-						"http://",
-						{
-							"Fn::GetAtt":
-							[
-								"ElasticLoadBalancer",
-								"DNSName"
-							]
-						}
-					]
+					"Queue",
+					"Arn"
 				]
-			}
+			},
+			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-QueueARN" }}
+		},
+		"Subnet1":
+		{
+			"Description": "The subnet 1.",
+			"Value":
+			{
+				"Ref": "Subnet1"
+			},
+			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Subnet1" }}
+		},
+		"Subnet2":
+		{
+			"Description": "The subnet 2.",
+			"Value":
+			{
+				"Ref": "Subnet2"
+			},
+			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Subnet2" }}
+		},
+		"LoadBalancerSecurityGroup":
+		{
+			"Description": "The load balancer's security group.",
+			"Value":
+			{
+				"Ref": "LoadBalancerSecurityGroup"
+			},
+			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-LoadBalancerSecurityGroup" }}
+		},
+		"EntityDBSecurityGroup":
+		{
+			"Description": "The security group for the EntityDB instances.",
+			"Value":
+			{
+				"Ref": "EntityDBSecurityGroup"
+			},
+			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-EntityDBSecurityGroup" }}
+		},
+		"SSHLocation":
+		{
+			"Description": "The SSH location.",
+			"Value":
+			{
+				"Ref": "SSHLocation"
+			},
+			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-SSHLocation" }}
 		}
 	}
 }

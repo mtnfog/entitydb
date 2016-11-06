@@ -20,7 +20,6 @@ package com.mtnfog.test.entitydb.search;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
@@ -50,7 +48,7 @@ public class ElasticSearchIndexTest {
 	private static final Logger LOGGER = LogManager.getLogger(ElasticSearchIndexTest.class);
 	
 	private static final String ELASTICSEARCH_HOST = "http://localhost:9200";
-	//private static final String ELASTICSEARCH_HOST = "https://search-entitydb-4cpoahp2k7dpakwchunuuxrcwm.us-east-1.es.amazonaws.com/";
+	//private static final String ELASTICSEARCH_HOST = "http://search-base-elasticse-1n4w19rokqngi-v2h45ltxpsvziussef7afzipbm.us-east-1.es.amazonaws.com";
 	
 	private EmbeddedElasticsearchServer server;
 	
@@ -66,12 +64,6 @@ public class ElasticSearchIndexTest {
 	public void after() {
 		
 		server.close();
-		
-	}
-	
-	public static String getSettings() throws IOException, URISyntaxException {
-		
-		return FileUtils.readFileToString(new File(ElasticSearchIndexTest.class.getResource("/mapping.json").toURI()));
 		
 	}
 	

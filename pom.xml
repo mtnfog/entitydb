@@ -170,7 +170,7 @@
 		<module>entitydb-rules-engine</module>
 		<module>entitydb-search</module>
 		<module>entitydb-queues</module>
-		<!--<module>entitydb-testing</module>-->
+		<module>entitydb-testing</module>
 		<module>entitydb-data-store</module>
 		<module>entitydb-configuration</module>
 		<module>entitydb-services</module>

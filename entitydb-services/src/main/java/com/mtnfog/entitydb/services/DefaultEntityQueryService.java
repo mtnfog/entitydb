@@ -105,7 +105,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 			EntityQuery entityQuery = Eql.generate(query);
 			
 				// Audit this query.
-				boolean auditResult = auditLogger.audit(query, System.currentTimeMillis(), apiKey, properties.getAuditId());
+				boolean auditResult = auditLogger.audit(query, System.currentTimeMillis(), apiKey, properties.getSystemId());
 				
 				if(auditResult) {
 				
@@ -210,7 +210,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				
 				if(properties.isAuditEnabled()) {
 				
-					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), user.getUsername(), AuditAction.SEARCH_RESULT, properties.getAuditId());
+					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), user.getUsername(), AuditAction.SEARCH_RESULT, properties.getSystemId());
 					
 				}
 								

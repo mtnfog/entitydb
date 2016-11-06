@@ -83,7 +83,7 @@ public class ElasticSearchIndexer implements Indexer {
 				
 				} catch (MalformedAclException ex) {
 					
-					LOGGER.error("The ACL for entity " + e + " is invalid. The entity will not be indexed.", ex);
+					LOGGER.error("The ACL for entity " + e.toString() + " is invalid. The entity will not be indexed.", ex);
 					
 				}
 				

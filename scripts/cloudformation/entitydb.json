@@ -1,0 +1,393 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "AWS CloudFormation template for standing up an EntityDB testing stack composed of EntityDB, MongoDB, and Elasticsearch.",
+	"Parameters":
+	{
+		"KeyName":
+		{
+			"Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+			"Type": "AWS::EC2::KeyPair::KeyName",
+			"ConstraintDescription": "Must be the name of an existing EC2 KeyPair."
+		},
+		"EntityDBInstanceType":
+		{
+			"Description": "The instance type for the EntityDB instance(s).",
+			"Type": "String",
+			"Default": "t2.nano"
+		},
+		"EntityDBAMI":
+		{
+			"Description": "The EntityDB AMI.",
+			"Type": "String",
+			"Default": "ami-40d28157"
+		},
+		"InstanceCount":
+		{
+			"Description": "Desired number of EntityDB instances.",
+			"Type": "Number",
+			"Default": "1"
+		},
+		"EntityDBS3Directory":
+		{
+			"Description": "The S3 directory containing EntityDB files.",
+			"Type": "String",
+			"Default": "bucket/entitydb/"
+		},
+		"BaseStackName": 
+		{
+			"Description": "The name of the base stack.",
+			"Type": "String",
+			"Default": "base"
+		}
+	},
+	"Resources":
+	{
+		"EntityDBInstanceProfile":
+		{
+			"Type": "AWS::IAM::InstanceProfile",
+			"Properties":
+			{
+				"Path": "/",
+				"Roles":
+				[
+					{
+						"Ref": "EntityDBRole"
+					}
+				]
+			}
+		},
+		"EntityDBSQSPolicy":
+		{
+			"Type": "AWS::IAM::Policy",
+			"Properties":
+			{
+				"PolicyDocument":
+				{
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Action":
+							[
+								"sqs:*"
+							],
+							"Resource":
+							{
+								"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-QueueARN" }
+							}
+						}
+					]
+				},
+				"PolicyName":
+				{
+					"Fn::Join":
+					[
+						"",
+						[
+							{
+								"Ref": "AWS::StackName"
+							},
+							"-entitydb-sqs-policy"
+						]
+					]
+				},
+				"Roles":
+				[
+					{
+						"Ref": "EntityDBRole"
+					}
+				]
+			}
+		},
+		"EntityDBS3Policy":
+		{
+			"Type": "AWS::IAM::Policy",
+			"Properties":
+			{
+				"PolicyDocument":
+				{
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Action":
+							[
+								"s3:GetObject",
+								"s3:ListBucket",
+								"s3:ListAllMyBuckets",
+								"s3:ListObjects"
+							],
+							"Resource": 
+							{
+								"Fn::Join":
+								[
+									"",
+									[
+										"arn:aws:s3:::",
+										{
+											"Ref": "EntityDBS3Directory"
+										},
+										"/*"
+									]
+								]
+							}
+						},
+						{
+							"Effect": "Allow",
+							"Action": "s3:ListAllMyBuckets",
+							"Resource": "arn:aws:s3:::*"
+						}
+					]
+				},
+				"PolicyName":
+				{
+					"Fn::Join":
+					[
+						"",
+						[
+							{
+								"Ref": "AWS::StackName"
+							},
+							"-entitydb-s3-policy"
+						]
+					]
+				},
+				"Roles":
+				[
+					{
+						"Ref": "EntityDBRole"
+					}
+				]
+			}
+		},
+		"EntityDBCloudWatchPolicy":
+		{
+			"Type": "AWS::IAM::Policy",
+			"Properties":
+			{
+				"PolicyDocument":
+				{
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Action":
+							[
+								"cloudwatch:putMetricData"
+							],
+							"Resource": "*"
+						}
+					]
+				},
+				"PolicyName":
+				{
+					"Fn::Join":
+					[
+						"",
+						[
+							{
+								"Ref": "AWS::StackName"
+							},
+							"-entitydb-cloudwatch-policy"
+						]
+					]
+				},
+				"Roles":
+				[
+					{
+						"Ref": "EntityDBRole"
+					}
+				]
+			}
+		},
+		"EntityDBRole":
+		{
+			"Type": "AWS::IAM::Role",
+			"Properties":
+			{
+				"AssumeRolePolicyDocument":
+				{
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Principal":
+							{
+								"Service":
+								[
+									"ec2.amazonaws.com"
+								]
+							},
+							"Action":
+							[
+								"sts:AssumeRole"
+							]
+						}
+					]
+				},
+				"Path": "/"
+			}
+		},	
+		"EntityDBGroup":
+		{
+			"Type": "AWS::AutoScaling::AutoScalingGroup",
+			"DependsOn":
+			[
+				"ElasticLoadBalancer"
+			],
+			"Properties":
+			{
+				"AvailabilityZones":
+				[
+					"us-east-1d",
+					"us-east-1e"
+				],
+				"VPCZoneIdentifier":
+				[
+					{
+						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet1" }
+					},
+					{
+						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet2" }
+					}
+				],
+				"LaunchConfigurationName":
+				{
+					"Ref": "LaunchConfig"
+				},
+				"MinSize": "1",
+				"MaxSize": "10",
+				"DesiredCapacity":
+				{
+					"Ref": "InstanceCount"
+				},
+				"LoadBalancerNames":
+				[
+					{
+						"Ref": "ElasticLoadBalancer"
+					}
+				]
+			}
+		},
+		"LaunchConfig":
+		{
+			"Type": "AWS::AutoScaling::LaunchConfiguration",
+			"Properties":
+			{
+				"AssociatePublicIpAddress": "true",
+				"ImageId":
+				{
+					"Ref": "EntityDBAMI"
+				},
+				"IamInstanceProfile":
+				{
+					"Fn::GetAtt":
+					[
+						"EntityDBInstanceProfile",
+						"Arn"
+					]
+				},
+				"SecurityGroups":
+				[
+					{
+						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-EntityDBSecurityGroup" }
+					}
+				],
+				"KeyName":
+				{
+					"Ref": "KeyName"
+				},
+				"InstanceType":
+				{
+					"Ref": "EntityDBInstanceType"
+				},
+				"UserData":
+				{
+					"Fn::Base64":
+					{
+						"Fn::Join":
+						[
+							"",
+							[
+								"#!/bin/bash -xe\n",
+								"apt-get update\n",
+								"apt-get upgrade -y\n",
+								"apt-get install -y openjdk-8-jre\n",
+								"apt-get install -y awscli ntp\n",
+								"mkdir /opt/entitydb\n",
+								"aws s3 cp s3://", {"Ref": "EntityDBS3Directory"}, " /opt/entitydb --recursive\n",
+								"chmod +x /opt/entitydb/entitydb.jar\n",
+								"ln -s /opt/entitydb/entitydb.jar /etc/init.d/entitydb\n",
+								"update-rc.d entitydb defaults 99\n",
+								"service entitydb start\n"
+							]
+						]
+					}
+				}
+			}
+		},
+		"ElasticLoadBalancer":
+		{
+			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+			"Properties":
+			{
+				"CrossZone": "true",
+				"SecurityGroups":
+				[
+					{
+						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-LoadBalancerSecurityGroup" }
+					}
+				],
+				"Subnets":
+				[
+					{
+						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet1" }
+					},
+					{
+						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet2" }
+					}
+				],
+				"Listeners":
+				[
+					{
+						"LoadBalancerPort": "8080",
+						"InstancePort": "8080",
+						"Protocol": "HTTP"
+					}
+				],
+				"HealthCheck":
+				{
+					"Target": "HTTP:8080/api/health",
+					"HealthyThreshold": "3",
+					"UnhealthyThreshold": "5",
+					"Interval": "30",
+					"Timeout": "25"
+				}
+			}
+		}
+	},
+	"Outputs":
+	{
+		"URL":
+		{
+			"Description": "URL of the website",
+			"Value":
+			{
+				"Fn::Join":
+				[
+					"",
+					[
+						"http://",
+						{
+							"Fn::GetAtt":
+							[
+								"ElasticLoadBalancer",
+								"DNSName"
+							]
+						}
+					]
+				]
+			}
+		}
+	}
+}
