@@ -39,7 +39,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.mtnfog.entitydb.testing.StressTests</mainClass>
+							<mainClass>com.mtnfog.entitydb.testing.StressTest</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -120,7 +120,6 @@
 			<artifactId>entity-model</artifactId>
 			<version>${entity.model.version}</version>
 			<type>test-jar</type>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
