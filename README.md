@@ -40,7 +40,7 @@ Once successfully built, an `entitydb.jar` will be under `entitydb-app/target`. 
 
 ## Deploying
 
-Refer to the wiki for detailed deployment instructions. Scripts are included under the `scripts/packaging/` directory to create an AMI (Packer script) and a Docker container.
+Refer to the wiki for detailed deployment instructions. Scripts are included under the `scripts/packaging/` directory to create an AMI (Packer script), a Docker container, and a CloudFormation stack.
 
 ### Ingesting Entities
 
