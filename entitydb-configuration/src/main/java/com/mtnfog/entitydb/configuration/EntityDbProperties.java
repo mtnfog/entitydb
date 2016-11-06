@@ -20,17 +20,30 @@ package com.mtnfog.entitydb.configuration;
 
 import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
-import org.apache.commons.lang3.StringUtils;
 
 /**
- * User-configurable properties available through the entitydb.properties file.
+ * User-configurable properties available through
+ * the <code>entitydb.properties</code> file.
  * 
  * @author Mountain Fog, Inc.
  *
  */
 @Sources("file:entitydb.properties")
 public interface EntityDbProperties extends Config {
-
+	
+	public static final String INTERNAL = "internal";
+	
+	public static final String MYSQL = "mysql";
+	public static final String DYNAMODB = "dynamodb";
+	public static final String MONGODB = "mongodb";
+	
+	public static final String ELASTICSEARCH = "elasticsearch";
+	
+	public static final String ACTIVEMQ = "activemq";
+	public static final String SQS = "sqs";
+	
+	public static final String INFLUXDB = "influxdb";
+	
 	/**
 	 * Gets if the indexer is enabled.
 	 * @return <code>true</code> if the indexer is enabled.
@@ -100,9 +113,11 @@ public interface EntityDbProperties extends Config {
 	
 	/**
 	 * Gets the port of the MongoDB server.
-	 * @return The port of the MongoDB server.
+	 * @return The port of the MongoDB server. If not specified in
+	 * the properties then <code>27017</code> will be returned.
 	 */
 	@Key("mongodb.port")
+	@DefaultValue("27017")
     public int getMongoDBPort();
 	
 	/**
@@ -149,9 +164,11 @@ public interface EntityDbProperties extends Config {
 	
 	/**
 	 * Gets the Cassandra keyspace.
-	 * @return The Cassandra keyspace.
+	 * @return The Cassandra keyspace. If not specified in the properties
+	 * then <code>entitydb</code> will be returned.
 	 */
 	@Key("cassandra.keyspace")
+	@DefaultValue("entitydb")
     public String getCassandraKeyspace();
 	
 	/**
@@ -187,7 +204,7 @@ public interface EntityDbProperties extends Config {
 	 * @return The MySQL JDBC URL.
 	 */
 	@Key("mysql.jdbc.url")
-    public String getMySqlJdbURL();
+    public String getMySqlJdbcURL();
 	
 	/**
 	 * Gets the MySQL username.
@@ -206,7 +223,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the cache provider.
 	 * @return The cache provider. If not specified in the properties
-	 * then <code>internal</code> is returned.
+	 * then <code>internal</code> will be returned.
 	 */
 	@Key("cache")
 	@DefaultValue("internal")
@@ -222,7 +239,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the cache TTL.
 	 * @return The cache TTL. If not specified in the properties
-	 * then <code>3600</code> is returned.
+	 * then <code>3600</code> will be returned.
 	 */
 	@Key("cache.ttl")
 	@DefaultValue("3600")
@@ -231,7 +248,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the queue provider.
 	 * @return The queue provider. If not specified in the properties
-	 * then <code>internal</code> is returned.
+	 * then <code>internal</code> will be returned.
 	 */
 	@Key("queue.provider")
 	@DefaultValue("internal")
@@ -240,7 +257,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the sleep period in seconds for the queue.
 	 * @return The sleep period in seconds for the queue. If not
-	 * specified in the properties then <code>60</code> is returned.
+	 * specified in the properties then <code>60</code> will be returned.
 	 */
 	@Key("queue.consumer.sleep")
 	@DefaultValue("60")
@@ -257,7 +274,7 @@ public interface EntityDbProperties extends Config {
 	 * Gets the SQS endpoint.
 	 * @return The SQS endpoint. If not specified in the properties
 	 * then the endpoint for us-east-1 (<code>https://sqs.us-east-1.amazonaws.com</code>)
-	 * is returned.
+	 * will be returned.
 	 */
 	@Key("queue.sqs.endpoint")
     public String getSqsEndpoint();
@@ -279,7 +296,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the SQS queue visibility timeout.
 	 * @return The SQS queue visibility timeout. If not specified in the
-	 * properties then <code>60</code> is returned.
+	 * properties then <code>60</code> will be returned.
 	 */
 	@Key("queue.sqs.visibility.timeout")
     public int getSqsVisibilityTimeout();
@@ -288,7 +305,7 @@ public interface EntityDbProperties extends Config {
 	 * Gets the ActiveMQ broker URL.
 	 * @return The ActiveMQ broker URL. If not specified in the
 	 * properties then <code>vm://localhost?broker.persistent=true</code>
-	 * is returned.
+	 * will be returned.
 	 */
 	@Key("queue.activemq.broker.url")
 	@DefaultValue("vm://localhost?broker.persistent=true")
@@ -297,7 +314,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the name of the ActiveMQ queue.
 	 * @return The name of the ActiveMQ queue. If not specified in the
-	 * properties then <code>entitydb</code> is returned.
+	 * properties then <code>entitydb</code> will be returned.
 	 */
 	@Key("queue.activemq.queue.name")
 	@DefaultValue("entities")
@@ -306,7 +323,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the timeout for the ActiveMQ queue connections.
 	 * @return The timeout for the ActiveMQ queue connections. If not specified
-	 * in the settings then <code>100</code> is returned.
+	 * in the settings then <code>100</code> will be returned.
 	 */
 	@Key("queue.activemq.timeout")
 	@DefaultValue("100")
@@ -315,7 +332,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets if the rules engine is enabled.
 	 * @return <code>true</code> if the rules engine is enabled. If not
-	 * specified in the settings then <code>false</code> is returned.
+	 * specified in the settings then <code>false</code> will be returned.
 	 */
 	@Key("rules.engine.enabled")
 	@DefaultValue("false")
@@ -331,7 +348,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the search index provider.
 	 * @return The search index provider. If not specified in the settings
-	 * then <code>internal</code> is returned.
+	 * then <code>internal</code> will be returned.
 	 */
 	@Key("search.index.provider")
 	@DefaultValue("internal")
@@ -361,7 +378,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the provider of the datastore.
 	 * @return The provider of the datastore. If not provided 
-	 * in the settings then <code>internal</code> is returned.
+	 * in the settings then <code>internal</code> will be returned.
 	 */
 	@Key("datastore")
 	@DefaultValue("internal")
@@ -371,7 +388,7 @@ public interface EntityDbProperties extends Config {
 	 * Gets the JDBC URL for the datastore.
 	 * @return The JDBC URL for the database. If not provided in
 	 * the settings then <code>jdbc:mariadb://localhost/entitydb?useSSL=false</code>
-	 * is returned.
+	 * will be returned.
 	 */
 	@Key("datastore.jdbc.url")
 	@DefaultValue("jdbc:mariadb://localhost/entitydb?useSSL=false")
@@ -394,7 +411,7 @@ public interface EntityDbProperties extends Config {
 	/**
 	 * Gets the provider for the metrics.
 	 * @return The provider for the metrics. If not specified in the
-	 * properties then <code>internal</code> is returned.
+	 * properties then <code>internal</code> will be returned.
 	 */
 	@Key("metrics.provider")
 	@DefaultValue("internal")
@@ -433,7 +450,7 @@ public interface EntityDbProperties extends Config {
 	 * through the API.
 	 * @return <code>true</code> if entity ACLs are masked when entities
 	 * are returned through the API. If not specified in the properties
-	 * then <code>false</code> is returned.
+	 * then <code>false</code> will be returned.
 	 */
 	@Key("mask.entity.acl")
 	@DefaultValue("false")
@@ -444,7 +461,7 @@ public interface EntityDbProperties extends Config {
 	 * EntityDB starts.
 	 * @return <code>true</code> if test data should be populated to the
 	 * datastore when EntityDB starts. If not specified in the properties
-	 * then <code>false</code> is returned.
+	 * then <code>false</code> will be returned.
 	 */
 	@Key("populate.test.data")
 	@DefaultValue("false")

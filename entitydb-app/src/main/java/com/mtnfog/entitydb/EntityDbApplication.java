@@ -95,9 +95,7 @@ import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
 @SpringBootApplication(exclude = { JacksonAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class })
 @PropertySource(value = {"file:entitydb.properties"}, ignoreResourceNotFound = false)
 @Configuration
-public class EntityDbApplication extends SpringBootServletInitializer {
-	
-	private static final String INTERNAL = "internal";
+public class EntityDbApplication extends SpringBootServletInitializer {		
 
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbApplication.class);
 		
@@ -185,11 +183,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 		try {
 		
-			if("mysql".equalsIgnoreCase(entitydb)) {
+			if(StringUtils.equalsIgnoreCase(EntityDbProperties.MYSQL, entitydb)) {
 								
-				entityStore = RdbmsEntityStore.createMySQL5EntityStore(properties.getMySqlJdbURL(), properties.getMySqlUsername(), properties.getMySqlPassword(), "validate");
+				entityStore = RdbmsEntityStore.createMySQL5EntityStore(properties.getMySqlJdbcURL(), properties.getMySqlUsername(), properties.getMySqlPassword(), "validate");
 				
-			} else if("dynamodb".equalsIgnoreCase(entitydb)) {
+			} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.DYNAMODB, entitydb)) {
 				
 				if(StringUtils.isNotEmpty(properties.getDynamoDBAccessKey())) {
 								
@@ -201,7 +199,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 					
 				}
 				
-			} else if("mongodb".equalsIgnoreCase(entitydb)) {
+			} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.MONGODB, entitydb)) {
 				
 				final String mongoDbHost = properties.getMongoDBHost();
 				final int mongoDbPort = properties.getMongoDBPort();
@@ -220,7 +218,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 					
 				}
 				
-			} else if(INTERNAL.equalsIgnoreCase(entitydb)) {
+			} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.INTERNAL, entitydb)) {
 				
 				LOGGER.warn("A temporary, internal entity store will be used. Its contents are not retained across restarts.");
 				
@@ -253,7 +251,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 		try {
 		
-			if(INTERNAL.equalsIgnoreCase(properties.getSearchIndexProvider())) {
+			if(StringUtils.equalsIgnoreCase(EntityDbProperties.INTERNAL, properties.getSearchIndexProvider())) {
 				
 				EmbeddedElasticsearchServer embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
 				embeddedElasticsearchServer.start();
@@ -262,7 +260,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 							
 				searchIndex = new ElasticSearchIndex("http://localhost:9200/");
 				
-			} else if("elasticsearch".equalsIgnoreCase(properties.getSearchIndexProvider())) {
+			} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.ELASTICSEARCH, properties.getSearchIndexProvider())) {
 			
 				if(StringUtils.isEmpty(properties.getElasticsearchUsername())) {
 					
@@ -328,7 +326,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 		String queue = properties.getQueueProvider();
 		
-		if("sqs".equalsIgnoreCase(queue)) {
+		if(StringUtils.equalsIgnoreCase(EntityDbProperties.SQS, queue)) {
 						
 			LOGGER.info("Using SQS queue: {}", properties.getSqsQueueUrl());
 			
@@ -342,7 +340,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 			}
 			
-		} else if("activemq".equalsIgnoreCase(queue)) {
+		} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.ACTIVEMQ, queue)) {
 			
 			LOGGER.info("Using ActiveMQ queue.");
 						
@@ -356,7 +354,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 			}
 			
-		} else if(INTERNAL.equalsIgnoreCase(queue)) {
+		} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.INTERNAL, queue)) {
 			
 			LOGGER.info("Using internal queue.");
 			
@@ -381,7 +379,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 		String queue = properties.getQueueProvider();
 								
-		if("sqs".equalsIgnoreCase(queue)) {
+		if(StringUtils.equalsIgnoreCase(EntityDbProperties.SQS, queue)) {
 									
 			LOGGER.info("Using SQS queue {}.", properties.getSqsQueueUrl());
 			
@@ -395,7 +393,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 			}
 			
-		} else if("activemq".equalsIgnoreCase(queue)) {
+		} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.ACTIVEMQ, queue)) {
 			
 			LOGGER.info("Using ActiveMQ queue.");
 						
@@ -409,7 +407,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 			}
 			
-		} else if(INTERNAL.equalsIgnoreCase(queue)) {
+		} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.INTERNAL, queue)) {
 			
 			LOGGER.info("Using internal queue.");
 			
@@ -430,7 +428,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	@Bean
 	public MetricReporter getMetricReporter() {
 		
-		if("influxdb".equalsIgnoreCase(properties.getMetricsProvider())) {
+		if(StringUtils.equalsIgnoreCase(EntityDbProperties.INFLUXDB, properties.getMetricsProvider())) {
 			
 			LOGGER.info("Using InfluxDB at {} and database {}.", properties.getInfluxDbDatabase(), properties.getInfluxDbDatabase());
 			
