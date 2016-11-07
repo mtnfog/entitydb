@@ -26,11 +26,11 @@ import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.InternalQueue;
-import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
-import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
 
 /**
  * Implementation of {@link QueuePublisher} that publishes messages to an internal queue
@@ -45,12 +45,20 @@ public class InternalQueuePublisher implements QueuePublisher {
 	
 	private MetricReporter metricReporter;
 	
+	/**
+	 * Creates a new internal queue publisher. Messages placed onto the internal queue
+	 * are held in memory and any messages on the queue will be lost should the EntityDB process exit.
+	 * @param metricReporter A {@link MetricReporter}.
+	 */
 	public InternalQueuePublisher(MetricReporter metricReporter) {
 		
 		this.metricReporter = metricReporter;
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void queueUpdateAcl(String entityId, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 		
@@ -78,6 +86,9 @@ public class InternalQueuePublisher implements QueuePublisher {
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 

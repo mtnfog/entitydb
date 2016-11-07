@@ -18,8 +18,6 @@
  */
 package com.mtnfog.entitydb.configuration;
 
-import java.util.UUID;
-
 import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
 

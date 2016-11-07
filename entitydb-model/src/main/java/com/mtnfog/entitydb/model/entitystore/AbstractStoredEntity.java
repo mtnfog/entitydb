@@ -21,6 +21,13 @@ package com.mtnfog.entitydb.model.entitystore;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 
+/**
+ * Base class for stored entities. A stored entity is an
+ * entity which has been persisted to an entity store.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public abstract class AbstractStoredEntity {
 		
 	public abstract String getId();

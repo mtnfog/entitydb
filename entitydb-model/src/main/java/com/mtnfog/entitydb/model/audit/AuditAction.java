@@ -42,6 +42,11 @@ public enum AuditAction {
 	STORED("stored"),
 	
 	/**
+	 * An entity's ACL was updated.
+	 */
+	ACL_UPDATED("acl_updated"),
+	
+	/**
 	 * An entity was skipped because it already exists in the store.
 	 */
 	SKIPPED("skipped"),

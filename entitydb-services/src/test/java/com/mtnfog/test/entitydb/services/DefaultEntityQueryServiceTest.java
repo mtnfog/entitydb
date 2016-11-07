@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -52,6 +54,7 @@ import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.consumers.InternalQueueConsumer;
@@ -153,11 +156,18 @@ public class DefaultEntityQueryServiceTest {
 			return RdbmsEntityStore.createHypersonicEntityStore("jdbc:hsqldb:mem:entitydb", "sa", "", "create-drop");
 
 		}
+		
+		@Bean
+		public ConcurrentLinkedQueue<IndexedEntity> getIndexerCache() {
+
+			return new ConcurrentLinkedQueue<IndexedEntity>();
+			
+		}
 
 		@Bean
 		public QueueConsumer getQueueConsumer() throws IOException, URISyntaxException {
 
-			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getEntityQueryService(), getMetricReporter(), 5);
+			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getEntityQueryService(), getMetricReporter(), 5, getIndexerCache());
 
 		}
 

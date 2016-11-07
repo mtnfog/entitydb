@@ -48,18 +48,34 @@ public class QueryResult {
 		
 	}
 
+	/**
+	 * Gets the query's ID.
+	 * @return The query's ID.
+	 */
 	public String getQueryId() {
 		return queryId;
 	}
 
+	/**
+	 * Sets the query's ID.
+	 * @param queryId The query's ID.
+	 */
 	public void setQueryId(String queryId) {
 		this.queryId = queryId;
 	}
 
+	/**
+	 * Gets the list {@link IndexedEntity entities}.
+	 * @return The list {@link IndexedEntity entities}.
+	 */
 	public List<IndexedEntity> getEntities() {
 		return entities;
 	}
 
+	/**
+	 * sets the {@link IndexedEntity entities}.
+	 * @param entities A list of {@link IndexedEntity entities}.
+	 */
 	public void setEntities(List<IndexedEntity> entities) {
 		this.entities = entities;
 	}

@@ -44,9 +44,9 @@ public interface EntityStore<T extends AbstractStoredEntity> {
 	public String getStatus();
 	
 	/**
-	 * Gets a list of entities that have not been indexed.
+	 * Gets a list of visible entities that have not been indexed.
 	 * @param The maximum number of entities to retrieve.
-	 * @return A list of entities that have not been indexed.
+	 * @return A list of visible entities that have not been indexed.
 	 */
 	public List<T> getNonIndexedEntities(int limit);
 	

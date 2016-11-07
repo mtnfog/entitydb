@@ -149,6 +149,9 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public long getLastIndexedId() {	
 		
@@ -461,6 +464,9 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public long getCount() {
 		
@@ -649,26 +655,14 @@ public class ElasticSearchIndex implements SearchIndex {
         }
 		
 	}
-
-	private boolean indexExists() throws IOException {
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void close() {
 		
-		return false;
-		
-		/*GetAliases getAliases = new GetAliases.Builder().build();
-		
-		JestResult jestResult = jestClient.execute(getAliases);
-		
-		int count = jestResult.getJsonObject().getAsJsonObject(INDEX_NAME).getAsJsonObject("aliases").entrySet().size();
-		
-		if(count == 0) {
-			
-			return false;
-			
-		} else {
-			
-			return true;
-			
-		}*/
+		jestClient.shutdownClient();
 		
 	}
 	
@@ -682,27 +676,19 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 		boolean result = true;
 		
-		try {
+		try {									
+				
+			final String settings = getSettings();
 			
-			if(!indexExists()) {							
-				
-				final String settings = getSettings();
-				
-				CreateIndex createIndex = new CreateIndex.Builder(INDEX_NAME)
-						.settings(settings)
-		                .build();
-				
-				JestResult jestResult = jestClient.execute(createIndex);
-				
-				result = jestResult.isSucceeded();
-				
-				LOGGER.info("Elasticsearch index creation status: " + jestResult.getJsonString());
+			CreateIndex createIndex = new CreateIndex.Builder(INDEX_NAME)
+					.settings(settings)
+	                .build();
 			
-			} else {
-				
-				LOGGER.info("Elasticsearch index {} exists.", INDEX_NAME);
-				
-			}
+			JestResult jestResult = jestClient.execute(createIndex);
+			
+			result = jestResult.isSucceeded();
+			
+			LOGGER.info("Elasticsearch index creation status: " + jestResult.getJsonString());
 						
 		} catch (IOException ex) {
 			
@@ -731,12 +717,5 @@ public class ElasticSearchIndex implements SearchIndex {
 		return settings;
 		
 	}
-	
-	@Override
-	public void close() {
 		
-		jestClient.shutdownClient();
-		
-	}
-	
 }

@@ -18,15 +18,29 @@
  */
 package com.mtnfog.entitydb.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mtnfog.entitydb.model.domain.ContinuousQuery;
 import com.mtnfog.entitydb.model.domain.User;
+import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.services.NotificationService;
 
+/**
+ * Implementation of {@link NotificationService}.
+ *  
+ * @author Mountain Fog, Inc.
+ *
+ */
 @Component
 public class DefaultNotifcationService implements NotificationService {
 
+	@Autowired
+	private MetricReporter metricReporter;
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery) {
 
@@ -34,6 +48,9 @@ public class DefaultNotifcationService implements NotificationService {
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String createNotificationTopic(User user) {
 		

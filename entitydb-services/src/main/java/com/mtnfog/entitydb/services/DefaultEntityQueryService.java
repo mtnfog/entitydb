@@ -98,6 +98,8 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	@Override
 	public QueryResult eql(String query, String apiKey, int continuous, int days) {
 				
+		long startTime = System.currentTimeMillis();
+		
 		QueryResult queryResult = null;
 		
 		try {
@@ -126,6 +128,9 @@ public class DefaultEntityQueryService implements EntityQueryService {
 						continuousQueryRepository.save(new ContinuousQueryEntity(userEntity, query, new Date(), days, snsTopicArn));
 					
 					}
+					
+					// Report the execution time for successful queries.
+					metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_QUERY, "executionTime", startTime);
 				
 				} else {
 					
@@ -158,7 +163,12 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	@Override
 	public void executeContinuousQueries(Entity entity, String entityId) {
 		
+		long startTime = System.currentTimeMillis();
+		
 		List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
+		
+		// Report the number of continuous queries being executed.
+		metricReporter.report(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "count", continuousQueryEntities.size());
 		
 		for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
 									
@@ -182,6 +192,9 @@ public class DefaultEntityQueryService implements EntityQueryService {
 			}
 						
 		}
+		
+		// Report the time taken to execute the continuous queries.
+		metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "executionTime", startTime);
 		
 	}
 	

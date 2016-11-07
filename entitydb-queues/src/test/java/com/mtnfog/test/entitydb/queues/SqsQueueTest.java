@@ -18,20 +18,19 @@
  */
 package com.mtnfog.test.entitydb.queues;
 
+import org.elasticmq.NodeAddress;
 import org.elasticmq.rest.sqs.SQSRestServer;
 import org.elasticmq.rest.sqs.SQSRestServerBuilder;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 
+import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.model.CreateQueueResult;
 import com.mtnfog.entitydb.queues.consumers.SqsQueueConsumer;
 import com.mtnfog.entitydb.queues.publishers.SqsQueuePublisher;
 
-@Ignore
 public class SqsQueueTest extends AbstractQueueTest {
-	
-	// https://github.com/adamw/elasticmq
-	
+
 	private SQSRestServer sqs;
 	
 	@Before
@@ -39,16 +38,20 @@ public class SqsQueueTest extends AbstractQueueTest {
 		
 		super.before();
 		
-		sqs = SQSRestServerBuilder.withPort(9325).withInterface("localhost").start();
+		sqs = SQSRestServerBuilder.withServerAddress(new NodeAddress("http", "localhost", 9324, "")).start();
+		sqs.waitUntilStarted();
 		
 		final String endpoint = "http://localhost:9324";
 		
-		// TODO: What should the queueUrl be?
-		final String queueUrl = "http://localhost:9324/queue";
-		final int visibilityTimeout = 10;
+		AmazonSQSClient client = new AmazonSQSClient();
+		client.setEndpoint(endpoint);
 		
-		consumer = new SqsQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, endpoint, queueUrl, sleepSeconds, visibilityTimeout);
-		publisher = new SqsQueuePublisher(queueUrl, endpoint, metricReporter);				
+		CreateQueueResult result = client.createQueue("entitydb");
+				
+		final int visibilityTimeout = 10;
+			
+		consumer = new SqsQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, endpoint, result.getQueueUrl(), "a", "s", sleepSeconds, visibilityTimeout, indexerCache);
+		publisher = new SqsQueuePublisher(result.getQueueUrl(), endpoint, "a", "s", metricReporter);				
 		
 	}
 	

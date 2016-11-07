@@ -16,25 +16,33 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.test.entitydb.queues;
+package com.mtnfog.entitydb.model.queue;
 
-import org.junit.Before;
-
-import com.mtnfog.entitydb.queues.consumers.InternalQueueConsumer;
-import com.mtnfog.entitydb.queues.publishers.InternalQueuePublisher;
-
-public class InternalQueueTest extends AbstractQueueTest {
-
-	protected int sleepSeconds = 1;
+/**
+ * Constants used by the queues.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
+public class QueueConstants {
 	
-	@Before
-	public void before() throws Exception {
-		
-		super.before();
-		
-		consumer = new InternalQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, sleepSeconds, indexerCache);
-		publisher = new InternalQueuePublisher(metricReporter);				
-		
+	/**
+	 * The action to be taken on the queue message.
+	 */
+	public static final String ACTION = "action";	
+	
+	/**
+	 * An entity is to be ingested.
+	 */
+	public static final String ACTION_INGEST = "ingest";
+	
+	/**
+	 * An entity's ACL is to be updated.
+	 */
+	public static final String ACTION_UPDATE_ACL = "updateAcl";	
+	
+	private QueueConstants() {
+		// This is a utility class.
 	}
 	
 }

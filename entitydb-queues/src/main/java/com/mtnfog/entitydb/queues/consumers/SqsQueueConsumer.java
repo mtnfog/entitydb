@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,17 +39,18 @@ import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.google.gson.Gson;
-import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.queue.QueueConstants;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
-import com.mtnfog.entitydb.model.security.Acl;
+import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
+import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
-import com.mtnfog.entitydb.queues.QueueConstants;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
 
 /**
  * A queue consumer that consumes from an AWS SQS queue.
@@ -75,9 +77,10 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	
 	public SqsQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
 			AuditLogger auditLogger, EntityQueryService entityQueryService, 
-			MetricReporter metricReporter, String endpoint, String queueUrl, int sleepSeconds, int visibilityTimeout) {
+			MetricReporter metricReporter, String endpoint, String queueUrl, int sleepSeconds, int visibilityTimeout,
+			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 		
-		super(entityStore, rulesEngines,  auditLogger, entityQueryService, metricReporter);
+		super(entityStore, rulesEngines,  auditLogger, entityQueryService, metricReporter, indexerCache);
 		
 		client = new AmazonSQSClient(getClientConfiguration());
 		client.setEndpoint(endpoint);
@@ -91,9 +94,10 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	
 	public SqsQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines, 
 			AuditLogger auditLogger, EntityQueryService entityQueryService, 
-			MetricReporter metricReporter, String endpoint, String queueUrl, String accessKey, String secretKey, int sleepSeconds, int visibilityTimeout) {
+			MetricReporter metricReporter, String endpoint, String queueUrl, String accessKey, String secretKey, int sleepSeconds, int visibilityTimeout,
+			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 			
-		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter);
+		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, indexerCache);
 		
 		client = new AmazonSQSClient(new BasicAWSCredentials(accessKey, secretKey), getClientConfiguration());
 		client.setEndpoint(endpoint);
@@ -145,23 +149,15 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 			
 				// Ingest the entity.
 				
-				Entity entity = gson.fromJson(message.getBody(), Entity.class);
-				
-				final String acl = message.getMessageAttributes().get(QueueConstants.ACL).getStringValue();
-				final String apiKey = message.getMessageAttributes().get(QueueConstants.API_KEY).getStringValue();				
+				QueueIngestMessage queueIngestMessage = gson.fromJson(message.getBody(), QueueIngestMessage.class);						
 				
 				try {
 				
-					LOGGER.debug("Received entity with ACL: {}", acl);
-					
-					processed = ingestEntity(entity, new Acl(acl), apiKey);					
+					processed = ingestEntity(queueIngestMessage);					
 				
 				} catch (MalformedAclException ex) {
-					
-					// This should never hapen since the ACL is validated before here
-					// so this error will not be rethrown.
-					
-					LOGGER.error("The received ACL " + acl + " is malformed.", ex);
+										
+					LOGGER.error("The received ACL " + queueIngestMessage.getAcl() + " is malformed.", ex);
 					
 				}
 			
@@ -169,20 +165,15 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 				
 				// Update the entity's ACL.
 				
-				final String entityId = message.getBody();
-				final String acl = message.getMessageAttributes().get(QueueConstants.ACL).getStringValue();
+				QueueUpdateAclMessage queuUpdateAclMessage = gson.fromJson(message.getBody(), QueueUpdateAclMessage.class);
 				
 				try {
 									
-					processed = updateEntityAcl(entityId, new Acl(acl));
+					processed = updateEntityAcl(queuUpdateAclMessage);
 					
 				} catch (EntityStoreException ex) {
 					
-					LOGGER.error("Unable to update entity " + entityId + " to have ACL " + acl + ".", ex);
-					
-				} catch (MalformedAclException ex) {
-					
-					LOGGER.error("Unable to update entity " + entityId + " to have ACL " + acl + ". The ACL is malformed.", ex);
+					LOGGER.error("Unable to update entity " + queuUpdateAclMessage.getEntityId() + " to have ACL " + queuUpdateAclMessage.getAcl() + ".", ex);
 					
 				}
 				

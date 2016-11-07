@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,9 +38,11 @@ import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.queue.QueueConstants;
+import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.queues.QueueConstants;
 
 /**
  * Implementation of {@link QueuePublisher} that publishes messages to an AWS SQS queue.
@@ -51,22 +54,43 @@ public class SqsQueuePublisher implements QueuePublisher {
 
 	private static final Logger LOGGER = LogManager.getLogger(SqsQueuePublisher.class);
 	
+	private static final String STRING = "String";
+	
 	private AmazonSQSClient client;
 	private Gson gson;
 	private MetricReporter metricReporter;
 
 	private String queueUrl;
 	
+	/**
+	 * Creates a new SQS queue publisher. Credentials are obtained through the credential
+	 * provider chain. Credentials need IAM permissions
+	 * that allow publishing messages to an SQS queue.
+	 * @param queueUrl The URL of the SQS queue.
+	 * @param endpoint The AWS SQS endpoint.
+	 * @param metricReporter A {@link MetricReporter}.
+	 */
 	public SqsQueuePublisher(String queueUrl, String endpoint, MetricReporter metricReporter) {
 
 		this.queueUrl = queueUrl;
 		this.metricReporter = metricReporter;
 		
 		client = new AmazonSQSClient();
+		client.setEndpoint(endpoint);
+		
 		gson = new Gson();
 
 	}
 	
+	/**
+	 * Creates a new SQS queue publisher. The access/secret key combination need IAM permissions
+	 * that allow publishing messages to an SQS queue.
+	 * @param queueUrl The URL of the SQS queue.
+	 * @param endpoint The AWS SQS endpoint.
+	 * @param accessKey The access key.
+	 * @param secretKey The secret key.
+	 * @param metricReporter A {@link MetricReporter}.
+	 */
 	public SqsQueuePublisher(String queueUrl, String endpoint, String accessKey, String secretKey, MetricReporter metricReporter) {
 
 		this.queueUrl = queueUrl;
@@ -79,6 +103,9 @@ public class SqsQueuePublisher implements QueuePublisher {
 
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void queueUpdateAcl(String entityId, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 		
@@ -91,12 +118,12 @@ public class SqsQueuePublisher implements QueuePublisher {
 			SendMessageRequest request = new SendMessageRequest();
 			
 			Map<String, MessageAttributeValue> attributes = new HashMap<String, MessageAttributeValue>();
-			attributes.put(QueueConstants.ACTION, new MessageAttributeValue().withDataType("String").withStringValue(QueueConstants.ACTION_UPDATE_ACL));
-			attributes.put(QueueConstants.ACL, new MessageAttributeValue().withDataType("String").withStringValue(acl));
-			attributes.put(QueueConstants.API_KEY, new MessageAttributeValue().withDataType("String").withStringValue(apiKey));
+			attributes.put(QueueConstants.ACTION, new MessageAttributeValue().withDataType(STRING).withStringValue(QueueConstants.ACTION_UPDATE_ACL));
+			
+			QueueUpdateAclMessage queueUpdateAclMessage = new QueueUpdateAclMessage(entityId, acl, apiKey);
 			
 			request.setQueueUrl(queueUrl);
-			request.setMessageBody(entityId);
+			request.setMessageBody(gson.toJson(queueUpdateAclMessage));
 			request.setMessageAttributes(attributes);
 	
 			client.sendMessage(request);
@@ -111,6 +138,9 @@ public class SqsQueuePublisher implements QueuePublisher {
 		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 
@@ -134,15 +164,16 @@ public class SqsQueuePublisher implements QueuePublisher {
 			for (Entity entity : entities) {
 	
 				Map<String, MessageAttributeValue> attributes = new HashMap<String, MessageAttributeValue>();
-				attributes.put(QueueConstants.ACTION, new MessageAttributeValue().withDataType("String").withStringValue(QueueConstants.ACTION_INGEST));				
-				attributes.put(QueueConstants.ACL, new MessageAttributeValue().withDataType("String").withStringValue(acl));
-				attributes.put(QueueConstants.API_KEY, new MessageAttributeValue().withDataType("String").withStringValue(apiKey));
+				attributes.put(QueueConstants.ACTION, new MessageAttributeValue().withDataType(STRING).withStringValue(QueueConstants.ACTION_INGEST));				
+				
+				QueueIngestMessage quueIngestMessage = new QueueIngestMessage(entity, acl, apiKey);				
 				
 				SendMessageBatchRequestEntry entry = new SendMessageBatchRequestEntry();
 				
-				entry.setMessageBody(gson.toJson(entity));
-				entry.setMessageAttributes(attributes);
-	
+				entry.setMessageBody(gson.toJson(quueIngestMessage));
+				entry.setMessageAttributes(attributes);				
+				entry.setId(UUID.randomUUID().toString());
+				
 				entries.add(entry);
 	
 			}

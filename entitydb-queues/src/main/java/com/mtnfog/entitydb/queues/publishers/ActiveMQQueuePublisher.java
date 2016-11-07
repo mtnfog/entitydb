@@ -38,11 +38,11 @@ import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.queue.QueueConstants;
+import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.queues.QueueConstants;
-import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
-import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
 
 /**
  * Implementation of {@link QueuePublisher} that publishes messages to an ActiveMQ queue.
@@ -86,6 +86,9 @@ public class ActiveMQQueuePublisher implements QueuePublisher {
                 
 	}	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void queueUpdateAcl(String entityId, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 		
@@ -121,6 +124,9 @@ public class ActiveMQQueuePublisher implements QueuePublisher {
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 

@@ -18,12 +18,24 @@
  */
 package com.mtnfog.entitydb.model.metrics;
 
+/**
+ * A metric of the system.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public class Metric {
 
 	private String name;
 	private long value;
 	private Unit unit;
 	
+	/**
+	 * Creates a new metric.
+	 * @param name The name of the metric.
+	 * @param value The value of the metric.
+	 * @param unit The {@link Unit unit} of the metric.
+	 */
 	public Metric(String name, long value, Unit unit) {
 		
 		this.name = name;
@@ -32,14 +44,26 @@ public class Metric {
 		
 	}
 	
+	/**
+	 * Gets the metric's name.
+	 * @return The metric's name.
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Gets the metric's value.
+	 * @return The metric's value.
+	 */
 	public long getValue() {
 		return value;
 	}
 	
+	/**
+	 * Gets the metric's {@link Unit unit}.
+	 * @return The metric's {@link Unit unit}.
+	 */
 	public Unit getUnit() {
 		return unit;
 	}

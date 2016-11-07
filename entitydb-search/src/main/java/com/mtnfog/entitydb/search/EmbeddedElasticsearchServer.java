@@ -30,14 +30,29 @@ import org.elasticsearch.node.NodeBuilder;
 
 import com.google.common.io.Files;
 
+/**
+ * An Elasticsearch server that runs embedded in the same process as EntityDB.
+ * This class is used for testing purposes and should not be used in a
+ * production system.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public class EmbeddedElasticsearchServer {
 
 	private Node node;
 	
+	/**
+	 * Creates a new embedded Elasticsearch server.
+	 */
     public EmbeddedElasticsearchServer() {
 
     }
     
+    /**
+     * Starts the embedded Elasticsearch server.
+     * @throws IOException Thrown if the server cannot successfully start.
+     */
     public void start() throws IOException {
     	
         Settings.Builder elasticsearchSettings = Settings.builder()
@@ -72,12 +87,19 @@ public class EmbeddedElasticsearchServer {
 		
     }
     
+    /**
+     * Closes and stops the server.
+     */
     public void close() {
     	
     	node.close();
     	
     }
 
+    /**
+     * Gets the ELasticsearch {@link Client} for this server.
+     * @return
+     */
     public Client getClient() {
          
     	return node.client();

@@ -32,12 +32,28 @@ public class EntityIdGenerator {
 		// This is a utility class.
 	}
 	
+	/**
+	 * Generates an entity ID. An entity ID is a fingerprint that uniquely identifies an entity.
+	 * @param entity The {@link Entity entity}.
+	 * @param acl The entity's ACL.
+	 * @return The entity's ID.
+	 */
 	public static String generateEntityId(Entity entity, String acl) {
 		
 		return generateEntityId(entity.getText(), entity.getConfidence(), entity.getLanguageCode(), entity.getContext(), entity.getDocumentId(), acl);
 		
 	}
 	
+	/**
+	 * Generates an entity ID. An entity ID is a fingerprint that uniquely identifies an entity.
+	 * @param entityText The text of the entity.
+	 * @param confidence The confidence of the entity.
+	 * @param entityLanguage The language of the entity.
+	 * @param context The context of the entity.
+	 * @param documentId The document ID of the entity.
+	 * @param acl The entity's ACL.
+	 * @return The entity's ID.
+	 */
 	public static String generateEntityId(String entityText, double confidence, String entityLanguage, String context, String documentId, String acl) {
 		
 		String encodedEntity = String.format("%s:%s:%s:%s:%s:%s", entityText, confidence, entityLanguage, context, documentId, acl);

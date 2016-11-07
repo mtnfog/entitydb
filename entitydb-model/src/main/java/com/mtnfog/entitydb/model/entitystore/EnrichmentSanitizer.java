@@ -21,6 +21,12 @@ package com.mtnfog.entitydb.model.entitystore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Sanitizer for entity enrichments.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public class EnrichmentSanitizer {
 
 	/**

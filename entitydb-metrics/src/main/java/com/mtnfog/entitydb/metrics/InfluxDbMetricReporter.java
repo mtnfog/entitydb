@@ -27,6 +27,7 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Point.Builder;
+import org.springframework.scheduling.annotation.Async;
 
 import com.mtnfog.entitydb.model.metrics.Metric;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
@@ -42,7 +43,7 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 
 	private static final Logger LOGGER = LogManager.getLogger(InfluxDbMetricReporter.class);
 	
-	private static final String RETENTION = "autogen";
+	private static final String DEFAULT_RETENTION_POLICY = "autogen";
 	
 	private InfluxDB influxDB;
 	private String database;
@@ -62,14 +63,17 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 		influxDB = InfluxDBFactory.connect(endpoint, username, password);
 		influxDB.createDatabase(database);		
 
-		// Flush every 2000 Points, at least every 100ms
-		//influxDB.enableBatch(10, 100, TimeUnit.MILLISECONDS);
+		// Flush every 10 data points, at least every 60 seconds.
+		influxDB.enableBatch(10, 60, TimeUnit.SECONDS);
 		
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * This function is executed asynchronously.
 	 */
+	@Async
 	@Override
 	public void report(String measurement, List<Metric> metrics) {
 		
@@ -82,13 +86,16 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 		
 		Point point = builder.build();
 		
-		influxDB.write(database, RETENTION, point);
+		influxDB.write(database, DEFAULT_RETENTION_POLICY, point);
 		
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * This function is executed asynchronously.
 	 */
+	@Async
 	@Override
 	public void report(String measurement, String field, long value) {
 		
@@ -98,7 +105,7 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 		
 		Point point = builder.build();
 		
-		influxDB.write(database, RETENTION, point);
+		influxDB.write(database, DEFAULT_RETENTION_POLICY, point);
 		
 	}
 	

@@ -19,10 +19,12 @@
 package com.mtnfog.test.entitydb.queues;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -44,6 +46,7 @@ import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.test.entity.utils.EntityUtils;
 
@@ -56,6 +59,7 @@ public abstract class AbstractQueueTest {
 	protected List<RulesEngine> rulesEngines;
 	protected AuditLogger auditLogger;
 	protected EntityQueryService entityQueryService;
+	protected ConcurrentLinkedQueue<IndexedEntity> indexerCache;
 	
 	protected MetricReporter metricReporter;
 		
@@ -73,8 +77,10 @@ public abstract class AbstractQueueTest {
 		entityStore = new RdbmsEntityStore(getJdbcUrl(), jdbcDriver, jdbcUsername, jdbcPassword, jdbcDialect, schemaExport);
 		rulesEngines = new LinkedList<RulesEngine>();
 		auditLogger = new FileAuditLogger();
+		entityQueryService = mock(EntityQueryService.class);
 		
 		metricReporter = new DefaultMetricReporter();
+		indexerCache = new ConcurrentLinkedQueue<IndexedEntity>();
 		
 	}
 	

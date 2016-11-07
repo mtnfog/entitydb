@@ -27,7 +27,7 @@ package com.mtnfog.entitydb.model.search;
 public interface Indexer {
 
 	/**
-	 * Index entities.
+	 * Index entities that are marked as not indexed in the entity store.
 	 * @param limit The batch size of entities to index. Entities will be indexed
 	 * in batches with size either equal to the limit or smaller.
 	 */

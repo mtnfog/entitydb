@@ -18,16 +18,12 @@
  */
 package com.mtnfog.entitydb.search.indexer;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
+
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
-import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
@@ -38,22 +34,19 @@ import com.mtnfog.entitydb.model.search.SearchIndex;
  * @author Mountain Fog, Inc.
  *
  */
-public class ElasticSearchIndexer implements Indexer {
+public class ElasticSearchIndexer extends AbstractIndexer implements Indexer {
 
 	private static final Logger LOGGER = LogManager.getLogger(ElasticSearchIndexer.class);
-
-	private SearchIndex searchIndex;
-	private EntityStore<?> entityStore;
-
+	
 	/**
 	 * Creates a new ElasticSearch indexer.
 	 * @param searchIndex The search index.
 	 * @param entityStore The entity store.
+	 * @param indexerCache The cache used by the indexer.
 	 */
-	public ElasticSearchIndexer(SearchIndex searchIndex, EntityStore<?> entityStore) {
+	public ElasticSearchIndexer(SearchIndex searchIndex, EntityStore<?> entityStore, ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 		
-		this.searchIndex = searchIndex;
-		this.entityStore = entityStore;
+		super(searchIndex, entityStore, indexerCache);
 		
 	}
 	
@@ -62,42 +55,11 @@ public class ElasticSearchIndexer implements Indexer {
 	 */
 	@Override
 	public void index(int limit) {
-		
-		List<?> entities = entityStore.getNonIndexedEntities(limit);
-					
-		if(CollectionUtils.isNotEmpty(entities)) {
-			
-			LOGGER.debug("Got {} entities to index.", entities.size());
-			
-			Set<IndexedEntity> entitiesToIndex = new LinkedHashSet<IndexedEntity>();
-			Set<String> entityIds = new LinkedHashSet<String>();
-			
-			for(Object e : entities) {
-				
-				try {
-				
-					IndexedEntity indexedEntity = ((AbstractStoredEntity) e).toIndexedEntity();
-					LOGGER.trace("Indexing entity {}.", indexedEntity.getEntityId());
-					entitiesToIndex.add(indexedEntity);
-					entityIds.add(indexedEntity.getEntityId());
-				
-				} catch (MalformedAclException ex) {
-					
-					LOGGER.error("The ACL for entity " + e.toString() + " is invalid. Entity [" + e.toString() + "] will not be indexed.", ex);
-					
-				}
-				
-			}
-			
-			Set<String> failedIndexEntityIds = searchIndex.index(entitiesToIndex);
-			entityIds.removeAll(failedIndexEntityIds);
-			
-			long indexed = entityStore.markEntitiesAsIndexed(entityIds);
-			
-			LOGGER.debug("Marked {} entities as indexed.", indexed);
-						
-		}
 	
+		LOGGER.trace("Indexing up to {} entities in Elasticsearch.", limit);
+		
+		super.index(limit);
+		
 	}
 	
 }

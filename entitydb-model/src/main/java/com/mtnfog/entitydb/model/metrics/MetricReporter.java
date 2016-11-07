@@ -29,6 +29,26 @@ import java.util.List;
 public interface MetricReporter {
 
 	/**
+	 * A measurement for metrics related to ingest.
+	 */
+	public static final String MEASUREMENT_INGEST = "Ingest";
+	
+	/**
+	 * A measurement for metrics related to the API.
+	 */
+	public static final String MEASUREMENT_API = "API";
+	
+	/**
+	 * A measurement for metrics related to queries.
+	 */
+	public static final String MEASUREMENT_QUERY = "Query";
+	
+	/**
+	 * A measurement for metrics related to continuous queries.
+	 */
+	public static final String MEASUREMENT_CONTINUOUS_QUERY = "ContinuousQuery";
+	
+	/**
 	 * Report the metrics.
 	 * @measurement The measurement.
 	 * @param metrics A list of {@link Metric metrics}.

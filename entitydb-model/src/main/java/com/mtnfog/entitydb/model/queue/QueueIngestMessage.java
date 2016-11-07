@@ -16,7 +16,7 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.queues.messages;
+package com.mtnfog.entitydb.model.queue;
 
 import com.mtnfog.entity.Entity;
 

@@ -18,9 +18,22 @@
  */
 package com.mtnfog.entitydb.model.metrics;
 
+/**
+ * A unit for a {@link Metric metric}.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public enum Unit {
 
+	/**
+	 * A measure of time in milliseconds.
+	 */
 	MILLISECONDS,
+	
+	/**
+	 * A measure of entities by count.
+	 */
 	ENTITIES;
 	
 }

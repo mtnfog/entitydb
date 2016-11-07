@@ -27,8 +27,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
@@ -39,8 +42,9 @@ import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 
 @Configuration
+@EnableAsync
 @EnableScheduling
-public class Scheduler {
+public class Scheduler extends AsyncConfigurerSupport {
 
 	private static final Logger LOGGER = LogManager.getLogger(Scheduler.class);
 	
@@ -65,6 +69,20 @@ public class Scheduler {
     public Executor taskScheduler() {
 		
         return Executors.newScheduledThreadPool(5);
+        
+    }
+	
+	@Override
+    public Executor getAsyncExecutor() {
+		
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(2);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("EntityDB-");
+        executor.initialize();
+        
+        return executor;
         
     }
 	

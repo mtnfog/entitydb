@@ -39,7 +39,7 @@ public class ActiveMQQueueTest extends AbstractQueueTest {
 	private static final String QUEUE_NAME = "entities";
 	private static final int TIMEOUT = 10000;
 	
-	private BrokerService broker;
+	private BrokerService broker;	
 	
 	@Before
 	public void before() throws Exception {
@@ -49,7 +49,7 @@ public class ActiveMQQueueTest extends AbstractQueueTest {
 		broker = BrokerFactory.createBroker(new URI("broker:(tcp://localhost:61616)"));		
         broker.start();
 		
-		consumer = new ActiveMQQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, BROKER_URL, QUEUE_NAME, TIMEOUT);
+		consumer = new ActiveMQQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, BROKER_URL, QUEUE_NAME, TIMEOUT, indexerCache);
 		publisher = new ActiveMQQueuePublisher(BROKER_URL, QUEUE_NAME, metricReporter); 		
 		        
 	}

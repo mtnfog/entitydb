@@ -19,6 +19,7 @@
 package com.mtnfog.entitydb.queues.consumers;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -34,9 +35,11 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
+import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
-import com.mtnfog.entitydb.model.security.Acl;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
 
 /**
@@ -57,40 +60,67 @@ public abstract class AbstractQueueConsumer {
 	private AuditLogger auditLogger;	
 	private EntityQueryService entityQueryService;
 	private MetricReporter metricReporter;
+	private ConcurrentLinkedQueue<IndexedEntity> indexerCache;
 	
+	/**
+	 * Base constructor for queue consumers.
+	 * @param entityStore An {@link EntityStore}.
+	 * @param rulesEngines A list of {@link RuleEngine}.
+	 * @param auditLogger An {@link AuditLogger}.
+	 * @param entityQueryService An {@link EntityQueryService}.
+	 * @param metricReporter A {@link MetricReporter}.
+	 * @param indexerCache The indexer's cache.
+	 */
 	public AbstractQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter,
+			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 		
 		this.entityStore = entityStore;
 		this.rulesEngines = rulesEngines;
 		this.auditLogger = auditLogger;
 		this.entityQueryService = entityQueryService;
 		this.metricReporter = metricReporter;
+		this.indexerCache = indexerCache;
 		
 	}
 	
 	/**
 	 * Updates an entity's ACL in the entity store and the search index.
-	 * @param entityId The entity's ID.
-	 * @param acl The entity's new ACL.
+	 * @param queueUpdateAclMessage The {@link QueueUpdateAclMessage} that contains the entity ID and the new ACL.
 	 * @return <code>true</code> if the entity's ACL was successfully changed; otherwise <code>false</code>.
 	 */
-	protected boolean updateEntityAcl(String entityId, Acl acl) throws EntityStoreException {
+	protected boolean updateEntityAcl(QueueUpdateAclMessage queueUpdateAclMessage) throws EntityStoreException {
 	
 		// The ACL was validated when it was received through the API.
 		// There is no need to validate it again here.
 		
-		boolean updated = true;
+		boolean updated = false;
 		
 		try {
 		
-			entityStore.updateAcl(entityId, acl.toString());						
+			String entityId = entityStore.updateAcl(queueUpdateAclMessage.getEntityId(), queueUpdateAclMessage.getAcl());
+						
+			// Audit this update.
+			auditLogger.audit(queueUpdateAclMessage.getEntityId(), System.currentTimeMillis(), queueUpdateAclMessage.getApiKey(), AuditAction.ACL_UPDATED, properties.getSystemId());
+			
+			// Put the entity onto the internal list for indexing.
+			IndexedEntity indexedEntity = entityStore.getEntityById(entityId).toIndexedEntity();
+			indexerCache.add(IndexedEntity.fromEntity(indexedEntity, queueUpdateAclMessage.getEntityId(), queueUpdateAclMessage.getAcl()));						
+			
+			// Report how long this ACL update was in the queue.
+			metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_INGEST, "timeInAclUpdateQueue", queueUpdateAclMessage.getTimestamp());
+			
+			updated = true;
 			
 		} catch (NonexistantEntityException ex) {
 			
-			LOGGER.warn("Entity {} does not exist.", entityId);
+			// Should not be thrown because the entity is checked for existance when received through the API.
+			LOGGER.warn("Entity {} does not exist.", queueUpdateAclMessage.getEntityId());
 			
-			updated = false;
+		} catch (MalformedAclException ex) {
+			
+			// Should not be thrown because the ACL is validated when received through the API.
+			LOGGER.warn("Updated ACL {} for entity {} is invalid.", queueUpdateAclMessage.getAcl(), queueUpdateAclMessage.getEntityId());
 			
 		}
 		
@@ -100,76 +130,81 @@ public abstract class AbstractQueueConsumer {
 	
 	/**
 	 * Process the entity through the rules engine, store the entity, and index it.
-	 * @param entity The {@link Entity entity}.
-	 * @param context The context under which the entity was extracted.
-	 * @param documentId The document ID under which the entity was extracted.
-	 * @param acl The entity's {@link Acl ACL}.
+	 * @param queueIngestMessage The {@link QueueIngestMessage} containing the entity to ingest.
 	 * @return <code>true</code> if the entity was successfully ingested; otherwise <code>false</code>.
 	 * @throws MalformedAclException 
 	 */
-	protected boolean ingestEntity(Entity entity, Acl acl, String apiKey) throws MalformedAclException {
+	protected boolean ingestEntity(QueueIngestMessage queueIngestMessage) throws MalformedAclException {
 			
 		long startTime = System.currentTimeMillis();
 		
 		boolean ingested = true;
 		
-		// The ACL was validated when it was received through the API.
-		// There is no need to validate it again here.		
-		
-		final String entityId = EntityIdGenerator.generateEntityId(entity.getText(), entity.getConfidence(), entity.getLanguageCode(), entity.getContext(), entity.getDocumentId(), acl.toString());
-		
-		LOGGER.trace("Consumed entity {} from the queue.", entityId);
-		
 		// The rules engine should execute whether or not the entity exists in the store.
-		LOGGER.trace("Executing the rules engine on entity {}.", entityId);
-		String updatedAcl = executeRulesEngine(entity);
+		String updatedAcl = executeRulesEngine(queueIngestMessage.getEntity());
+		
+		// Set the ACL to a string for easier reference.
+		String acl = queueIngestMessage.getAcl();
 		
 		// See if the rule execution returned an updated ACL.
 		if(StringUtils.isNotEmpty(updatedAcl)) {
-			acl = new Acl(updatedAcl);
+			acl = updatedAcl;
 		}
 		
+		// Generate the entity's ID.
+		final String entityId = EntityIdGenerator.generateEntityId(queueIngestMessage.getEntity().getText(), queueIngestMessage.getEntity().getConfidence(), 
+				queueIngestMessage.getEntity().getLanguageCode(), queueIngestMessage.getEntity().getContext(), queueIngestMessage.getEntity().getDocumentId(), 
+				queueIngestMessage.getAcl().toString());
+		
+		LOGGER.trace("Consumed entity {} from the queue.", entityId);
+
 		// Make sure this entity is not already stored.
 		if(entityStore.getEntityById(entityId) == null) {
 			
 			try {	
 				
 				LOGGER.trace("Storing entity {}.", entityId);
-				entityStore.storeEntity(entity, acl.toString());													
+				entityStore.storeEntity(queueIngestMessage.getEntity(), acl);													
 				
 			} catch (EntityStoreException ex) {
 				
-				LOGGER.error("Unable to store entity: " + entity.toString(),  ex);
+				LOGGER.error("Unable to store entity: " + queueIngestMessage.getEntity().toString(),  ex);
 				
 				// This will leave the entity on the queue.
 				ingested = false;
 				
-				metricReporter.report("Ingest", "ingestException", 1L);
+				metricReporter.report(MetricReporter.MEASUREMENT_INGEST, "ingestException", 1L);
 				
 			}
 			
 			if(ingested) {
 			
 				// Audit this entity ingest.
-				LOGGER.trace("Writing entity {} to audit log.", entityId);
-				auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.STORED, properties.getSystemId());
+				auditLogger.audit(entityId, System.currentTimeMillis(), queueIngestMessage.getApiKey(), AuditAction.STORED, properties.getSystemId());
 			
-				// Execute the continuous queries against the entity.
-				entityQueryService.executeContinuousQueries(entity, entityId);
+				// This entity is ready for indexing.
+				indexerCache.add(IndexedEntity.fromEntity(queueIngestMessage.getEntity(), entityId, acl));
 				
-				metricReporter.reportElapsedTime("Ingest", "time",startTime);
+				// Execute the continuous queries against the entity.
+				entityQueryService.executeContinuousQueries(queueIngestMessage.getEntity(), entityId);
+				
+				// Report the elapsed time to ingest.
+				metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_INGEST, "time", startTime);
+				
+				// Report how long this entity was in the queue.
+				metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_INGEST, "timeInIngestQueue", queueIngestMessage.getTimestamp());
 				
 			}
 			
 		} else {
 			
 			LOGGER.info("Entity {} already exists in the entity store.", entityId);
-			auditLogger.audit(entityId, System.currentTimeMillis(), apiKey, AuditAction.SKIPPED, properties.getSystemId());
+			auditLogger.audit(entityId, System.currentTimeMillis(), queueIngestMessage.getApiKey(), AuditAction.SKIPPED, properties.getSystemId());
 			
 			// We will want to return true here because the entity was successfully processed
 			// but there's no need to store the entity again. So don't set ingested = false.
 			
-			metricReporter.report("Ingest", "duplicateEntity", 1L);
+			metricReporter.report(MetricReporter.MEASUREMENT_INGEST, "duplicateEntity", 1L);
 			
 		}				
 		

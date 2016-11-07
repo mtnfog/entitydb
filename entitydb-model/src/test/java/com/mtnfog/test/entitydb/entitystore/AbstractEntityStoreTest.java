@@ -28,9 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -89,11 +91,48 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		List<T> nonIndexedEntities = entityStore.getNonIndexedEntities(25);
 		
 		assertEquals(2, nonIndexedEntities.size());
+				
+	}	
+	
+	@Test
+	public void getVisibleNonIndexedEntities() throws EntityStoreException, NonexistantEntityException {
 		
-		// TODO: Set an entity as not visible (delete) and verify that
-		// the invisible entity is not returned.
+		Entity entity = new Entity();
+		entity.setText("George Washington");
+		entity.setConfidence(90.0);
+		entity.setType("person");
+		entity.setContext("context");
 		
-	}		
+		Entity entity2 = new Entity();
+		entity2.setText("George Washington");
+		entity2.setConfidence(90.0);
+		entity2.setType("person");
+		entity2.setContext("context2");
+		
+		final String entityId1 = entityStore.storeEntity(entity, "::1");
+		final String entityId2 = entityStore.storeEntity(entity2, "::1");
+	
+		assertEquals(2, entityStore.getEntityCount());	
+		
+		final String entityId3 = entityStore.updateAcl(entityId2, "::0");
+		
+		List<T> nonIndexedEntities = entityStore.getNonIndexedEntities(25);
+		
+		assertEquals(2, nonIndexedEntities.size());
+		
+		for(T e : nonIndexedEntities) {
+			
+			// entityId2 should NOT be returned as it is no longer visible due to the ACL update.
+			
+			if(StringUtils.equals(entityId1, e.getId()) || StringUtils.equals(entityId3, e.getId())) {
+				// Good.
+			} else {
+				Assert.fail("An invalid entity was returned.");
+			}
+			
+		}
+				
+	}	
 	
 	@Test
 	public void markAsIndexed() throws EntityStoreException {

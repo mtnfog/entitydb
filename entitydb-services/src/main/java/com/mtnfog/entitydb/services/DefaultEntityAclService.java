@@ -33,6 +33,12 @@ import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityAclService;
 
+/**
+ * Default implementation of {@link EntityAclService}.
+ *  
+ * @author Mountain Fog, Inc.
+ *
+ */
 @Component
 public class DefaultEntityAclService implements EntityAclService {
 
@@ -53,8 +59,10 @@ public class DefaultEntityAclService implements EntityAclService {
 	@Override
 	public void queueEntityAclUpdate(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException {
 		
+		metricReporter.report(MetricReporter.MEASUREMENT_API, "entityAclUpdate", 1);
+		
 		// The entity needs to exist (in the search index). 
-		// The request to change the ACL will be put onto the queue.
+		// The request to change the ACL will be put onto the queue.				
 		
 		IndexedEntity indexedEntity = searchIndex.getEntity(entityId);
 		

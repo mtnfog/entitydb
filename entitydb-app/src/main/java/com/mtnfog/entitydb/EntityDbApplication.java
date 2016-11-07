@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -61,6 +63,7 @@ import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
@@ -126,7 +129,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	@Bean
 	public Indexer getIndexer() {
 		
-		return new ElasticSearchIndexer(getSearchIndex(), getEntityStore());
+		return new ElasticSearchIndexer(getSearchIndex(), getEntityStore(), getIndexerCache());
 		
 	}
 		
@@ -386,11 +389,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			if(StringUtils.isNotEmpty(properties.getSqsAccessKey())) {
 			
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout(), getIndexerCache());
 				
 			} else {
 				
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout(), getIndexerCache());
 				
 			}
 			
@@ -400,7 +403,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 						
 			try {
 			
-				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout());
+				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout(), getIndexerCache());
 				
 			} catch (Exception ex) {
 				
@@ -412,13 +415,13 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Using internal queue.");
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep(), getIndexerCache());
 			
 		} else {
 			
 			LOGGER.warn("Invalid queue {}. Using the internal queue.", queue);
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep(), getIndexerCache());
 			
 		}
 		
@@ -460,8 +463,15 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		return new HttpMessageConverters(true, messageConverters);
 
 	}
-	
+
 	@Bean
+	public ConcurrentLinkedQueue<IndexedEntity> getIndexerCache() {
+
+		return new ConcurrentLinkedQueue<IndexedEntity>();
+		
+	}
+	
+	@Bean(destroyMethod="shutdown")
 	public CacheManager cacheManager() {
 		
 		LOGGER.info("Creating cache manager.");
@@ -470,6 +480,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 		cacheNames.add("nonExpiredContinuousQueries");
 		cacheNames.add("continuousQueriesByUser");
+		cacheNames.add("indexer");
 		cacheNames.add("general");
 		
 		CacheManager cacheManager = null;

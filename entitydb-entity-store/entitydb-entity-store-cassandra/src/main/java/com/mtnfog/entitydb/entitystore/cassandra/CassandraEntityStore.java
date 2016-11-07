@@ -324,6 +324,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 			cloned.setText(entity.getText());
 			cloned.setType(entity.getType());
 			cloned.setUri(entity.getUri());
+			cloned.setIndexed(0);
 			
 			// Make the ID for the new entity and set it.
 			newEntityId = EntityIdGenerator.generateEntityId(cloned.getText(), cloned.getConfidence(), cloned.getLanguage(), cloned.getContext(), cloned.getDocumentId(), acl);
@@ -345,6 +346,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					.value("acl", bindMarker())
 					.value("visible", bindMarker())
 					.value("timestamp", bindMarker())
+					.value("indexed", bindMarker())
 					.value("enrichments", bindMarker()));		
 			
 			BoundStatement boundEntityInsert = entityInsert.bind(
@@ -360,11 +362,16 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					acl,
 					cloned.getVisible(),
 					System.currentTimeMillis(),
+					cloned.getIndexed(),
 					cloned.getEnrichments());
 						
-			Statement statement = QueryBuilder.update(keySpace, TABLE_NAME).with(set("visible", 0)).where(eq("id", entityId));
+			Statement updateEntityStatement = 
+					QueryBuilder
+						.update(keySpace, TABLE_NAME)
+						.with(set("visible", 0))
+						.where(eq("id", entityId));
 			
-			batchStatement.add(statement);
+			batchStatement.add(updateEntityStatement);
 			batchStatement.add(boundEntityInsert);
 						
 			try {

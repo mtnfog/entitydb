@@ -19,6 +19,7 @@
 package com.mtnfog.entitydb.queues.consumers;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,13 +28,13 @@ import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
+import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
+import com.mtnfog.entitydb.model.queue.QueueMessage;
+import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.InternalQueue;
-import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
-import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
-import com.mtnfog.entitydb.queues.messages.QueueMessage;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -59,9 +60,10 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @param searchIndex A {@link SearchIndex search index}.
 	 */
 	public InternalQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines, 
-			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter, int sleepSeconds) {
+			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter, int sleepSeconds,
+			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 		
-		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter);
+		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, indexerCache);
 		
 		this.metricReporter = metricReporter;
 		this.sleepSeconds = sleepSeconds;
@@ -73,6 +75,8 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	 */
 	@Override
 	public void shutdown() {
+		
+		consume = false;
 		
 	}
 	
@@ -94,7 +98,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 				
 						QueueIngestMessage internalQueueIngestMessage = (QueueIngestMessage) message;
 						
-						boolean successful = ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+						boolean successful = ingestEntity(internalQueueIngestMessage);
 						
 						if(successful) {
 							
@@ -106,7 +110,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 						
 						QueueUpdateAclMessage internalQueueUpdateAclMessage = (QueueUpdateAclMessage) message;
 						
-						boolean successful = updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+						boolean successful = updateEntityAcl(internalQueueUpdateAclMessage);
 						
 						if(successful) {
 							

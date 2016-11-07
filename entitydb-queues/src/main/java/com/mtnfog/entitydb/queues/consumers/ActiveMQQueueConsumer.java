@@ -19,6 +19,7 @@
 package com.mtnfog.entitydb.queues.consumers;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.PreDestroy;
 import javax.jms.Connection;
@@ -40,13 +41,13 @@ import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.queue.QueueConstants;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
+import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
+import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
+import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
-import com.mtnfog.entitydb.queues.QueueConstants;
-import com.mtnfog.entitydb.queues.messages.QueueIngestMessage;
-import com.mtnfog.entitydb.queues.messages.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -84,9 +85,9 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
 			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter,
-			String brokerURL, String queueName, int timeout) throws JMSException {
+			String brokerURL, String queueName, int timeout, ConcurrentLinkedQueue<IndexedEntity> indexerCache) throws JMSException {
 		
-		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter);
+		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, indexerCache);
 
 		gson = new Gson();
 		
@@ -120,9 +121,10 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
 			AuditLogger auditLogger, EntityQueryService entityQueryService,
-			MetricReporter metricReporter, String brokerURL, String queueName) throws JMSException {
+			MetricReporter metricReporter, String brokerURL, String queueName,
+			ConcurrentLinkedQueue<IndexedEntity> indexerCache) throws JMSException {
 	
-		this(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, brokerURL, queueName, DEFAULT_TIMEOUT);
+		this(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, brokerURL, queueName, DEFAULT_TIMEOUT, indexerCache);
 		
 	}
 	
@@ -164,7 +166,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		            	try {
 		            	
 		            		// Ingest the entity.
-		            		successful = ingestEntity(internalQueueIngestMessage.getEntity(), new Acl(internalQueueIngestMessage.getAcl()), internalQueueIngestMessage.getApiKey());
+		            		successful = ingestEntity(internalQueueIngestMessage);
 								
 		            		if(successful) {
 								
@@ -185,7 +187,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		            	try {
 		            	
 		            		// Update the entity's ACL.
-		            		successful = updateEntityAcl(internalQueueUpdateAclMessage.getEntityId(), new Acl(internalQueueUpdateAclMessage.getAcl()));
+		            		successful = updateEntityAcl(internalQueueUpdateAclMessage);
 		            		
 		            		if(successful) {
 								
@@ -196,10 +198,6 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 						} catch (EntityStoreException ex) {
 							
 							LOGGER.error("Unable to update entity " + internalQueueUpdateAclMessage.getEntityId() + " to have ACL " + internalQueueUpdateAclMessage.getAcl() + ".", ex);
-							
-						} catch (MalformedAclException ex) {
-							
-							LOGGER.error("Unable to update entity " + internalQueueUpdateAclMessage.getEntityId() + " to have ACL " + internalQueueUpdateAclMessage.getAcl() + ". The ACL is malformed.", ex);
 							
 						}
 		            	

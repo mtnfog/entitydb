@@ -20,12 +20,23 @@ package com.mtnfog.entitydb.queues;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.mtnfog.entitydb.queues.messages.QueueMessage;
+import com.mtnfog.entitydb.model.queue.QueueMessage;
 
+/**
+ * An internal queue. The queue it contains is a singleton
+ * and can be accessed through the <code>getQueue()</code> method.
+ * 
+ * @author Mountain Fog, Inc.
+ *
+ */
 public class InternalQueue {
 
 	private static ConcurrentLinkedQueue<QueueMessage> queue;
 		
+	/**
+	 * Gets the queue.
+	 * @return A {@link ConcurrentLinkedQueue}.
+	 */
 	public static ConcurrentLinkedQueue<QueueMessage> getQueue() {
 		
 		if(queue == null) {

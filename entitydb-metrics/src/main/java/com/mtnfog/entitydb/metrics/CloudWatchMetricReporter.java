@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.scheduling.annotation.Async;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
@@ -86,7 +87,10 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * This function is executed asynchronously.
 	 */
+	@Async
 	@Override
 	public void report(String measurement, List<Metric> metrics) {
 	    
@@ -114,7 +118,10 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * This function is executed asynchronously.
 	 */
+	@Async
 	@Override
 	public void report(String measurement, String field, long value) {
 		
