@@ -19,12 +19,17 @@
 package com.mtnfog.entitydb.model.security;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 
 /**
@@ -34,6 +39,8 @@ import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
  *
  */
 public class Acl {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Acl.class);
 	
 	public static final String WORLD = "::1";
 
@@ -150,6 +157,67 @@ public class Acl {
 			return false;
 			
 		}
+		
+	}
+	
+	/**
+	 * Determines if the entity having the given ACL is visible to the given {@link User user}. 
+	 * @param acl The entity's {@link Acl ACL}.
+	 * @param user The {@link User user}.
+	 * @return <code>true</code> if the entity having the given ACL is visible to the user;
+	 * otherwise <code>false</code>.
+	 */
+	public boolean isEntityVisibleToUser(User user) {
+		
+		boolean visible = false;
+
+		// Check the world flag first.
+		
+		if(world == 1) {
+			
+			visible = true;
+			
+		} else {
+		
+			List<String> aclGroups = Arrays.asList(groups);
+			
+			Collection<String> intersection = CollectionUtils.intersection(aclGroups, user.getGroups());
+			
+			// If at least one group intersects then it is visible.
+			
+			if(CollectionUtils.isNotEmpty(intersection)) {
+				
+				visible = true;
+				
+			} else {
+				
+				// Check the users.
+				
+				List<String> aclUsers = Arrays.asList(users);
+
+				
+				if(aclUsers.contains(String.valueOf(user.getId()))) {
+					
+					// The user's ID is in the ACL.
+					
+					visible = true;
+					
+				} else {
+					
+					System.out.println("Does not contain.");
+				}
+				
+			}
+			
+		}
+		
+		return visible;		
+		
+	}
+	
+	public static boolean isEntityVisibleToUser(Acl acl, User user) {
+		
+		return acl.isEntityVisibleToUser(user);
 		
 	}
 	

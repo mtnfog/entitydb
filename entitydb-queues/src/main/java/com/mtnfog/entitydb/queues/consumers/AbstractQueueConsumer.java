@@ -109,7 +109,7 @@ public abstract class AbstractQueueConsumer {
 			
 		} catch (NonexistantEntityException ex) {
 			
-			// Should not be thrown because the entity is checked for existance when received through the API.
+			// Should not be thrown because the entity is checked for existence when received through the API.
 			LOGGER.warn("Entity {} does not exist.", queueUpdateAclMessage.getEntityId());
 			
 		} catch (MalformedAclException ex) {

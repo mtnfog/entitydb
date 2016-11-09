@@ -19,16 +19,16 @@
 package com.mtnfog.entitydb.services;
 
 import java.util.Collection;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
+import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.model.services.EntityQueueService;
 
@@ -47,6 +47,9 @@ public class DefaultEntityQueueService implements EntityQueueService {
 	@Autowired
 	private EntityQueryService entityQueryService;
 	
+	@Autowired
+	private ThreadPoolExecutor executor;
+	
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -56,26 +59,29 @@ public class DefaultEntityQueueService implements EntityQueueService {
 	@Override
 	public void queueIngest(final Collection<Entity> entities, final String acl, final String apiKey) throws MalformedAclException, EntityPublisherException {
 		
+		// Validate the ACL.
+		Acl entityAcl = new Acl(acl);
+		
 		queuePublisher.queueIngest(entities, acl, apiKey);
 		
-		Executors.newSingleThreadExecutor().execute(new Runnable() {
+		executor.execute(new Runnable() {
+			
 		    @Override
 		    public void run() {
-		    	executeContinuousQueries(entities, acl);
+		    	
+		    	executeContinuousQueries(entities, entityAcl);
+		    	
 		    }
+		    
 		});				
 		
 	}
 	
-	private void executeContinuousQueries(final Collection<Entity> entities, final String acl) {
+	private void executeContinuousQueries(final Collection<Entity> entities, final Acl acl) {
 			
-		for(Entity entity : entities) {
-			
-			final String entityId = EntityIdGenerator.generateEntityId(entity, acl);
+		long timestamp = System.currentTimeMillis();
 		
-			entityQueryService.executeContinuousQueries(entity, entityId);
-			
-		}
+		entityQueryService.executeContinuousQueries(entities, acl, timestamp);
 		
 	}
 

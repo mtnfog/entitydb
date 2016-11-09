@@ -18,8 +18,11 @@
  */
 package com.mtnfog.entitydb.model.services;
 
+import java.util.Collection;
+
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
+import com.mtnfog.entitydb.model.security.Acl;
 
 /**
  * Interface for the entity query service. Implementations of this interface
@@ -42,9 +45,10 @@ public interface EntityQueryService {
 	
 	/**
 	 * Executes all continuous queries against the entity.
-	 * @param entity The {@link Entity entity}.
-	 * @param entityId The ID of the entity.
+	 * @param entity A collection {@link Entity entities}.
+	 * @param acl The {@link Acl ACL} of the entity.
+	 * @param entitiesReceivedTimestamp The timestamp of when the entities were received.
 	 */
-	public void executeContinuousQueries(Entity entity, String entityId);
+	public void executeContinuousQueries(Collection<Entity> entities, Acl acl, long entitiesReceivedTimestamp);
 	
 }

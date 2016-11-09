@@ -21,6 +21,7 @@ package com.mtnfog.entitydb.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.domain.ContinuousQuery;
 import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
@@ -42,7 +43,7 @@ public class DefaultNotifcationService implements NotificationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery) {
+	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery, Entity entity) {
 
 		// TODO: Notify the user of a match via the SNS topic.
 		

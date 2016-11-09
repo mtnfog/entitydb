@@ -18,6 +18,7 @@
  */
 package com.mtnfog.entitydb.services;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -41,7 +42,9 @@ import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
 import com.mtnfog.entitydb.model.datastore.entities.NotificationEntity;
 import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
+import com.mtnfog.entitydb.model.domain.ContinuousQuery;
 import com.mtnfog.entitydb.model.domain.User;
+import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
@@ -52,6 +55,7 @@ import com.mtnfog.entitydb.model.metrics.Unit;
 import com.mtnfog.entitydb.model.notifications.NotificationType;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
+import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.model.services.NotificationService;
 import com.mtnfog.entitydb.eql.Eql;
@@ -162,7 +166,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void executeContinuousQueries(Entity entity, String entityId) {
+	public void executeContinuousQueries(Collection<Entity> entities, Acl acl, long entitiesReceivedTimestamp) {
 		
 		long startTime = System.currentTimeMillis();
 		
@@ -172,23 +176,48 @@ public class DefaultEntityQueryService implements EntityQueryService {
 		metricReporter.report(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "count", continuousQueryEntities.size(), Unit.COUNT);
 		
 		for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
-									
-			boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
+				
+			// Execute the query on each entity.
+			for(Entity entity : entities) {
 			
-			if(match) {
+				// Generate the entity's ID.
+				final String entityId = EntityIdGenerator.generateEntityId(entity, acl.toString());
 				
-				// If this is a match notify the owner of the continuous query.
+				// Get the user (owner) of the continuous query.
+				UserEntity userEntity = continuousQueryEntity.getUser();
+				User user = User.fromEntity(userEntity);
 				
-				String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
+				// Make sure the owner of this continuous query is actually able to see this entity.
+				// This check is likely cheaper than evaluating the continuous query so do it first.
+				boolean isVisible = Acl.isEntityVisibleToUser(acl, user);
 				
-				NotificationEntity notificationEntity = new NotificationEntity();
-				notificationEntity.setUser(continuousQueryEntity.getUser());
-				notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
-				notificationEntity.setNotification(notification);
+				if(isVisible) {
 				
-				notificationRepository.save(notificationEntity);
-				
-				// TODO: Send a message to the continuous query's SNS topic.
+					boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
+					
+					if(match) {
+							
+						// Notify the owner of the continuous query of the match.
+						
+						String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
+						
+						NotificationEntity notificationEntity = new NotificationEntity();
+						notificationEntity.setUser(continuousQueryEntity.getUser());
+						notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
+						notificationEntity.setNotification(notification);
+						
+						notificationRepository.save(notificationEntity);
+						
+						// Generate a notification for the user.
+						ContinuousQuery continuousQuery = ContinuousQuery.fromEntity(continuousQueryEntity);
+						notificationService.sendContinuousQueryNotification(continuousQuery, entity);
+						
+						// Record this time-to-alert metric.
+						metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "timeToAlert", entitiesReceivedTimestamp);
+							
+					}
+					
+				}
 			
 			}
 						
@@ -230,9 +259,10 @@ public class DefaultEntityQueryService implements EntityQueryService {
 								
 				if(!auditResult) {
 				
-					// If it can't be audited don't return it.
-					LOGGER.warn("Entity ID {} could not be audited so it was not returned in query results.", indexedEntity.getEntityId());
+					// If it can't be audited don't return it.					
 					it.remove();
+					
+					LOGGER.warn("Entity ID {} could not be audited so it was not returned in query results.", indexedEntity.getEntityId());
 					
 				} else {
 					

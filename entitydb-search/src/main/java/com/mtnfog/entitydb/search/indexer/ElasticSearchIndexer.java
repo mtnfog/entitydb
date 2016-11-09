@@ -38,15 +38,19 @@ public class ElasticSearchIndexer extends AbstractIndexer implements Indexer {
 
 	private static final Logger LOGGER = LogManager.getLogger(ElasticSearchIndexer.class);
 	
+	private int batchSize;
+	
 	/**
 	 * Creates a new ElasticSearch indexer.
 	 * @param searchIndex The search index.
 	 * @param entityStore The entity store.
 	 * @param indexerCache The cache used by the indexer.
 	 */
-	public ElasticSearchIndexer(SearchIndex searchIndex, EntityStore<?> entityStore, ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
+	public ElasticSearchIndexer(SearchIndex searchIndex, EntityStore<?> entityStore, ConcurrentLinkedQueue<IndexedEntity> indexerCache, int batchSize) {
 		
 		super(searchIndex, entityStore, indexerCache);
+		
+		this.batchSize = batchSize;
 		
 	}
 	
@@ -54,11 +58,11 @@ public class ElasticSearchIndexer extends AbstractIndexer implements Indexer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long index(int limit) {
+	public long index() {
 	
-		LOGGER.trace("Indexing up to {} entities in Elasticsearch.", limit);
+		LOGGER.trace("Indexing up to {} entities in Elasticsearch.", batchSize);
 		
-		return super.index(limit);
+		return super.index(batchSize);
 		
 	}
 	

@@ -18,12 +18,13 @@
  */
 package com.mtnfog.entitydb.model.services;
 
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.domain.ContinuousQuery;
 import com.mtnfog.entitydb.model.domain.User;
 
 public interface NotificationService {
 
-	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery);
+	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery, Entity entity);
 	public String createNotificationTopic(User user);
 	
 }

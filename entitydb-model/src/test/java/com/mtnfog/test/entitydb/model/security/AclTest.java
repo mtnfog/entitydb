@@ -18,13 +18,24 @@
  */
 package com.mtnfog.test.entitydb.model.security;
 
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
+import com.mtnfog.entitydb.model.domain.User;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.security.Acl;
 
 public class AclTest {
 
+	private static final Logger LOGGER = LogManager.getLogger(AclTest.class);
+	
 	@Test(expected = MalformedAclException.class)
 	public void acl1() throws MalformedAclException {
 		
@@ -71,6 +82,101 @@ public class AclTest {
 	public void acl7() throws MalformedAclException {
 		
 		new Acl("::1");
+		
+	}
+	
+	@Test
+	public void visible1() throws MalformedAclException {
+		
+		long id = 1;
+		String username = "user";
+		String email = "email@emasdf.com";
+		String mobile = "555-555-5555";
+		String apiKey = "asdf1234";
+		Set<String> groups = new HashSet<String>(Arrays.asList("g1", "g2", "g3"));
+		
+		User user = new User(id, username, email, mobile, apiKey, groups);		
+		
+		Acl acl = new Acl("::1");
+		boolean visible = acl.isEntityVisibleToUser(user);
+		
+		assertTrue(visible);
+		
+	}
+	
+	@Test
+	public void visible2() throws MalformedAclException {
+		
+		long id = 1;
+		String username = "user";
+		String email = "email@emasdf.com";
+		String mobile = "555-555-5555";
+		String apiKey = "asdf1234";
+		Set<String> groups = new HashSet<String>(Arrays.asList("g1", "g2", "g3"));
+		
+		User user = new User(id, username, email, mobile, apiKey, groups);		
+		
+		Acl acl = new Acl("::0");
+		boolean visible = acl.isEntityVisibleToUser(user);
+		
+		assertFalse(visible);
+		
+	}
+	
+	@Test
+	public void visible3() throws MalformedAclException {
+		
+		long id = 1;
+		String username = "user";
+		String email = "email@emasdf.com";
+		String mobile = "555-555-5555";
+		String apiKey = "asdf1234";
+		Set<String> groups = new HashSet<String>(Arrays.asList("g1", "g2", "g3"));
+		
+		User user = new User(id, username, email, mobile, apiKey, groups);		
+		
+		Acl acl = new Acl(":g1:0");
+		boolean visible = acl.isEntityVisibleToUser(user);
+		
+		assertTrue(visible);
+		
+	}
+	
+	@Test
+	public void visible4() throws MalformedAclException {
+		
+		long id = 1;
+		String username = "user";
+		String email = "email@emasdf.com";
+		String mobile = "555-555-5555";
+		String apiKey = "asdf1234";
+		Set<String> groups = new HashSet<String>(Arrays.asList("g1", "g2", "g3"));
+		
+		User user = new User(id, username, email, mobile, apiKey, groups);		
+		
+		Acl acl = new Acl(":g5,g6:0");
+		boolean visible = acl.isEntityVisibleToUser(user);
+		
+		assertFalse(visible);
+		
+	}
+	
+	@Test
+	public void visible5() throws MalformedAclException {
+		
+		long id = 1;
+		String username = "user";
+		String email = "email@emasdf.com";
+		String mobile = "555-555-5555";
+		String apiKey = "asdf1234";
+		Set<String> groups = new HashSet<String>(Arrays.asList("g1", "g2", "g3"));
+		
+		User user = new User(id, username, email, mobile, apiKey, groups);		
+		
+		Acl acl = new Acl("1:g5,g6:0");
+		boolean visible = acl.isEntityVisibleToUser(user);
+		
+		assertTrue(visible);
 		
 	}
 

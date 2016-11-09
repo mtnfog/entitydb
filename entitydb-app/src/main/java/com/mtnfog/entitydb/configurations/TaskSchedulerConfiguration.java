@@ -20,6 +20,10 @@ package com.mtnfog.entitydb.configurations;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +32,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
@@ -62,29 +65,19 @@ public class TaskSchedulerConfiguration {
 		
 	@Autowired
 	private MetricReporter metricReporter;
-
+	
+	@Autowired
+	private ThreadPoolExecutor executor;
+	
 	@Bean(destroyMethod = "shutdown")
-	public ThreadPoolTaskScheduler taskScheduler() {
-	    
-		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-	    taskScheduler.setPoolSize(10);
-	    taskScheduler.setThreadNamePrefix("EntityDB-");
-	    
-	    return taskScheduler;
-	    
-	}
+    public Executor taskScheduler() {
+        return Executors.newScheduledThreadPool(5);
+    }
 	
 	@Scheduled(fixedDelay = 5000)
 	public void consume() {
-		
-		LOGGER.info("Executing queue consume.");
-		
-		/*RetryPolicy retryPolicy = new RetryPolicy()
-			.retryIf((Long result) -> result == 0)
-			.withBackoff(1, 30, TimeUnit.SECONDS)
-			.withJitter(.1);
-
-		Failsafe.with(retryPolicy).run(() -> queueConsumer.consume());*/
+				
+		LOGGER.info("Executing queue consumer.");
 		
 		queueConsumer.consume();
 				
@@ -101,19 +94,40 @@ public class TaskSchedulerConfiguration {
 		List<Metric> metrics = new LinkedList<Metric>();
 		metrics.add(new Metric("stored", stored, Unit.COUNT));
 		metrics.add(new Metric("indexed", indexed, Unit.COUNT));
+		metrics.add(new Metric("activeThreads", executor.getActiveCount(), Unit.COUNT));
+		metrics.add(new Metric("queuedThreads", executor.getQueue().size(), Unit.COUNT));
 		
 		metricReporter.report(MetricReporter.MEASUREMENT_INGEST, metrics);
 		
 	}
 	
-	@Scheduled(fixedDelay = 5000)
+	@Scheduled(fixedDelay = 500)
 	public void index() {
 		
 		LOGGER.info("Executing indexer.");
 		
-		if(properties.isIndexerEnabled()) {
+		if(properties.isIndexerEnabled()) {			
 			
-			long indexed = indexer.index(properties.getIndexerBatchSize());
+			int sleepPeriod = 2000;
+			
+			while(indexer.index() == 0) {
+			
+				try {
+					
+					sleepPeriod = sleepPeriod * 2;
+					
+					// Sleep for a max of 3 minutes.
+					if(sleepPeriod > 180000) {
+						sleepPeriod = 180000;
+					}
+					
+					Thread.sleep(sleepPeriod);
+					
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
+				}
+				
+			}
 	
 		}
 		

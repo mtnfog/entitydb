@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +47,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-
 import com.mtnfog.entitydb.audit.FileAuditLogger;
 import com.mtnfog.entitydb.audit.FluentdAuditLogger;
 import com.mtnfog.entitydb.caching.memcached.MemcachedCache;
@@ -120,11 +122,23 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		return application.sources(EntityDbApplication.class);
 		
 	}
+	
+	@Bean(destroyMethod = "shutdown")
+	public ThreadPoolExecutor getThreadPoolExecutor() {
+		
+		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+		
+		executor.setMaximumPoolSize(16);
+		executor.setCorePoolSize(8);		
+	    
+		return executor;
+		
+	}
 		
 	@Bean
 	public Indexer getIndexer() {
 		
-		return new ElasticSearchIndexer(getSearchIndex(), getEntityStore(), getIndexerCache());
+		return new ElasticSearchIndexer(getSearchIndex(), getEntityStore(), getIndexerCache(), properties.getIndexerBatchSize());
 		
 	}
 		
