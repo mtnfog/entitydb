@@ -18,11 +18,14 @@
  */
 package com.mtnfog.test.entitydb;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mtnfog.entitydb.metrics.InfluxDbMetricReporter;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 
+@Ignore
 public class InfluxDbMetricReporterIT {
 	
 	@Test
@@ -30,7 +33,7 @@ public class InfluxDbMetricReporterIT {
 		
 		MetricReporter reporter = new InfluxDbMetricReporter("http://localhost:8086", "entitydb", "root", "root");
 		
-		reporter.report("cpu", "usage", 50L);
+		reporter.report("cpu", "usage", 50L, Unit.COUNT);
 		
 	}
 	

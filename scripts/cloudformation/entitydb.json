@@ -33,7 +33,7 @@
 			"Type": "String",
 			"Default": "bucket/entitydb/"
 		},
-		"BaseStackName": 
+		"BaseStackName":
 		{
 			"Description": "The name of the base stack.",
 			"Type": "String",
@@ -73,7 +73,10 @@
 							],
 							"Resource":
 							{
-								"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-QueueARN" }
+								"Fn::ImportValue":
+								{
+									"Fn::Sub": "${BaseStackName}-QueueARN"
+								}
 							}
 						}
 					]
@@ -117,7 +120,7 @@
 								"s3:ListAllMyBuckets",
 								"s3:ListObjects"
 							],
-							"Resource": 
+							"Resource":
 							{
 								"Fn::Join":
 								[
@@ -200,6 +203,52 @@
 				]
 			}
 		},
+		"EntityDBCloudWatchLogsPolicy":
+		{
+			"Type": "AWS::IAM::Policy",
+			"Properties":
+			{
+				"PolicyDocument":
+				{
+					"Statement":
+					[
+						{
+							"Effect": "Allow",
+							"Action":
+							[
+								"logs:CreateLogGroup",
+								"logs:CreateLogStream",
+								"logs:PutLogEvents",
+								"logs:DescribeLogStreams"
+							],
+							"Resource":
+							[
+								"arn:aws:logs:*:*:*"
+							]
+						}
+					]
+				},
+				"PolicyName":
+				{
+					"Fn::Join":
+					[
+						"",
+						[
+							{
+								"Ref": "AWS::StackName"
+							},
+							"-entitydb-cloudwatchlogs-policy"
+						]
+					]
+				},
+				"Roles":
+				[
+					{
+						"Ref": "EntityDBRole"
+					}
+				]
+			}
+		},
 		"EntityDBRole":
 		{
 			"Type": "AWS::IAM::Role",
@@ -227,7 +276,7 @@
 				},
 				"Path": "/"
 			}
-		},	
+		},
 		"EntityDBGroup":
 		{
 			"Type": "AWS::AutoScaling::AutoScalingGroup",
@@ -245,10 +294,16 @@
 				"VPCZoneIdentifier":
 				[
 					{
-						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet1" }
+						"Fn::ImportValue":
+						{
+							"Fn::Sub": "${BaseStackName}-Subnet1"
+						}
 					},
 					{
-						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet2" }
+						"Fn::ImportValue":
+						{
+							"Fn::Sub": "${BaseStackName}-Subnet2"
+						}
 					}
 				],
 				"LaunchConfigurationName":
@@ -290,7 +345,10 @@
 				"SecurityGroups":
 				[
 					{
-						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-EntityDBSecurityGroup" }
+						"Fn::ImportValue":
+						{
+							"Fn::Sub": "${BaseStackName}-EntityDBSecurityGroup"
+						}
 					}
 				],
 				"KeyName":
@@ -315,7 +373,11 @@
 								"apt-get install -y openjdk-8-jre\n",
 								"apt-get install -y awscli ntp\n",
 								"mkdir /opt/entitydb\n",
-								"aws s3 cp s3://", {"Ref": "EntityDBS3Directory"}, " /opt/entitydb --recursive\n",
+								"aws s3 cp s3://",
+								{
+									"Ref": "EntityDBS3Directory"
+								},
+								" /opt/entitydb --recursive\n",
 								"chmod +x /opt/entitydb/entitydb.jar\n",
 								"ln -s /opt/entitydb/entitydb.jar /etc/init.d/entitydb\n",
 								"update-rc.d entitydb defaults 99\n",
@@ -335,16 +397,25 @@
 				"SecurityGroups":
 				[
 					{
-						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-LoadBalancerSecurityGroup" }
+						"Fn::ImportValue":
+						{
+							"Fn::Sub": "${BaseStackName}-LoadBalancerSecurityGroup"
+						}
 					}
 				],
 				"Subnets":
 				[
 					{
-						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet1" }
+						"Fn::ImportValue":
+						{
+							"Fn::Sub": "${BaseStackName}-Subnet1"
+						}
 					},
 					{
-						"Fn::ImportValue" :  {"Fn::Sub": "${BaseStackName}-Subnet2" }
+						"Fn::ImportValue":
+						{
+							"Fn::Sub": "${BaseStackName}-Subnet2"
+						}
 					}
 				],
 				"Listeners":

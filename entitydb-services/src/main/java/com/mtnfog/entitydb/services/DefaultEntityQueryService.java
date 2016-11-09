@@ -48,6 +48,7 @@ import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
 import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
 import com.mtnfog.entitydb.model.exceptions.api.InternalServerErrorException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 import com.mtnfog.entitydb.model.notifications.NotificationType;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
@@ -99,7 +100,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	public QueryResult eql(String query, String apiKey, int continuous, int days) {
 				
 		long startTime = System.currentTimeMillis();
-		
+
 		QueryResult queryResult = null;
 		
 		try {
@@ -107,7 +108,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 			EntityQuery entityQuery = Eql.generate(query);
 			
 				// Audit this query.
-				boolean auditResult = auditLogger.audit(query, System.currentTimeMillis(), apiKey, properties.getSystemId());
+				boolean auditResult = auditLogger.audit(query, System.currentTimeMillis(), apiKey);
 				
 				if(auditResult) {
 				
@@ -149,7 +150,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 			
 			LOGGER.error("Unable to execute query.", ex);
 			
-			throw new InternalServerErrorException("Unable to process entity query. See the log for more information.");
+			throw new InternalServerErrorException("Unable to execute the query. See the log for more information.");
 			
 		}
 		
@@ -168,7 +169,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 		List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
 		
 		// Report the number of continuous queries being executed.
-		metricReporter.report(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "count", continuousQueryEntities.size());
+		metricReporter.report(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "count", continuousQueryEntities.size(), Unit.COUNT);
 		
 		for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
 									
@@ -223,7 +224,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				
 				if(properties.isAuditEnabled()) {
 				
-					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), user.getUsername(), AuditAction.SEARCH_RESULT, properties.getSystemId());
+					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), user.getUsername(), AuditAction.SEARCH_RESULT);
 					
 				}
 								
@@ -259,5 +260,5 @@ public class DefaultEntityQueryService implements EntityQueryService {
 		return queryResult;
 					
 	}
-		
+			
 }

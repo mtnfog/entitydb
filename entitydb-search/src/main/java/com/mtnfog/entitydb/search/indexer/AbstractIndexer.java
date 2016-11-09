@@ -69,7 +69,11 @@ public abstract class AbstractIndexer {
 	 * 
 	 * @param limit THe maximum batch size for indexing operations.
 	 */
-	protected void index(int limit) {
+	protected long index(int limit) {
+		
+		LOGGER.info("Executing indexer.");
+		
+		long indexed = 0;
 		
 		Set<IndexedEntity> entitiesToIndex = new LinkedHashSet<IndexedEntity>();
 		Set<String> entityIds = new LinkedHashSet<String>();
@@ -130,16 +134,18 @@ public abstract class AbstractIndexer {
 			Set<String> failedIndexEntityIds = searchIndex.index(entitiesToIndex);
 			entityIds.removeAll(failedIndexEntityIds);
 			
-			long indexed = entityStore.markEntitiesAsIndexed(entityIds);
+			indexed = entityStore.markEntitiesAsIndexed(entityIds);
 			
-			LOGGER.debug("Marked {} entities as indexed.", indexed);
+			LOGGER.info("Indexed {} entities.", indexed);
 		
 		} else {
-			
-			LOGGER.debug("There are no entities to index.");
+					
+			LOGGER.debug("No entities to index.");
 			
 		}
 	
+		return indexed;
+		
 	}
 	
 }

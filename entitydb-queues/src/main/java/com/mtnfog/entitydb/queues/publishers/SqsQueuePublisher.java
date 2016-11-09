@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -144,13 +145,6 @@ public class SqsQueuePublisher implements QueuePublisher {
 	@Override
 	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 
-		// One at a time or in a batch? It may be better to do one at a time.
-		/* Delivers up to ten messages to the specified queue. This is a batch version of SendMessage. 
-		 * The result of the send action on each message is reported individually in the response. 
-		 * The maximum allowed individual message size is 256 KB (262,144 bytes).
-		 * The maximum total payload size (i.e., the sum of all a batch's individual message lengths) is also 256 KB (262,144 bytes).
-		 */	
-
 		if(!Acl.validate(acl)) {
 			throw new MalformedAclException("The ACL [" + acl + "] is malformed.");
 		}
@@ -174,11 +168,24 @@ public class SqsQueuePublisher implements QueuePublisher {
 				entry.setMessageAttributes(attributes);				
 				entry.setId(UUID.randomUUID().toString());
 				
+				// TODO: Check the size of `entry` to make sure it is less than 256 KB.
+				// TODO: Make sure the batch will still be less than 256 KB after adding `entry`.
+				
 				entries.add(entry);
-	
+				
+				if(entries.size() == 10) {
+					
+					// TODO: Check the result of sendMessageBatch() for failed messages.
+					client.sendMessageBatch(queueUrl, entries);
+					entries.clear();
+					
+				}
+				
 			}
 			
-			client.sendMessageBatch(queueUrl, entries);
+			if(CollectionUtils.isNotEmpty(entries)) {
+				client.sendMessageBatch(queueUrl, entries);
+			}
 			
 			metricReporter.reportElapsedTime("QueueIngest", "time", startTime);
 

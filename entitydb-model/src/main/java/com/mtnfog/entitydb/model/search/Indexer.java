@@ -30,7 +30,8 @@ public interface Indexer {
 	 * Index entities that are marked as not indexed in the entity store.
 	 * @param limit The batch size of entities to index. Entities will be indexed
 	 * in batches with size either equal to the limit or smaller.
+	 * @return The number of entities indexed by the operation.
 	 */
-	public void index(int limit);
+	public long index(int limit);
 	
 }

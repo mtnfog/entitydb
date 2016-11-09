@@ -47,7 +47,7 @@ public interface MetricReporter {
 	 * A measurement for metrics related to continuous queries.
 	 */
 	public static final String MEASUREMENT_CONTINUOUS_QUERY = "ContinuousQuery";
-	
+		
 	/**
 	 * Report the metrics.
 	 * @measurement The measurement.
@@ -60,8 +60,9 @@ public interface MetricReporter {
 	 * @param measurement The measurement.
 	 * @param field The field.
 	 * @param value The value.
+	 * @param The metric's {@link Unit unit}.
 	 */
-	public void report(String measurement, String field, long value);
+	public void report(String measurement, String field, long value, Unit unit);
 	
 	/**
 	 * Report the elapsed time for an event.

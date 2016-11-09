@@ -42,7 +42,7 @@ public abstract class AbstractMetricReporter {
 			
 			return StandardUnit.Milliseconds;
 			
-		} else if(unit == Unit.ENTITIES) {
+		} else if(unit == Unit.COUNT) {
 			
 			return StandardUnit.Count;
 			

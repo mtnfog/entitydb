@@ -50,7 +50,7 @@ public class SqsQueueTest extends AbstractQueueTest {
 				
 		final int visibilityTimeout = 10;
 			
-		consumer = new SqsQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, endpoint, result.getQueueUrl(), "a", "s", sleepSeconds, visibilityTimeout, indexerCache);
+		consumer = new SqsQueueConsumer(entityStore, rulesEngines, auditLogger, metricReporter, endpoint, result.getQueueUrl(), "a", "s", visibilityTimeout, indexerCache);
 		publisher = new SqsQueuePublisher(result.getQueueUrl(), endpoint, "a", "s", metricReporter);				
 		
 	}

@@ -33,7 +33,7 @@ import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
 	
 	@Cacheable("nonExpiredContinuousQueries")
-	@Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days", nativeQuery=true)	 
+	@Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days OR Days = -1", nativeQuery=true)	 
 	public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
 	 
 	@Cacheable("continuousQueriesByUser")

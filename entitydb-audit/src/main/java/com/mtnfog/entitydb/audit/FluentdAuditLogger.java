@@ -35,17 +35,21 @@ import com.mtnfog.entitydb.model.audit.AuditLogger;
  * @author Mountain Fog, Inc.
  *
  */
-public class FluentdAuditLogger implements AuditLogger {
+public class FluentdAuditLogger extends AbstractAuditLogger implements AuditLogger {
 	
 	private static final Logger LOGGER = LogManager.getLogger(FluentdAuditLogger.class);
 
 	private static final FluentLogger FLUENT_LOGGER = FluentLogger.getLogger("entitydb");
 	
+	public FluentdAuditLogger(String systemId) {
+		super(systemId);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean audit(String entityId, long timestamp, String userIdentifier, AuditAction auditAction, String entityDbId) {
+	public boolean audit(String entityId, long timestamp, String userIdentifier, AuditAction auditAction) {
 		
 		Map<String, Object> data = new HashMap<String, Object>();      		
 		
@@ -53,7 +57,7 @@ public class FluentdAuditLogger implements AuditLogger {
 		data.put("timestamp", timestamp);
         data.put("userIdentifier", userIdentifier);
         data.put("action", auditAction.toString());
-        data.put("entityDbId", entityDbId);
+        data.put("systemId", systemId);
         
         return FLUENT_LOGGER.log("follow", data);
 		
@@ -63,7 +67,7 @@ public class FluentdAuditLogger implements AuditLogger {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean audit(String query, long timestamp, String userName, String entityDbId) {
+	public boolean audit(String query, long timestamp, String userName) {
 		
 		Map<String, Object> data = new HashMap<String, Object>();      		
 		
@@ -71,7 +75,7 @@ public class FluentdAuditLogger implements AuditLogger {
 		data.put("timestamp", timestamp);
         data.put("userName", userName);
         data.put("action", AuditAction.QUERY.toString());
-        data.put("entityDbId", entityDbId);
+        data.put("systemId", systemId);
         
         return FLUENT_LOGGER.log("follow", data);
 		

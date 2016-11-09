@@ -48,7 +48,6 @@ import com.mtnfog.entitydb.model.queue.QueueConstants;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
 import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
-import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 
@@ -72,32 +71,29 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	private static final int DEFAULT_MAX_RETRIES  = (int)TimeUnit.SECONDS.toMillis(10);
 	private static final int DEFAULT_MAX_CONNECTIONS  = (int)TimeUnit.SECONDS.toMillis(10);
 	
-	private int sleepSeconds;
 	private int visibilityTimeout;
 	
 	public SqsQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, EntityQueryService entityQueryService, 
-			MetricReporter metricReporter, String endpoint, String queueUrl, int sleepSeconds, int visibilityTimeout,
+			AuditLogger auditLogger, MetricReporter metricReporter, String endpoint, String queueUrl, int visibilityTimeout,
 			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 		
-		super(entityStore, rulesEngines,  auditLogger, entityQueryService, metricReporter, indexerCache);
+		super(entityStore, rulesEngines,  auditLogger, metricReporter, indexerCache);
 		
 		client = new AmazonSQSClient(getClientConfiguration());
 		client.setEndpoint(endpoint);
 		gson = new Gson();
 		
 		this.queueUrl = queueUrl;
-		this.sleepSeconds = sleepSeconds;
 		this.visibilityTimeout = visibilityTimeout;
 		
 	}
 	
 	public SqsQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines, 
-			AuditLogger auditLogger, EntityQueryService entityQueryService, 
-			MetricReporter metricReporter, String endpoint, String queueUrl, String accessKey, String secretKey, int sleepSeconds, int visibilityTimeout,
+			AuditLogger auditLogger, MetricReporter metricReporter, String endpoint, String queueUrl, 
+			String accessKey, String secretKey, int visibilityTimeout,
 			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 			
-		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, indexerCache);
+		super(entityStore, rulesEngines, auditLogger, metricReporter, indexerCache);
 		
 		client = new AmazonSQSClient(new BasicAWSCredentials(accessKey, secretKey), getClientConfiguration());
 		client.setEndpoint(endpoint);
@@ -105,7 +101,6 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 		gson = new Gson();
 					
 		this.queueUrl = queueUrl;
-		this.sleepSeconds = sleepSeconds;
 		this.visibilityTimeout = visibilityTimeout;
 		
 	}
@@ -123,6 +118,8 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 	 */
 	@Override
 	public void consume() {
+		
+		int messagesConsumed = 0;
 					
 		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest();
 		receiveMessageRequest.setQueueUrl(queueUrl);
@@ -193,10 +190,13 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 				
 				client.deleteMessage(deleteMessageRequest);
 				
+				messagesConsumed++;
+				
 				// The deleteMessageResult is not checked because if the delete fails
 				// the message will remain on the queue. The next time that message is
 				// received it will see that the entity already exists and it will
-				// attempt to delete the message again.
+				// attempt to delete the message again. After so many attempts the
+				// message will be moved to the dead letter queue (if configured).
 			
 			} else {
 				
@@ -204,17 +204,6 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 				
 			}
 			
-		}
-		
-		if(getSize() <= 0) {
-		
-			try {
-				LOGGER.info("Queue processor thread {} is sleeping for {} seconds.", Thread.currentThread().getId(), sleepSeconds);
-				Thread.sleep(sleepSeconds * 1000);
-			} catch (InterruptedException e) {
-				// Ignoring.
-			}
-		
 		}
 				
 	}

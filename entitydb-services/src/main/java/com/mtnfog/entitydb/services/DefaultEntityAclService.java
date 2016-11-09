@@ -27,6 +27,7 @@ import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
@@ -59,7 +60,7 @@ public class DefaultEntityAclService implements EntityAclService {
 	@Override
 	public void queueEntityAclUpdate(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException {
 		
-		metricReporter.report(MetricReporter.MEASUREMENT_API, "entityAclUpdate", 1);
+		metricReporter.report(MetricReporter.MEASUREMENT_API, "entityAclUpdate", 1, Unit.COUNT);
 		
 		// The entity needs to exist (in the search index). 
 		// The request to change the ACL will be put onto the queue.				

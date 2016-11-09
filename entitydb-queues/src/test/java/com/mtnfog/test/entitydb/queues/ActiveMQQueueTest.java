@@ -49,7 +49,7 @@ public class ActiveMQQueueTest extends AbstractQueueTest {
 		broker = BrokerFactory.createBroker(new URI("broker:(tcp://localhost:61616)"));		
         broker.start();
 		
-		consumer = new ActiveMQQueueConsumer(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, BROKER_URL, QUEUE_NAME, TIMEOUT, indexerCache);
+		consumer = new ActiveMQQueueConsumer(entityStore, rulesEngines, auditLogger, metricReporter, BROKER_URL, QUEUE_NAME, TIMEOUT, indexerCache);
 		publisher = new ActiveMQQueuePublisher(BROKER_URL, QUEUE_NAME, metricReporter); 		
 		        
 	}

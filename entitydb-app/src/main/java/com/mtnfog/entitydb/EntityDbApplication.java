@@ -24,12 +24,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
@@ -58,6 +56,7 @@ import com.mtnfog.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import com.mtnfog.entitydb.metrics.CloudWatchMetricReporter;
 import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.metrics.InfluxDbMetricReporter;
+import com.mtnfog.entitydb.metrics.utils.MetricUtils;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
@@ -66,7 +65,6 @@ import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.consumers.ActiveMQQueueConsumer;
 import com.mtnfog.entitydb.queues.consumers.InternalQueueConsumer;
 import com.mtnfog.entitydb.queues.consumers.SqsQueueConsumer;
@@ -104,9 +102,6 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbApplication.class);
 		
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
-			
-	@Autowired
-	private EntityQueryService entityQueryService;
 	
 	/**
 	 * The EntityDB main function.
@@ -146,16 +141,16 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 				if("tempfile".equalsIgnoreCase(auditLoggerType)) {
 					
-					auditLogger = new FileAuditLogger();
+					auditLogger = new FileAuditLogger(getSystemId());
 									
 				} else if("fluentd".equalsIgnoreCase(auditLoggerType)) {
 				
-					auditLogger = new FluentdAuditLogger();
+					auditLogger = new FluentdAuditLogger(getSystemId());
 					
 				} else {
 					
 					LOGGER.warn("Invalid value for audit logger.");
-					auditLogger = new FileAuditLogger();
+					auditLogger = new FileAuditLogger(getSystemId());
 					
 				}
 				
@@ -168,7 +163,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		} else {
 			
 			LOGGER.info("Auditing is disabled. Audit events will be directed to a temporary file and discarded.");
-			auditLogger = new FluentdAuditLogger();
+			auditLogger = new FluentdAuditLogger(getSystemId());
 			
 		}
 		
@@ -389,11 +384,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			if(StringUtils.isNotEmpty(properties.getSqsAccessKey())) {
 			
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout(), getIndexerCache());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsAccessKey(), properties.getSqsSecretKey(), properties.getSqsVisibilityTimeout(), getIndexerCache());
 				
 			} else {
 				
-				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getQueueConsumerSleep(), properties.getSqsVisibilityTimeout(), getIndexerCache());
+				queueConsumer = new SqsQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), properties.getSqsEndpoint(), properties.getSqsQueueUrl(), properties.getSqsVisibilityTimeout(), getIndexerCache());
 				
 			}
 			
@@ -403,7 +398,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 						
 			try {
 			
-				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout(), getIndexerCache());
+				queueConsumer = new ActiveMQQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), properties.getActiveMQBrokerUrl(), properties.getActiveMQQueueName(), properties.getActiveMQBrokerTimeout(), getIndexerCache());
 				
 			} catch (Exception ex) {
 				
@@ -415,22 +410,23 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Using internal queue.");
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep(), getIndexerCache());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), getIndexerCache());
 			
 		} else {
 			
 			LOGGER.warn("Invalid queue {}. Using the internal queue.", queue);
 			
-			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), entityQueryService, getMetricReporter(), properties.getQueueConsumerSleep(), getIndexerCache());
+			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), getIndexerCache());
 			
 		}
 		
 		return queueConsumer;			
 		
 	}
-	
+		
 	@Bean
 	public MetricReporter getMetricReporter() {
+	
 		
 		if(StringUtils.equalsIgnoreCase(EntityDbProperties.INFLUXDB, properties.getMetricsProvider())) {
 			
@@ -439,8 +435,8 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			return new InfluxDbMetricReporter(properties.getInfluxDbEndpoint(), properties.getInfluxDbDatabase(), properties.getInfluxDbUsername(), properties.getInfluxDbPassword());
 			
 		} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.CLOUDWATCH, properties.getMetricsProvider())) {
-									
-			return new CloudWatchMetricReporter(properties.getSystemId(), properties.getCloudWatchNamespace(), 
+												
+			return new CloudWatchMetricReporter(getSystemId(), properties.getCloudWatchNamespace(), 
 					properties.getCloudWatchAccessKey(), properties.getCloudWatchSecretKey(), properties.getCloudWatchEndpoint());
 			
 			
@@ -535,6 +531,20 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		}
 		
 		return null;
+		
+	}
+	
+	private String getSystemId() {
+		
+		String systemId = properties.getSystemId();
+		
+		if(StringUtils.isEmpty(systemId)) {
+			
+			systemId = MetricUtils.getSystemId();
+			
+		}
+		
+		return systemId;
 		
 	}
 

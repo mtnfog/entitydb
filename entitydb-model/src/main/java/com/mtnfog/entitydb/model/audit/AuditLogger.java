@@ -37,20 +37,18 @@ public interface AuditLogger {
 	 * @param timestamp When the event took place.
 	 * @param userName The user's name.
 	 * @param auditAction The {@link AuditAction action} being audited.
-	 * @param entityDbId An identifier for the EntityDB installation.
 	 * @return <code>true</code> when the audit operation succeeds; <code>false</code> otherwise.
 	 */
-	public boolean audit(String entityId, long timestamp, String userName, AuditAction auditAction, String entityDbId);
+	public boolean audit(String entityId, long timestamp, String userName, AuditAction auditAction);
 	
 	/**
 	 * Write the audit log to the 
 	 * @param query The ID of the entity.
 	 * @param timestamp When the event took place.
 	 * @param userIdentifier A unique identifier of the user.
-	 * @param entityDbId An identifier for the EntityDB installation.
 	 * @return <code>true</code> when the audit operation succeeds; <code>false</code> otherwise.
 	 */
-	public boolean audit(String query, long timestamp, String userName, String entityDbId);
+	public boolean audit(String query, long timestamp, String userName);
 	
 	/**
 	 * Closes and releases any resources.

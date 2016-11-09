@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
 import com.mtnfog.entitydb.model.audit.AuditAction;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 
-public class FileAuditLogger implements AuditLogger {
+public class FileAuditLogger extends AbstractAuditLogger implements AuditLogger {
 	
 	private static final Logger LOGGER = LogManager.getLogger(AuditLogger.class);
 
@@ -38,7 +38,9 @@ public class FileAuditLogger implements AuditLogger {
 	 * Creates a new file-based audit logger.
 	 * @param fileName THe audit log file name.
 	 */
-	public FileAuditLogger(String fileName) {
+	public FileAuditLogger(String systemId, String fileName) {
+		
+		super(systemId);
 		
 		file = new File(fileName);
 		
@@ -48,7 +50,9 @@ public class FileAuditLogger implements AuditLogger {
 	 * Creates a new file-based audit logger that uses a temporary file.
 	 * @throws IOException Thrown if a temporary file cannot be created.
 	 */
-	public FileAuditLogger() throws IOException {
+	public FileAuditLogger(String systemId) throws IOException {
+		
+		super(systemId);
 		
 		file = File.createTempFile("audit", "log");
 		
@@ -60,9 +64,9 @@ public class FileAuditLogger implements AuditLogger {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean audit(String entityId, long timestamp, String userIdentifier, AuditAction auditAction, String entityDbId) {
+	public boolean audit(String entityId, long timestamp, String userIdentifier, AuditAction auditAction) {
 
-		final String data = String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"", entityId, timestamp, userIdentifier, auditAction.toString(), entityDbId);
+		final String data = String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"", entityId, timestamp, userIdentifier, auditAction.toString(), systemId);
 		
 		try {
 		
@@ -82,9 +86,9 @@ public class FileAuditLogger implements AuditLogger {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean audit(String query, long timestamp, String userName, String entityDbId) {
+	public boolean audit(String query, long timestamp, String userName) {
 		
-		final String data = String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"", query, timestamp, userName, AuditAction.QUERY, entityDbId);
+		final String data = String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"\t\"%s\"", query, timestamp, userName, AuditAction.QUERY, systemId);
 		
 		try {
 		

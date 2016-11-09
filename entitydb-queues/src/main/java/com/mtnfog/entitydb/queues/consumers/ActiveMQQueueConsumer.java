@@ -47,7 +47,6 @@ import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
 import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
@@ -84,10 +83,10 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @throws JMSException Thrown if the ActiveMQ consumer cannot be created.
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter,
+			AuditLogger auditLogger, MetricReporter metricReporter,
 			String brokerURL, String queueName, int timeout, ConcurrentLinkedQueue<IndexedEntity> indexerCache) throws JMSException {
 		
-		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, indexerCache);
+		super(entityStore, rulesEngines, auditLogger, metricReporter, indexerCache);
 
 		gson = new Gson();
 		
@@ -120,11 +119,10 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @throws JMSException Thrown if the ActiveMQ consumer cannot be created.
 	 */
 	public ActiveMQQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, EntityQueryService entityQueryService,
-			MetricReporter metricReporter, String brokerURL, String queueName,
+			AuditLogger auditLogger, MetricReporter metricReporter, String brokerURL, String queueName,
 			ConcurrentLinkedQueue<IndexedEntity> indexerCache) throws JMSException {
 	
-		this(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, brokerURL, queueName, DEFAULT_TIMEOUT, indexerCache);
+		this(entityStore, rulesEngines, auditLogger, metricReporter, brokerURL, queueName, DEFAULT_TIMEOUT, indexerCache);
 		
 	}
 	
@@ -143,6 +141,8 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 */
 	@Override
 	public void consume() {
+		
+		int messagesConsumed = 0;
 		
 		try {
 		
@@ -211,6 +211,8 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 			            
 		            	message.acknowledge();
 		            	
+		            	messagesConsumed++;
+		            	
 		            } else {
 		            	
 		            	LOGGER.warn("Unable to process message from ActiveMQ queue.");
@@ -240,6 +242,8 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 			LOGGER.error("Unable to consume message from ActiveMQ queue.", ex);
 			
 		}
+		
+		//return messagesConsumed;
         
 	}
 

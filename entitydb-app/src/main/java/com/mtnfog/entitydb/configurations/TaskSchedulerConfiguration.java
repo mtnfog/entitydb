@@ -16,37 +16,35 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.schedulers;
+package com.mtnfog.entitydb.configurations;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
+import java.util.LinkedList;
+import java.util.List;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
+import com.mtnfog.entitydb.model.metrics.Metric;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.search.Indexer;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 
 @Configuration
-@EnableAsync
 @EnableScheduling
-public class Scheduler extends AsyncConfigurerSupport {
+public class TaskSchedulerConfiguration {
 
-	private static final Logger LOGGER = LogManager.getLogger(Scheduler.class);
+	private static final Logger LOGGER = LogManager.getLogger(TaskSchedulerConfiguration.class);
 	
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
 	
@@ -64,33 +62,32 @@ public class Scheduler extends AsyncConfigurerSupport {
 		
 	@Autowired
 	private MetricReporter metricReporter;
-	
+
 	@Bean(destroyMethod = "shutdown")
-    public Executor taskScheduler() {
-		
-        return Executors.newScheduledThreadPool(5);
-        
-    }
-	
-	@Override
-    public Executor getAsyncExecutor() {
-		
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("EntityDB-");
-        executor.initialize();
-        
-        return executor;
-        
-    }
+	public ThreadPoolTaskScheduler taskScheduler() {
+	    
+		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+	    taskScheduler.setPoolSize(10);
+	    taskScheduler.setThreadNamePrefix("EntityDB-");
+	    
+	    return taskScheduler;
+	    
+	}
 	
 	@Scheduled(fixedDelay = 5000)
-	public void consume() throws EntityStoreException {
+	public void consume() {
+		
+		LOGGER.info("Executing queue consume.");
+		
+		/*RetryPolicy retryPolicy = new RetryPolicy()
+			.retryIf((Long result) -> result == 0)
+			.withBackoff(1, 30, TimeUnit.SECONDS)
+			.withJitter(.1);
+
+		Failsafe.with(retryPolicy).run(() -> queueConsumer.consume());*/
 		
 		queueConsumer.consume();
-		
+				
 	}
 	
 	@Scheduled(fixedDelay = 60000)
@@ -101,20 +98,25 @@ public class Scheduler extends AsyncConfigurerSupport {
 		
 		LOGGER.info("Stored entities: {}, Indexed entities: {}", stored, indexed);
 		
-		metricReporter.report("Entities", "stored", stored);
-		metricReporter.report("Entities", "indexed", indexed);
+		List<Metric> metrics = new LinkedList<Metric>();
+		metrics.add(new Metric("stored", stored, Unit.COUNT));
+		metrics.add(new Metric("indexed", indexed, Unit.COUNT));
+		
+		metricReporter.report(MetricReporter.MEASUREMENT_INGEST, metrics);
 		
 	}
 	
 	@Scheduled(fixedDelay = 5000)
-	public void index() throws EntityStoreException {
+	public void index() {
+		
+		LOGGER.info("Executing indexer.");
 		
 		if(properties.isIndexerEnabled()) {
 			
-			indexer.index(properties.getIndexerBatchSize());
-			
+			long indexed = indexer.index(properties.getIndexerBatchSize());
+	
 		}
 		
 	}
-	
+		
 }

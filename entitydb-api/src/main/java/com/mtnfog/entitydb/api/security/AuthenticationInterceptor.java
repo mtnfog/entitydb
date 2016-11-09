@@ -49,7 +49,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
-		boolean authorized = true;
+		boolean authorized = false;
 		
 		final String apiKey = request.getHeader("Authorization");
 		

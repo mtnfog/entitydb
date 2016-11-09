@@ -21,12 +21,10 @@ package com.mtnfog.entitydb.queues.consumers;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.configuration.EntityDbProperties;
 import com.mtnfog.entitydb.model.audit.AuditAction;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
@@ -35,6 +33,7 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
 import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
@@ -53,12 +52,9 @@ public abstract class AbstractQueueConsumer {
 	
 	private static final Logger LOGGER = LogManager.getLogger(AbstractQueueConsumer.class);
 	
-	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
-	
 	private EntityStore<?> entityStore;
 	private List<RulesEngine> rulesEngines;
 	private AuditLogger auditLogger;	
-	private EntityQueryService entityQueryService;
 	private MetricReporter metricReporter;
 	private ConcurrentLinkedQueue<IndexedEntity> indexerCache;
 	
@@ -72,13 +68,12 @@ public abstract class AbstractQueueConsumer {
 	 * @param indexerCache The indexer's cache.
 	 */
 	public AbstractQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines,
-			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter,
+			AuditLogger auditLogger, MetricReporter metricReporter,
 			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 		
 		this.entityStore = entityStore;
 		this.rulesEngines = rulesEngines;
 		this.auditLogger = auditLogger;
-		this.entityQueryService = entityQueryService;
 		this.metricReporter = metricReporter;
 		this.indexerCache = indexerCache;
 		
@@ -101,7 +96,7 @@ public abstract class AbstractQueueConsumer {
 			String entityId = entityStore.updateAcl(queueUpdateAclMessage.getEntityId(), queueUpdateAclMessage.getAcl());
 						
 			// Audit this update.
-			auditLogger.audit(queueUpdateAclMessage.getEntityId(), System.currentTimeMillis(), queueUpdateAclMessage.getApiKey(), AuditAction.ACL_UPDATED, properties.getSystemId());
+			auditLogger.audit(queueUpdateAclMessage.getEntityId(), System.currentTimeMillis(), queueUpdateAclMessage.getApiKey(), AuditAction.ACL_UPDATED);
 			
 			// Put the entity onto the internal list for indexing.
 			IndexedEntity indexedEntity = entityStore.getEntityById(entityId).toIndexedEntity();
@@ -173,20 +168,17 @@ public abstract class AbstractQueueConsumer {
 				// This will leave the entity on the queue.
 				ingested = false;
 				
-				metricReporter.report(MetricReporter.MEASUREMENT_INGEST, "ingestException", 1L);
+				metricReporter.report(MetricReporter.MEASUREMENT_INGEST, "ingestException", 1L, Unit.COUNT);
 				
 			}
 			
 			if(ingested) {
 			
 				// Audit this entity ingest.
-				auditLogger.audit(entityId, System.currentTimeMillis(), queueIngestMessage.getApiKey(), AuditAction.STORED, properties.getSystemId());
+				auditLogger.audit(entityId, System.currentTimeMillis(), queueIngestMessage.getApiKey(), AuditAction.STORED);
 			
 				// This entity is ready for indexing.
 				indexerCache.add(IndexedEntity.fromEntity(queueIngestMessage.getEntity(), entityId, acl));
-				
-				// Execute the continuous queries against the entity.
-				entityQueryService.executeContinuousQueries(queueIngestMessage.getEntity(), entityId);
 				
 				// Report the elapsed time to ingest.
 				metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_INGEST, "time", startTime);
@@ -199,12 +191,12 @@ public abstract class AbstractQueueConsumer {
 		} else {
 			
 			LOGGER.info("Entity {} already exists in the entity store.", entityId);
-			auditLogger.audit(entityId, System.currentTimeMillis(), queueIngestMessage.getApiKey(), AuditAction.SKIPPED, properties.getSystemId());
+			auditLogger.audit(entityId, System.currentTimeMillis(), queueIngestMessage.getApiKey(), AuditAction.SKIPPED);
 			
 			// We will want to return true here because the entity was successfully processed
 			// but there's no need to store the entity again. So don't set ingested = false.
 			
-			metricReporter.report(MetricReporter.MEASUREMENT_INGEST, "duplicateEntity", 1L);
+			metricReporter.report(MetricReporter.MEASUREMENT_INGEST, "duplicateEntity", 1L, Unit.COUNT);
 			
 		}				
 		
@@ -241,5 +233,5 @@ public abstract class AbstractQueueConsumer {
 		return acl;
 		
 	}
-	
+		
 }

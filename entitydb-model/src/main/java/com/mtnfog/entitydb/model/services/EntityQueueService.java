@@ -16,38 +16,30 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.metrics;
+package com.mtnfog.entitydb.model.services;
+
+import java.util.Collection;
+
+import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.model.exceptions.EntityPublisherException;
+import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 
 /**
- * A unit for a {@link Metric metric}.
+ * Interface for entity queue services.
  * 
  * @author Mountain Fog, Inc.
  *
  */
-public enum Unit {
+public interface EntityQueueService {
 
 	/**
-	 * A measure of time in milliseconds.
+	 * Queues entities for ingest.
+	 * @param entities A collection of {@link Entity entities}.
+	 * @param acl The ACL for the entities.
+	 * @param apiKey The client's API key.
+	 * @throws MalformedAclException Thrown if the ACL is malformed.
+	 * @throws EntityPublisherException Thrown if the entities cannot be queued.
 	 */
-	MILLISECONDS("ms"),
-	
-	/**
-	 * A measure by count.
-	 */
-	COUNT("count");
-	
-	private String unit;
-	
-	private Unit(String unit) {
-		this.unit = unit;
-	}
-	
-	/**
-	 * Gets the name of the unit.
-	 * @return The name of the unit.
-	 */
-	public String getUnit() {
-		return unit;
-	}
+	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException;
 	
 }

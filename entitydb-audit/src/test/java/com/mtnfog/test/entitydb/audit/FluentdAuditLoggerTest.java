@@ -32,14 +32,13 @@ public class FluentdAuditLoggerTest {
 	@Ignore
 	public void logEntity() {
 		
-		FluentdAuditLogger logger = new FluentdAuditLogger();
+		FluentdAuditLogger logger = new FluentdAuditLogger("junit");
 		
 		String entityId = UUID.randomUUID().toString();
 		long timestamp = System.currentTimeMillis();
-		String auditId = "localhost";
 		String apiKey = "apikey";
 		
-		logger.audit(entityId, timestamp, apiKey, AuditAction.SEARCH_RESULT, auditId);
+		logger.audit(entityId, timestamp, apiKey, AuditAction.SEARCH_RESULT);
 		
 	}
 	

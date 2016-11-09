@@ -10,7 +10,7 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="org.apache.log4j.xml" level="info" />
-		<Root level="debug">
+		<Root level="error">
 			<AppenderRef ref="STDOUT" />
 		</Root>
 	</Loggers>

@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mtnfog.entitydb.model.metrics.Metric;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 
 /**
  * Implementation of {@link MetricReporter} that outputs the metrics
@@ -45,7 +46,7 @@ public class DefaultMetricReporter extends AbstractMetricReporter implements Met
 		String m = "";
 		
 		for(Metric metric : metrics) {			
-			m += metric.getName() + "=" + metric.getValue() + "; ";			
+			m += metric.getName() + "=" + metric.getValue() + " " + metric.getUnit().getUnit() + "; ";			
 		}
 		
 		LOGGER.info("Reporting measurement {} with metrics: {}", measurement, m);
@@ -56,9 +57,9 @@ public class DefaultMetricReporter extends AbstractMetricReporter implements Met
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void report(String measurement, String field, long value) {
+	public void report(String measurement, String field, long value, Unit unit) {
 		
-		LOGGER.info("Reporting measurement {} with metric: {} = {}.", measurement, field, value);
+		LOGGER.info("Reporting measurement {} with metric: {} = {} {}.", measurement, field, value, unit.getUnit());
 		
 	}
 
@@ -68,7 +69,7 @@ public class DefaultMetricReporter extends AbstractMetricReporter implements Met
 	@Override
 	public void reportElapsedTime(String measurement, String field, long startTime) {
 		
-		report(measurement, field, System.currentTimeMillis() - startTime);
+		report(measurement, field, System.currentTimeMillis() - startTime, Unit.MILLISECONDS);
 		
 	}
 	

@@ -1,6 +1,6 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "AWS CloudFormation template for standing up an EntityDB testing stack composed of EntityDB, MongoDB, and Elasticsearch.",
+	"Description": "AWS CloudFormation template for standing up an EntityDB testing stack composed of EntityDB, MongoDB, Elasticsearch, and Elasticache memcached.",
 	"Parameters":
 	{
 		"KeyName":
@@ -46,6 +46,64 @@
 	},
 	"Resources":
 	{
+		"CacheCluster":
+		{
+			"Type": "AWS::ElastiCache::CacheCluster",
+			"Properties":
+			{
+				"AZMode": "single-az",
+				"CacheNodeType": "cache.m1.small",
+				"CacheSubnetGroupName":
+				{
+					"Ref": "CacheSubnetGroup"
+				},
+				"Engine": "memcached",
+				"NumCacheNodes": 1,
+				"VpcSecurityGroupIds":
+				[
+					{
+						"Ref": "CacheSecurityGroup"
+					}
+				]
+			}
+		},
+		"CacheSubnetGroup":
+		{
+			"Type": "AWS::ElastiCache::SubnetGroup",
+			"Properties":
+			{
+				"Description": "EntityDB cache subnet group",
+				"SubnetIds":
+				[
+					{
+						"Ref": "Subnet1"
+					}
+				]
+			}
+		},
+		"CacheSecurityGroup":
+		{
+			"Type": "AWS::ElastiCache::SecurityGroup",
+			"Properties":
+			{
+				"Description": "Security group for the Elasticache cluster."
+			}
+		},
+		"CacheSecurityGroupIngress":
+		{
+			"Type": "AWS::ElastiCache::SecurityGroupIngress",
+			"Properties":
+			{
+				"CacheSecurityGroupName":
+				{
+					"Ref": "CacheSecurityGroup"
+				},
+				"EC2SecurityGroupName":
+				{
+					"Ref": "EntityDBSecurityGroup"
+				}
+			}
+		},
 		"Queue":
 		{
 			"Type": "AWS::SQS::Queue",
@@ -247,7 +305,7 @@
 		{
 			"Type": "AWS::Elasticsearch::Domain",
 			"Properties":
-			{				
+			{
 				"EBSOptions":
 				{
 					"EBSEnabled": "true",
@@ -572,6 +630,34 @@
 				]
 			}
 		},
+		"CacheCluster":
+		{
+			"Description": "The cache endpoint.",
+			"Value":
+			{
+				"Fn::Join":
+				[
+					"",
+					[
+						{
+							"Fn::GetAtt":
+							[
+								"CacheCluster",
+								"ConfigurationEndpoint.Address"
+							]
+						},
+						":",
+						{
+							"Fn::GetAtt":
+							[
+								"CacheCluster",
+								"ConfigurationEndpoint.Port"
+							]
+						}
+					]
+				]
+			}
+		},
 		"QueueURL":
 		{
 			"Description": "The queue URL.",
@@ -591,7 +677,13 @@
 					"Arn"
 				]
 			},
-			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-QueueARN" }}
+			"Export":
+			{
+				"Name":
+				{
+					"Fn::Sub": "${AWS::StackName}-QueueARN"
+				}
+			}
 		},
 		"Subnet1":
 		{
@@ -600,7 +692,13 @@
 			{
 				"Ref": "Subnet1"
 			},
-			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Subnet1" }}
+			"Export":
+			{
+				"Name":
+				{
+					"Fn::Sub": "${AWS::StackName}-Subnet1"
+				}
+			}
 		},
 		"Subnet2":
 		{
@@ -609,7 +707,13 @@
 			{
 				"Ref": "Subnet2"
 			},
-			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Subnet2" }}
+			"Export":
+			{
+				"Name":
+				{
+					"Fn::Sub": "${AWS::StackName}-Subnet2"
+				}
+			}
 		},
 		"LoadBalancerSecurityGroup":
 		{
@@ -618,7 +722,13 @@
 			{
 				"Ref": "LoadBalancerSecurityGroup"
 			},
-			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-LoadBalancerSecurityGroup" }}
+			"Export":
+			{
+				"Name":
+				{
+					"Fn::Sub": "${AWS::StackName}-LoadBalancerSecurityGroup"
+				}
+			}
 		},
 		"EntityDBSecurityGroup":
 		{
@@ -627,7 +737,13 @@
 			{
 				"Ref": "EntityDBSecurityGroup"
 			},
-			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-EntityDBSecurityGroup" }}
+			"Export":
+			{
+				"Name":
+				{
+					"Fn::Sub": "${AWS::StackName}-EntityDBSecurityGroup"
+				}
+			}
 		},
 		"SSHLocation":
 		{
@@ -636,7 +752,13 @@
 			{
 				"Ref": "SSHLocation"
 			},
-			"Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-SSHLocation" }}
+			"Export":
+			{
+				"Name":
+				{
+					"Fn::Sub": "${AWS::StackName}-SSHLocation"
+				}
+			}
 		}
 	}
 }

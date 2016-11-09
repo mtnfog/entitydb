@@ -54,11 +54,11 @@ public class ElasticSearchIndexer extends AbstractIndexer implements Indexer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void index(int limit) {
+	public long index(int limit) {
 	
 		LOGGER.trace("Indexing up to {} entities in Elasticsearch.", limit);
 		
-		super.index(limit);
+		return super.index(limit);
 		
 	}
 	

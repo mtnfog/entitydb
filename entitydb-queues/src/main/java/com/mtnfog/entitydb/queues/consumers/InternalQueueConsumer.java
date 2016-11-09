@@ -33,7 +33,6 @@ import com.mtnfog.entitydb.model.queue.QueueMessage;
 import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.queues.InternalQueue;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
@@ -50,7 +49,6 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	
 	private MetricReporter metricReporter;
 	
-	private int sleepSeconds;
 	private boolean consume = true;
 	
 	/**
@@ -60,13 +58,12 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @param searchIndex A {@link SearchIndex search index}.
 	 */
 	public InternalQueueConsumer(EntityStore<?> entityStore, List<RulesEngine> rulesEngines, 
-			AuditLogger auditLogger, EntityQueryService entityQueryService, MetricReporter metricReporter, int sleepSeconds,
+			AuditLogger auditLogger, MetricReporter metricReporter,
 			ConcurrentLinkedQueue<IndexedEntity> indexerCache) {
 		
-		super(entityStore, rulesEngines, auditLogger, entityQueryService, metricReporter, indexerCache);
+		super(entityStore, rulesEngines, auditLogger, metricReporter, indexerCache);
 		
 		this.metricReporter = metricReporter;
-		this.sleepSeconds = sleepSeconds;
 		
 	}
 	
@@ -85,6 +82,8 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 	 */
 	@Override
 	public void consume() {
+		
+		int messagesConsumed = 0;
 		
 		while(InternalQueue.getQueue().size() > 0 && consume == true) {
 		
@@ -120,6 +119,8 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 						
 					}
 					
+					messagesConsumed++;
+					
 				} catch (Exception ex) {
 					
 					LOGGER.error("Unable to consume message from internal queue. The message has been lost.", ex);
@@ -128,19 +129,8 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 			
 			}
 			
-			if(getSize() <= 0) {
-
-				try {
-					LOGGER.info("Queue processor thread {} is sleeping for {} seconds.", Thread.currentThread().getId(), sleepSeconds);
-					Thread.sleep(sleepSeconds * 1000);
-				} catch (InterruptedException e) {
-					// Ignoring.
-				}
-			
-			}
-			
 		}
-				
+			
 	}
 	
 	/**

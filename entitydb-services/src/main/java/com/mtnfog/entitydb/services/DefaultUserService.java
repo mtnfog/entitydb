@@ -35,7 +35,6 @@ import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 import com.mtnfog.entitydb.model.domain.ContinuousQuery;
 import com.mtnfog.entitydb.model.domain.Notification;
 import com.mtnfog.entitydb.model.domain.User;
-import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.services.UserService;
 
 /**
@@ -58,10 +57,7 @@ public class DefaultUserService implements UserService {
 	
 	@Autowired
 	private ContinuousQueryRepository continuousQueryRepository;
-	
-	@Autowired
-	private MetricReporter metricReporter;
-	
+		
 	/**
 	 * {@inheritDoc}
 	 */

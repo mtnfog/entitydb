@@ -29,11 +29,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityAclService;
 import com.mtnfog.entitydb.model.services.EntityQueryService;
+import com.mtnfog.entitydb.model.services.EntityQueueService;
 import com.mtnfog.entitydb.model.services.UserService;
 import com.mtnfog.entitydb.model.status.Status;
 import com.mtnfog.entitydb.model.domain.ContinuousQuery;
@@ -75,13 +75,13 @@ public class EntityDbRestApiController {
 	private EntityAclService entityAclService;
 	
 	@Autowired
-	private QueuePublisher queuePublisher;
-	
-	@Autowired
 	public EntityStore<?> entityStore;
 	
 	@Autowired
 	public UserService userService;
+	
+	@Autowired
+	public EntityQueueService entityQueueService;
 		
 	/**
 	 * Gets the status.
@@ -91,7 +91,7 @@ public class EntityDbRestApiController {
 	@RequestMapping(value = "/api/status", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Status status() throws EntityStoreException {
+	public Status status(@RequestHeader(value="Authorization") String authorization) throws EntityStoreException {
 		
 		return new Status(searchIndex.getCount(), entityStore.getEntityCount());		
 		
@@ -99,9 +99,10 @@ public class EntityDbRestApiController {
 	
 	/**
 	 * Only returns HTTP 200 OK responses. This function is for application-level
-	 * monitoring by load balancers and other monitors.
+	 * monitoring by load balancers and other monitors. Note that there is no
+	 * authentication on this endpoint.
 	 */
-	@RequestMapping(value = {"/", "/api/health"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/api/health", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public void health() {	
 		// Only returns HTTP OK to be used for application monitoring.
@@ -131,7 +132,7 @@ public class EntityDbRestApiController {
 	}
 	
 	/**
-	 * Gets the continuous queries for a user.
+	 * Gets the continuous queries for a user identified by the API key.
 	 * @param authorization The user's API key.
 	 * @return A list of {@link ContinuousQueries queries}.
 	 */
@@ -139,7 +140,7 @@ public class EntityDbRestApiController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public List<ContinuousQuery> continuousQueries(
-			@RequestHeader(value="Authorization", required=false) String authorization) {
+			@RequestHeader(value="Authorization") String authorization) {
 	
 		try {
 		
@@ -158,7 +159,7 @@ public class EntityDbRestApiController {
 	 * @param entities A collection of {@link Entities}.
 	 * @param acl An optional ACL for all entities. If not specified all entities
 	 * are visible to all users. 
-	 * @param authorization An optional Authorization header.
+	 * @param authorization The user's API key.
 	 * @throws MalformedAclException Thrown if the ACL is invalid.
 	 * @throws Exception Thrown if the entities cannot be queued for ingestion.
 	 * Check the server log for more information.
@@ -168,11 +169,11 @@ public class EntityDbRestApiController {
 	public void store(
 			@RequestBody Collection<Entity> entities, 
 			@RequestParam(value="acl", required=false, defaultValue=Acl.WORLD) String acl,
-			@RequestHeader(value="Authorization", required=false) String authorization) {
+			@RequestHeader(value="Authorization") String authorization) {
 					
-		try {
-						
-			queuePublisher.queueIngest(entities, acl, authorization);
+		try {					
+			
+			entityQueueService.queueIngest(entities, acl, authorization);
 			
 		} catch (MalformedAclException ex) {
 			
@@ -184,15 +185,15 @@ public class EntityDbRestApiController {
 			
 		}
 		
-		LOGGER.debug("Successfully queued {} entities.", entities.size());
+		LOGGER.debug("Successfully queued {} entities for ingest.", entities.size());
 			
 	}
 	
 	/**
-	 * Modifies an entity's ACL.
+	 * Queues an entity ACL modification.
 	 * @param entityId The ID of the entity.
 	 * @param acl The updated ACL for the entity.
-	 * @param authorization An optional Authorization header.
+	 * @param authorization The user's API key.
 	 * @throws NonexistantEntityException Thrown if the entity having the entity ID does not exist.
 	 * @throws MalformedAclException Thrown if the ACL is invalid.
 	 * @throws InternalServerErrorException Thrown if the entity's ACL cannot
@@ -203,7 +204,7 @@ public class EntityDbRestApiController {
 	public void store(
 			@PathVariable String entityId,
 			@RequestParam(value="acl", required=true) String acl,
-			@RequestHeader(value="Authorization", required=false) String authorization) {
+			@RequestHeader(value="Authorization") String authorization) {
 					
 		try {
 			
@@ -211,19 +212,19 @@ public class EntityDbRestApiController {
 			
 		} catch (NonexistantEntityException ex) {
 			
-			throw new NotFoundException("The entity was not found.");
+			throw new NotFoundException("The entity to update was not found.");
 			
 		} catch (MalformedAclException ex) {
 			
-			throw new BadRequestException("The ACL is malformed.", ex);			
+			throw new BadRequestException("The received ACL is malformed.", ex);			
 			
 		} catch (Exception ex) {
 			
-			throw new InternalServerErrorException("Unable to update entity's ACL.", ex);
+			throw new InternalServerErrorException("Unable to update the  entity's ACL.", ex);
 			
 		}
 		
-		LOGGER.info("Successfully queued ACL update request.");
+		LOGGER.info("Successfully queued ACL update request for entity {}.", entityId);
 			
 	}
 	
@@ -233,8 +234,8 @@ public class EntityDbRestApiController {
 	 * @param continuous An optional parameter enables this query as a
 	 * continuous query. Set to 1 to enable and 0 to disable (default).
 	 * @param days The number of days to run this query continuously.
-	 * If not provided the default value is 90 days.
-	 * @param authorization An optional Authorization header.
+	 * If not provided the default value is 90 days. Specify -1 for a non-expiring continuous query.
+	 * @param authorization The user's API key.
 	 * @return A {@link QueryResult} containing the entities.
 	 * @throws UnauthorizedException Thrown if the authentication is invalid.
 	 * @throws BadRequestException Thrown if the EQL query is malformed.
@@ -245,7 +246,7 @@ public class EntityDbRestApiController {
 			@RequestParam(value = "query") String query,
 			@RequestParam(value = "continuous", required = false, defaultValue = "0") int continuous,
 			@RequestParam(value = "days", required = false, defaultValue = "90") int days,
-			@RequestHeader(value = "Authorization", required = false) String authorization)	{			
+			@RequestHeader(value = "Authorization") String authorization)	{			
 					
 		LOGGER.trace("Received EQL query: {}", query);
 				

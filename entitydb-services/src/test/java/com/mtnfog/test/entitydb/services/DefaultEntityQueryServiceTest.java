@@ -132,7 +132,7 @@ public class DefaultEntityQueryServiceTest {
 		@Bean
 		public AuditLogger getAuditLogger() throws IOException {
 
-			return new FileAuditLogger();
+			return new FileAuditLogger("junit");
 
 		}
 
@@ -167,7 +167,7 @@ public class DefaultEntityQueryServiceTest {
 		@Bean
 		public QueueConsumer getQueueConsumer() throws IOException, URISyntaxException {
 
-			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getEntityQueryService(), getMetricReporter(), 5, getIndexerCache());
+			return new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), getIndexerCache());
 
 		}
 

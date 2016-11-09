@@ -253,16 +253,7 @@ public interface EntityDbProperties extends Config {
 	@Key("queue.provider")
 	@DefaultValue("internal")
     public String getQueueProvider();
-	
-	/**
-	 * Gets the sleep period in seconds for the queue.
-	 * @return The sleep period in seconds for the queue. If not
-	 * specified in the properties then <code>60</code> will be returned.
-	 */
-	@Key("queue.consumer.sleep")
-	@DefaultValue("60")
-    public int getQueueConsumerSleep();
-	
+		
 	/**
 	 * Gets the SQS queue URL.
 	 * @return The SQS queue URL.
@@ -419,11 +410,11 @@ public interface EntityDbProperties extends Config {
 	
 	/**
 	 * Gets the CloudWatch namespace. If not specified in the
-	 * properties then <code>entitydb</code> will be returned.
+	 * properties then <code>EntityDB</code> will be returned.
 	 * @return The CloudWatch namespace.
 	 */
 	@Key("metrics.cloudwatch.namespace")
-	@DefaultValue("entitydb")
+	@DefaultValue("EntityDB")
 	public String getCloudWatchNamespace();
 	
 	/**

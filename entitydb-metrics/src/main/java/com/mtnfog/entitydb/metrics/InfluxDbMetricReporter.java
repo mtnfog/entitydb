@@ -31,6 +31,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import com.mtnfog.entitydb.model.metrics.Metric;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 
 /**
  * Implementation of {@link MetricReporter} that reports
@@ -71,13 +72,16 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * The metric unit is ignored and milliseconds are used.
 	 * This function is executed asynchronously.
 	 */
 	@Async
 	@Override
 	public void report(String measurement, List<Metric> metrics) {
 		
-		Builder builder = Point.measurement(measurement)
+		Builder builder = 
+			Point
+				.measurement(measurement)
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 		
 		for(Metric metric : metrics) {		
@@ -93,15 +97,18 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * The metric unit is ignored and milliseconds are used.
 	 * This function is executed asynchronously.
 	 */
 	@Async
 	@Override
-	public void report(String measurement, String field, long value) {
+	public void report(String measurement, String field, long value, Unit unit) {
 		
-		Builder builder = Point.measurement(measurement)
+		Builder builder = 
+			Point
+				.measurement(measurement)
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-			.addField(field, value);			
+                .addField(field, value);			
 		
 		Point point = builder.build();
 		
@@ -115,7 +122,7 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 	@Override
 	public void reportElapsedTime(String measurement, String field, long startTime) {
 		
-		report(measurement, field, System.currentTimeMillis() - startTime);
+		report(measurement, field, System.currentTimeMillis() - startTime, Unit.MILLISECONDS);
 		
 	}
 	

@@ -1,4 +1,14 @@
 #!/bin/bash
+
+# This script executes packer with the following parameters.
+
+# Note: You need to edit the packer script entitydb.json to modify
+# the security_group_id, subnet_id, and vpc_id for your environment.
+
+# Note: The AMI will have AWS CloudWatch Logs enabled for the system
+# log and for the EntityDB log. Make sure EntityDB is running under an
+# IAM role that permits access to CloudWatch logs.
+
 VERSION=$1
 JAR="../../../entitydb-app/target/entitydb.jar"
 LICENSE="../../../LICENSE"

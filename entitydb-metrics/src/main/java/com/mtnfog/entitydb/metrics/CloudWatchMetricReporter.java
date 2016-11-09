@@ -33,6 +33,7 @@ import com.amazonaws.services.cloudwatch.model.MetricDatum;
 import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
 import com.mtnfog.entitydb.model.metrics.Metric;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
+import com.mtnfog.entitydb.model.metrics.Unit;
 
 /**
  * Implementation of {@link MetricReporter} that reports
@@ -95,17 +96,19 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 	public void report(String measurement, List<Metric> metrics) {
 	    
 		PutMetricDataRequest putMetricDataRequest = new PutMetricDataRequest();		   
-		putMetricDataRequest.setNamespace(namespace);
+		putMetricDataRequest.setNamespace(String.format("%s/%s", namespace, measurement));
 		
 		Collection<MetricDatum> metricData = new LinkedList<MetricDatum>();
 		
 		for(Metric metric : metrics) {
 			
 			MetricDatum metricDatum = new MetricDatum();
+			
 		    metricDatum.setMetricName(metric.getName());
 		    metricDatum.setValue((double) metric.getValue());
 		    metricDatum.setTimestamp(new Date());
 		    metricDatum.setUnit(getStandardUnit(metric.getUnit()));
+		    
 		    metricData.add(metricDatum);
 		    
 		}
@@ -123,17 +126,19 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 	 */
 	@Async
 	@Override
-	public void report(String measurement, String field, long value) {
+	public void report(String measurement, String field, long value, Unit unit) {
 		
 		PutMetricDataRequest putMetricDataRequest = new PutMetricDataRequest();		   
-		putMetricDataRequest.setNamespace(namespace);
+		putMetricDataRequest.setNamespace(String.format("%s/%s", namespace, measurement));
 		
 		Collection<MetricDatum> metricData = new LinkedList<MetricDatum>();
 
 		MetricDatum metricDatum = new MetricDatum();
+		
 	    metricDatum.setMetricName(field);
 	    metricDatum.setValue((double) value);
 	    metricDatum.setTimestamp(new Date());
+	    metricDatum.setUnit(getStandardUnit(unit));
 	    metricDatum.setDimensions(getDimension());
 	    
 	    metricData.add(metricDatum);
@@ -150,7 +155,7 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 	@Override
 	public void reportElapsedTime(String measurement, String field, long startTime) {
 		
-		report(measurement, field, System.currentTimeMillis() - startTime);
+		report(measurement, field, System.currentTimeMillis() - startTime, Unit.MILLISECONDS);
 		
 	}
 
