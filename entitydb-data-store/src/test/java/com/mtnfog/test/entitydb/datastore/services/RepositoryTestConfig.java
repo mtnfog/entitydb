@@ -16,20 +16,20 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.configuration;
+package com.mtnfog.test.entitydb.datastore.services;
 
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.aeonbits.owner.ConfigFactory;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -37,15 +37,13 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.mtnfog.entitydb.configuration.EntityDbProperties;
-
 @Configuration
 @EnableTransactionManagement
-public class PersistenceJPAConfig {
+@ComponentScan(basePackages = "com.mtnfog.entitydb")
+@EnableJpaRepositories("com.mtnfog.entitydb")
+public class RepositoryTestConfig {
 	
-	private static final Logger LOGGER = LogManager.getLogger(PersistenceJPAConfig.class);
-	
-	private static final EntityDbProperties entityDbProperties = ConfigFactory.create(EntityDbProperties.class);
+	private static final Logger LOGGER = LogManager.getLogger(RepositoryTestConfig.class);
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {		
@@ -65,31 +63,11 @@ public class PersistenceJPAConfig {
 	public DataSource dataSource() {
 		
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		
-		if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "internal")) {
-		
-			dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-			dataSource.setUrl("jdbc:hsqldb:mem:entitydb-data-store");
-			dataSource.setUsername("sa");
-			dataSource.setPassword("");
-		
-		} else if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "mysql")) {
-						
-			dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-			dataSource.setUrl(entityDbProperties.getJdbcUrl());
-			dataSource.setUsername(entityDbProperties.getDataStoreUsername());
-			dataSource.setPassword(entityDbProperties.getDataStorePassword());
 			
-		} else {
-			
-			LOGGER.warn("Invalid datastore {}. Using the internal store.", entityDbProperties.getDataStoreDatabase());
-			
-			dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-			dataSource.setUrl("jdbc:hsqldb:mem:entitydb-data-store");
-			dataSource.setUsername("sa");
-			dataSource.setPassword("");
-			
-		}
+		dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+		dataSource.setUrl("jdbc:hsqldb:mem:entitydb-data-store");
+		dataSource.setUsername("sa");
+		dataSource.setPassword("");
 
 		return dataSource;
 
@@ -113,24 +91,10 @@ public class PersistenceJPAConfig {
 	private Properties getProperties() {
 		
 		Properties properties = new Properties();
-		
-		if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "internal")) {
-			
-			properties.setProperty("hibernate.hbm2ddl.auto", "create");
-			properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-			
-		} else if(StringUtils.equals(entityDbProperties.getDataStoreDatabase(), "mysql")) {
-			
-			properties.setProperty("hibernate.hbm2ddl.auto", "validate");
-			properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-			
-		} else {
-			
-			properties.setProperty("hibernate.hbm2ddl.auto", "create");
-			properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-			
-		}
-		
+
+		properties.setProperty("hibernate.hbm2ddl.auto", "create");
+		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+
 		return properties;
 		
 	}

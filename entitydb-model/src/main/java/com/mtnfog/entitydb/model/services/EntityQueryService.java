@@ -19,8 +19,11 @@
 package com.mtnfog.entitydb.model.services;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
+import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.MalformedQueryException;
 import com.mtnfog.entitydb.model.exceptions.QueryExecutionException;
@@ -34,6 +37,32 @@ import com.mtnfog.entitydb.model.security.Acl;
  *
  */
 public interface EntityQueryService {
+	
+	/**
+	 * Gets a list of non-expired continuous queries.
+	 * @return A list of {@link ContinuousQueryEntity}.
+	 */
+	public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
+	
+	/**
+	 * Gets a list of continuous queries for a user.
+	 * @param userEntity The {@link UserEntity}.
+	 * @return A list of {@link ContinuousQueryEntity}.
+	 */
+	public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity);
+
+	/**
+	 * Saves a continuous query.
+	 * @param continuousQueryEntity A {@link ContinuousQueryEntity}.
+	 * @return The persisted {@link ContinuousQueryEntity}.
+	 */
+	public ContinuousQueryEntity save(ContinuousQueryEntity continuousQueryEntity);
+	
+	/**
+	 * Deletes a continuous query.
+	 * @param continuousQueryEntity The {@link ContinuousQueryEntity} to delete.
+	 */
+	public void delete(ContinuousQueryEntity continuousQueryEntity);
 
 	/**
 	 * Execute an EQL query.

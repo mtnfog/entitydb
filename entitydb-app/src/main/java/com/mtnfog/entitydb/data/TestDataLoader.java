@@ -16,7 +16,7 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.datastore.data;
+package com.mtnfog.entitydb.data;
 
 import java.util.ArrayList;
 

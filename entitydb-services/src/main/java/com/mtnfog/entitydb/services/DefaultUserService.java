@@ -26,7 +26,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mtnfog.entitydb.datastore.repository.ContinuousQueryRepository;
 import com.mtnfog.entitydb.datastore.repository.NotificationRepository;
 import com.mtnfog.entitydb.datastore.repository.UserRepository;
 import com.mtnfog.entitydb.model.datastore.entities.ContinuousQueryEntity;
@@ -35,6 +34,7 @@ import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 import com.mtnfog.entitydb.model.domain.ContinuousQuery;
 import com.mtnfog.entitydb.model.domain.Notification;
 import com.mtnfog.entitydb.model.domain.User;
+import com.mtnfog.entitydb.model.services.EntityQueryService;
 import com.mtnfog.entitydb.model.services.UserService;
 
 /**
@@ -56,7 +56,7 @@ public class DefaultUserService implements UserService {
 	private NotificationRepository notificationRepository;
 	
 	@Autowired
-	private ContinuousQueryRepository continuousQueryRepository;
+	private EntityQueryService entityQueryService;
 		
 	/**
 	 * {@inheritDoc}
@@ -140,7 +140,7 @@ public class DefaultUserService implements UserService {
 		
 		if(userEntity != null) {
 		
-			List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.findByUserOrderByIdDesc(userEntity);
+			List<ContinuousQueryEntity> continuousQueryEntities = entityQueryService.findByUserOrderByIdDesc(userEntity);
 			
 			for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
 				

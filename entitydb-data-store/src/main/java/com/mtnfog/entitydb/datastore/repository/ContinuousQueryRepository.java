@@ -20,8 +20,6 @@ package com.mtnfog.entitydb.datastore.repository;
 
 import java.util.List;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -32,19 +30,15 @@ import com.mtnfog.entitydb.model.datastore.entities.UserEntity;
 @Repository
 public interface ContinuousQueryRepository extends CrudRepository<ContinuousQueryEntity, Long> {
 	
-	@Cacheable("nonExpiredContinuousQueries")
 	@Query(value = "SELECT * FROM ContinuousQueries t WHERE DATEDIFF(NOW(), t.timestamp) <= t.days OR Days = -1", nativeQuery=true)	 
 	public List<ContinuousQueryEntity> getNonExpiredContinuousQueries();
 	 
-	@Cacheable("continuousQueriesByUser")
 	public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity);
 		
 	@Override
-	@CacheEvict(value = "nonExpiredContinuousQueries", allEntries=true)
 	public <S extends ContinuousQueryEntity> S save(S continuousQueryEntity);
 	
 	@Override
-	@CacheEvict(value = "nonExpiredContinuousQueries", allEntries=true)
-	public void delete(ContinuousQueryEntity ContinuousQueryEntity);
+	public void delete(ContinuousQueryEntity continuousQueryEntity);
 	
 }

@@ -30,6 +30,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.mtnfog.entity.Entity;
@@ -97,6 +100,42 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	
 	@Autowired
 	private MetricReporter metricReporter;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Cacheable("nonExpiredContinuousQueries")
+	public List<ContinuousQueryEntity> getNonExpiredContinuousQueries() {		
+		return continuousQueryRepository.getNonExpiredContinuousQueries();		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Cacheable("continuousQueriesByUser")
+	public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity) {
+		return continuousQueryRepository.findByUserOrderByIdDesc(userEntity);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@CachePut("nonExpiredContinuousQueries")
+	public ContinuousQueryEntity save(ContinuousQueryEntity continuousQueryEntity) {
+		return continuousQueryRepository.save(continuousQueryEntity);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@CacheEvict(value = "nonExpiredContinuousQueries", allEntries=true)
+	public void delete(ContinuousQueryEntity continuousQueryEntity) {
+		continuousQueryRepository.delete(continuousQueryEntity);
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -252,10 +291,8 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				// Set to true by default in case auditing is not enabled.
 				boolean auditResult = true;
 				
-				if(properties.isAuditEnabled()) {
-				
-					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), user.getUsername(), AuditAction.SEARCH_RESULT);
-					
+				if(properties.isAuditEnabled()) {				
+					auditResult = auditLogger.audit(indexedEntity.getEntityId(), System.currentTimeMillis(), user.getUsername(), AuditAction.SEARCH_RESULT);					
 				}
 								
 				if(!auditResult) {

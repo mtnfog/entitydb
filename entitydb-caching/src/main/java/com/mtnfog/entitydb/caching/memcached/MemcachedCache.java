@@ -22,7 +22,6 @@ import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
 
@@ -56,16 +55,25 @@ public class MemcachedCache implements Cache {
 		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Object getNativeCache() {
 		return client;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ValueWrapper get(final Object key) {
 		
@@ -91,32 +99,50 @@ public class MemcachedCache implements Cache {
 		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void put(final Object key, final Object value) {
 		client.set(key.toString(), ttl, value);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void evict(final Object key) {
 		client.delete(key.toString());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void clear() {
 		client.flush();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public <T> T get(Object key, Class<T> type) {
 		return (T) client.get((String) key);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ValueWrapper putIfAbsent(Object key, Object value) {
 		client.set(key.toString(), ttl, value);
 		return new SimpleValueWrapper(value);
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public <T> T get(Object key, Callable<T> valueLoader) {
 		return (T) client.get((String) key);
