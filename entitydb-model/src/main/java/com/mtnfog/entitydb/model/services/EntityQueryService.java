@@ -22,6 +22,8 @@ import java.util.Collection;
 
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
+import com.mtnfog.entitydb.model.exceptions.MalformedQueryException;
+import com.mtnfog.entitydb.model.exceptions.QueryExecutionException;
 import com.mtnfog.entitydb.model.security.Acl;
 
 /**
@@ -41,7 +43,7 @@ public interface EntityQueryService {
 	 * @param days The number of days to be continuous.
 	 * @return The {@link ExternalQueryResult result}.
 	 */
-	public QueryResult eql(String query, String apiKey, int continuous, int days);
+	public QueryResult eql(String query, String apiKey, int continuous, int days) throws MalformedQueryException, QueryExecutionException;
 	
 	/**
 	 * Executes all continuous queries against the entity.

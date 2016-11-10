@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
+import com.mtnfog.entitydb.api.exceptions.UnauthorizedException;
 import com.mtnfog.entitydb.model.services.UserService;
 
 /**

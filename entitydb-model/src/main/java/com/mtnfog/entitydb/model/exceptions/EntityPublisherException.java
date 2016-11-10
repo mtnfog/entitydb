@@ -18,23 +18,14 @@
  */
 package com.mtnfog.entitydb.model.exceptions;
 
-public class EntityPublisherException extends Exception {
+public class EntityPublisherException extends EntityDbException {
 
 	private static final long serialVersionUID = 2325000410259951206L;
 
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 */
 	public EntityPublisherException(String message) {
 		super(message);
 	}
 	
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 * @param throwable The exception.
-	 */
 	public EntityPublisherException(String message, Throwable throwable) {
 		super(message, throwable);
 	}

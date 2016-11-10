@@ -25,23 +25,14 @@ package com.mtnfog.entitydb.model.exceptions;
  * @author Mountain Fog, Inc.
  *
  */
-public class EntityStoreException extends Exception {
+public class EntityStoreException extends EntityDbException {
 
 	private static final long serialVersionUID = 2325000410259951206L;
 
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 */
 	public EntityStoreException(String message) {
 		super(message);
 	}
 	
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 * @param throwable The exception.
-	 */
 	public EntityStoreException(String message, Throwable throwable) {
 		super(message, throwable);
 	}

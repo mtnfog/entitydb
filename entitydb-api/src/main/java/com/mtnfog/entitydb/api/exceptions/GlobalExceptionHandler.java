@@ -26,10 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
-import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
-import com.mtnfog.entitydb.model.exceptions.api.NotFoundException;
-import com.mtnfog.entitydb.model.exceptions.api.UnableToQueueEntitiesException;
-import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

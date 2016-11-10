@@ -37,23 +37,10 @@
 		</license>
 	</licenses>
 	<dependencies>
-		<!-- The dependency exclusions in this POM are related to the rename of 
-			metrics-core from codahale to dropwizard. See: https://github.com/jsevellec/cassandra-unit/issues/165 -->
-		<!-- <dependency> <groupId>com.thinkaurelius.titan</groupId> <artifactId>titan-core</artifactId> 
-			<version>1.0.0</version> <exclusions> <exclusion> <groupId>com.codahale.metrics</groupId> 
-			<artifactId>metrics-core</artifactId> </exclusion> </exclusions> </dependency> 
-			<dependency> <groupId>com.thinkaurelius.titan</groupId> <artifactId>titan-cassandra</artifactId> 
-			<version>1.0.0</version> <exclusions> <exclusion> <groupId>com.codahale.metrics</groupId> 
-			<artifactId>metrics-core</artifactId> </exclusion> </exclusions> </dependency> 
-			<dependency> <groupId>com.thinkaurelius.titan</groupId> <artifactId>titan-berkeleyje</artifactId> 
-			<version>1.0.0</version> </dependency> <dependency> <groupId>io.dropwizard.metrics</groupId> 
-			<artifactId>metrics-core</artifactId> <version>3.1.0</version> </dependency> -->
 		<dependency>
 			<groupId>org.apache.cassandra</groupId>
 			<artifactId>cassandra-all</artifactId>
 			<version>${cassandra.version}</version>
-			<!-- <exclusions> <exclusion> <groupId>io.dropwizard.metrics</groupId> 
-				<artifactId>metrics-core</artifactId> </exclusion> </exclusions> -->
 			<exclusions>
 				<exclusion>
 					<groupId>commons-codec</groupId>
@@ -65,8 +52,6 @@
 			<groupId>com.datastax.cassandra</groupId>
 			<artifactId>cassandra-driver-core</artifactId>
 			<version>${cassandra.datastax.version}</version>
-			<!-- <exclusions> <exclusion> <groupId>io.dropwizard.metrics</groupId> 
-				<artifactId>metrics-core</artifactId> </exclusion> </exclusions> -->
 		</dependency>
 		<dependency>
 			<groupId>com.datastax.cassandra</groupId>
@@ -126,9 +111,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-model</artifactId>
+			<artifactId>entitydb-testing</artifactId>
 			<version>${project.version}</version>
-			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

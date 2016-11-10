@@ -155,9 +155,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-model</artifactId>
+			<artifactId>entitydb-testing</artifactId>
 			<version>${project.version}</version>
-			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

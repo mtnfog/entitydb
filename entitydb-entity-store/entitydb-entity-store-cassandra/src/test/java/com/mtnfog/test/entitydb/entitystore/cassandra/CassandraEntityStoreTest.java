@@ -29,7 +29,7 @@ import com.mtnfog.entitydb.entitystore.cassandra.CassandraEntityStore;
 import com.mtnfog.entitydb.entitystore.cassandra.model.CassandraStoredEntity;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
-import com.mtnfog.test.entitydb.entitystore.AbstractEntityStoreTest;
+import com.mtnfog.entitydb.testing.AbstractEntityStoreTest;
 
 public class CassandraEntityStoreTest extends AbstractEntityStoreTest<CassandraStoredEntity> {
 

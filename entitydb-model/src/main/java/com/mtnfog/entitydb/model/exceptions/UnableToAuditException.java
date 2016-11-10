@@ -18,16 +18,16 @@
  */
 package com.mtnfog.entitydb.model.exceptions;
 
-public class InvalidQueryException extends EntityDbException {
+public class UnableToAuditException extends EntityDbException {
 
-	private static final long serialVersionUID = 2325000410259951206L;
+	private static final long serialVersionUID = -7483655113391502743L;
 
-	public InvalidQueryException(String message) {
-		super(message);
+	public UnableToAuditException(String message) {		
+		super(message);		
 	}
 	
-	public InvalidQueryException(String message, Throwable throwable) {
-		super(message, throwable);
+	public UnableToAuditException(String message, Throwable t) {		
+		super(message, t);		
 	}
-	 
+
 }

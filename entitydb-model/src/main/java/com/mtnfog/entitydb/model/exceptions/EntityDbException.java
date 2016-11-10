@@ -16,26 +16,27 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.exceptions.api;
+package com.mtnfog.entitydb.model.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+public abstract class EntityDbException extends Exception {
 
-@ResponseStatus(value=HttpStatus.NOT_FOUND)
-public class NotFoundException extends RuntimeException {
-
-	private static final long serialVersionUID = -7483655113391502743L;
-
-	public NotFoundException(String message) {
-		
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Creates a new exception.
+	 * @param message The message of the exception.
+	 */
+	public EntityDbException(String message) {
 		super(message);
-		
 	}
 	
-	public NotFoundException(String message, Throwable t) {
-		
-		super(message, t);
-		
+	/**
+	 * Creates a new exception.
+	 * @param message The message of the exception.
+	 * @param throwable The exception.
+	 */
+	public EntityDbException(String message, Throwable throwable) {
+		super(message, throwable);
 	}
 
 }

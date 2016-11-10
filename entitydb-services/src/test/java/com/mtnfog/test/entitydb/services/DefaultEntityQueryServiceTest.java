@@ -49,7 +49,8 @@ import com.mtnfog.entitydb.metrics.DefaultMetricReporter;
 import com.mtnfog.entitydb.model.audit.AuditLogger;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
-import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
+import com.mtnfog.entitydb.model.exceptions.MalformedQueryException;
+import com.mtnfog.entitydb.model.exceptions.QueryExecutionException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
@@ -88,19 +89,12 @@ public class DefaultEntityQueryServiceTest {
 	}
 	
 	@Test
-	public void test() {
+	public void test() throws MalformedQueryException, QueryExecutionException {
 
 		QueryResult result = entityQueryService.eql("select * from entities", "1234", 0, 90);
 		
 		assertNotNull(result.getQueryId());
 		assertEquals(0, result.getEntities().size());
-
-	}
-
-	@Test(expected = UnauthorizedException.class)
-	public void test2() {
-
-		entityQueryService.eql("select * from entities", "asdf", 0, 90);
 
 	}
 

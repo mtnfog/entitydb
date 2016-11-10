@@ -58,11 +58,6 @@
 			<version>${javax.persistence.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.mtnfog</groupId>
 			<artifactId>entity-model</artifactId>
 			<version>${entity.model.version}</version>
@@ -70,11 +65,6 @@
 		<dependency>
 			<groupId>com.mtnfog.entitydb</groupId>
 			<artifactId>entitydb-eql-language</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-eql-filters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

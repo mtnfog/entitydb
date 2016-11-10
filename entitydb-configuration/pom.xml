@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>org.aeonbits.owner</groupId>
 			<artifactId>owner</artifactId>
-			<version>1.0.9</version>
+			<version>${aeonbits.owner.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

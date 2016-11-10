@@ -48,8 +48,9 @@ import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.InvalidQueryException;
-import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
-import com.mtnfog.entitydb.model.exceptions.api.InternalServerErrorException;
+import com.mtnfog.entitydb.model.exceptions.MalformedQueryException;
+import com.mtnfog.entitydb.model.exceptions.QueryExecutionException;
+import com.mtnfog.entitydb.model.exceptions.UnableToAuditException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.metrics.Unit;
 import com.mtnfog.entitydb.model.notifications.NotificationType;
@@ -101,7 +102,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public QueryResult eql(String query, String apiKey, int continuous, int days) {
+	public QueryResult eql(String query, String apiKey, int continuous, int days) throws MalformedQueryException, QueryExecutionException {
 				
 		long startTime = System.currentTimeMillis();
 
@@ -140,21 +141,21 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				} else {
 					
 					// The search could not be audited.
-					throw new InternalServerErrorException("Unable to audit query.");
+					throw new UnableToAuditException("Unable to audit query.");
 					
 				}
 			
-		} catch (BadRequestException | QueryGenerationException | IllegalStateException ex) {
+		} catch (QueryGenerationException | IllegalStateException ex) {
 			
 			LOGGER.error("Malformed query: " + ex.getMessage(), ex);
 			
-			throw new BadRequestException("Malformed query.");		
+			throw new MalformedQueryException("Malformed query.");		
 									
 		} catch (Exception ex) {
 			
 			LOGGER.error("Unable to execute query.", ex);
 			
-			throw new InternalServerErrorException("Unable to execute the query. See the log for more information.");
+			throw new QueryExecutionException("Unable to execute the query. See the log for more information.");
 			
 		}
 		

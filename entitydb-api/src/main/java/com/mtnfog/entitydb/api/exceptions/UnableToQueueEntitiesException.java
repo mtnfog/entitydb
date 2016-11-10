@@ -16,13 +16,13 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.exceptions.api;
+package com.mtnfog.entitydb.api.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value=HttpStatus.UNPROCESSABLE_ENTITY)
-public class UnableToQueueEntitiesException extends RuntimeException {
+public class UnableToQueueEntitiesException extends AbstractApiException {
 
 	private static final long serialVersionUID = -7483655113391502743L;
 

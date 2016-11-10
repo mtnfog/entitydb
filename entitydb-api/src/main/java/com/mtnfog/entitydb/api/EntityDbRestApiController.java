@@ -29,6 +29,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.api.exceptions.BadRequestException;
+import com.mtnfog.entitydb.api.exceptions.InternalServerErrorException;
+import com.mtnfog.entitydb.api.exceptions.NotFoundException;
+import com.mtnfog.entitydb.api.exceptions.UnableToQueueEntitiesException;
+import com.mtnfog.entitydb.api.exceptions.UnauthorizedException;
 import com.mtnfog.entitydb.model.search.SearchIndex;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.model.services.EntityAclService;
@@ -42,12 +47,9 @@ import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
+import com.mtnfog.entitydb.model.exceptions.MalformedQueryException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
-import com.mtnfog.entitydb.model.exceptions.api.BadRequestException;
-import com.mtnfog.entitydb.model.exceptions.api.InternalServerErrorException;
-import com.mtnfog.entitydb.model.exceptions.api.NotFoundException;
-import com.mtnfog.entitydb.model.exceptions.api.UnableToQueueEntitiesException;
-import com.mtnfog.entitydb.model.exceptions.api.UnauthorizedException;
+import com.mtnfog.entitydb.model.exceptions.QueryExecutionException;
 
 import java.util.Collection;
 import java.util.List;
@@ -220,7 +222,7 @@ public class EntityDbRestApiController {
 			
 		} catch (Exception ex) {
 			
-			throw new InternalServerErrorException("Unable to update the  entity's ACL.", ex);
+			throw new InternalServerErrorException("Unable to update the entity's ACL.", ex);
 			
 		}
 		
@@ -250,16 +252,28 @@ public class EntityDbRestApiController {
 					
 		LOGGER.trace("Received EQL query: {}", query);
 				
-		QueryResult queryResult = entityQueryService.eql(query, authorization, continuous, days);
+		try {
 		
-		// Return OK unless it is set to be a continuous query.
-		HttpStatus status = HttpStatus.OK;
-		
-		if(continuous != 0) {
-			status = HttpStatus.CREATED;
+			QueryResult queryResult = entityQueryService.eql(query, authorization, continuous, days);
+			
+			// Return OK unless it is set to be a continuous query.
+			HttpStatus status = HttpStatus.OK;
+			
+			if(continuous != 0) {
+				status = HttpStatus.CREATED;
+			}
+			
+			return new ResponseEntity<QueryResult>(queryResult, status);
+			
+		} catch (QueryExecutionException ex) {
+			
+			throw new InternalServerErrorException("Unable to execute the query.", ex);
+			
+		} catch (MalformedQueryException ex) {
+			
+			throw new BadRequestException("The received query is malformed.", ex);	
+
 		}
-		
-		return new ResponseEntity<QueryResult>(queryResult, status);
 		
 	}
 

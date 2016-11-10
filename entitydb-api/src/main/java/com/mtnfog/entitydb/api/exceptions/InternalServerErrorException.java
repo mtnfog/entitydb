@@ -16,18 +16,26 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.exceptions;
+package com.mtnfog.entitydb.api.exceptions;
 
-public class InvalidQueryException extends EntityDbException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-	private static final long serialVersionUID = 2325000410259951206L;
+@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
+public class InternalServerErrorException extends AbstractApiException {
 
-	public InvalidQueryException(String message) {
+	private static final long serialVersionUID = -7483655113391502743L;
+
+	public InternalServerErrorException(String message) {
+		
 		super(message);
+		
 	}
 	
-	public InvalidQueryException(String message, Throwable throwable) {
-		super(message, throwable);
+	public InternalServerErrorException(String message, Throwable t) {
+		
+		super(message, t);
+		
 	}
-	 
+
 }

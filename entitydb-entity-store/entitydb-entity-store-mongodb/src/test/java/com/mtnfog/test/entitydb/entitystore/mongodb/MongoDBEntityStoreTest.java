@@ -23,7 +23,7 @@ import com.mtnfog.entitydb.entitystore.mongodb.MongoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.mongodb.model.MongoDBStoredEntity;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
-import com.mtnfog.test.entitydb.entitystore.AbstractEntityStoreTest;
+import com.mtnfog.entitydb.testing.AbstractEntityStoreTest;
 
 public class MongoDBEntityStoreTest extends AbstractEntityStoreTest<MongoDBStoredEntity> {
 

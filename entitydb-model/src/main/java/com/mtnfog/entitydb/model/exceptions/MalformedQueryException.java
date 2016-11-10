@@ -18,15 +18,15 @@
  */
 package com.mtnfog.entitydb.model.exceptions;
 
-public class InvalidQueryException extends EntityDbException {
+public class MalformedQueryException extends EntityDbException {
 
 	private static final long serialVersionUID = 2325000410259951206L;
 
-	public InvalidQueryException(String message) {
+	public MalformedQueryException(String message) {
 		super(message);
 	}
 	
-	public InvalidQueryException(String message, Throwable throwable) {
+	public MalformedQueryException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
 	 

@@ -50,7 +50,9 @@
 		<entity.model.version>1.0.9</entity.model.version>
 		<!-- Artifact versions -->
 		<activemq.version>5.7.0</activemq.version>
+		<aeonbits.owner.version>1.0.9</aeonbits.owner.version>
 		<antlr.version>4.0</antlr.version>
+		<aspectjweaver.version>1.8.9</aspectjweaver.version>
 		<aws.sdk.version>1.11.49</aws.sdk.version>
 		<cassandra.version>3.7</cassandra.version>
 		<cassandra.datastax.version>3.1.0</cassandra.datastax.version>
@@ -92,8 +94,10 @@
 		<slf4j.version>1.7.21</slf4j.version>
 		<surefire.version>2.18</surefire.version>
 		<spring.boot.version>1.4.1.RELEASE</spring.boot.version>
+		<spring.data.jpa.version>1.10.2.RELEASE</spring.data.jpa.version>
 		<spring.version>4.3.3.RELEASE</spring.version>
 		<spring.security.version>4.1.3.RELEASE</spring.security.version>
+		<spymemcached.version>2.12.1</spymemcached.version>
 		<!-- Testing -->
 		<skipTests>false</skipTests>
 		<skipIntegrationTests>false</skipIntegrationTests>
@@ -169,13 +173,13 @@
 		<module>entitydb-eql</module>
 		<module>entitydb-rules-engine</module>
 		<module>entitydb-search</module>
-		<module>entitydb-queues</module>
-		<module>entitydb-testing</module>
+		<module>entitydb-queues</module>		
 		<module>entitydb-data-store</module>
 		<module>entitydb-configuration</module>
 		<module>entitydb-services</module>
 		<module>entitydb-caching</module>
     		<module>entitydb-metrics</module>
+		<module>entitydb-testing</module>
 	</modules>
 	<build>
 		<pluginManagement>

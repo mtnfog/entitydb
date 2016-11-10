@@ -16,7 +16,7 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.test.entitydb.entitystore;
+package com.mtnfog.entitydb.testing;
 
 import static org.junit.Assert.*;
 

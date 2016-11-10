@@ -16,26 +16,18 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.exceptions.api;
+package com.mtnfog.entitydb.model.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+public class QueryExecutionException extends EntityDbException {
 
-@ResponseStatus(value=HttpStatus.BAD_REQUEST)
-public class BadRequestException extends RuntimeException {
+	private static final long serialVersionUID = 2325000410259951206L;
 
-	private static final long serialVersionUID = -7483655113391502743L;
-
-	public BadRequestException(String message) {
-		
+	public QueryExecutionException(String message) {
 		super(message);
-		
 	}
 	
-	public BadRequestException(String message, Throwable t) {
-		
-		super(message, t);
-		
+	public QueryExecutionException(String message, Throwable throwable) {
+		super(message, throwable);
 	}
-
+	 
 }

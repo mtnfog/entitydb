@@ -16,23 +16,23 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.entitydb.model.exceptions.api;
+package com.mtnfog.entitydb.api.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value=HttpStatus.UNAUTHORIZED)
-public class UnauthorizedException extends RuntimeException {
+@ResponseStatus(value=HttpStatus.NOT_FOUND)
+public class NotFoundException extends AbstractApiException {
 
 	private static final long serialVersionUID = -7483655113391502743L;
 
-	public UnauthorizedException(String message) {
+	public NotFoundException(String message) {
 		
 		super(message);
 		
 	}
 	
-	public UnauthorizedException(String message, Throwable t) {
+	public NotFoundException(String message, Throwable t) {
 		
 		super(message, t);
 		

@@ -18,23 +18,14 @@
  */
 package com.mtnfog.entitydb.model.exceptions;
 
-public class MalformedAclException extends Exception {
+public class MalformedAclException extends EntityDbException {
 
 	private static final long serialVersionUID = 2325000410259951206L;
 
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 */
 	public MalformedAclException(String message) {
 		super(message);
 	}
-	
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 * @param throwable The exception.
-	 */
+
 	public MalformedAclException(String message, Throwable throwable) {
 		super(message, throwable);
 	}

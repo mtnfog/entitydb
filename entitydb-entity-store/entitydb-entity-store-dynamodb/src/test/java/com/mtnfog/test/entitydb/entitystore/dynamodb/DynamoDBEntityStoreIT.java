@@ -20,6 +20,7 @@ package com.mtnfog.test.entitydb.entitystore.dynamodb;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
@@ -39,7 +40,7 @@ import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.entitystore.dynamodb.model.DynamoDBStoredEntity;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
-import com.mtnfog.test.entitydb.entitystore.AbstractEntityStoreTest;
+import com.mtnfog.entitydb.testing.AbstractEntityStoreTest;
 
 /**
  * Integration tests for {@link DynamoDBEntityStore}. These tests can
