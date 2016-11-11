@@ -76,7 +76,7 @@ public abstract class AbstractIndexer {
 		long indexed = 0;
 		
 		Set<IndexedEntity> entitiesToIndex = new LinkedHashSet<IndexedEntity>();
-		Set<String> entityIds = new LinkedHashSet<String>();
+		Set<String> entityIds = new LinkedHashSet<String>();	
 	
 		if(!indexerCache.isEmpty()) {
 
@@ -135,6 +135,8 @@ public abstract class AbstractIndexer {
 			entityIds.removeAll(failedIndexEntityIds);
 			
 			indexed = entityStore.markEntitiesAsIndexed(entityIds);
+			
+			// TODO: Report metrics on how long each entity waited to be indexed.
 			
 			LOGGER.info("Indexed {} entities.", indexed);
 		

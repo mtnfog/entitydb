@@ -36,13 +36,10 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
-
 @TestExecutionListeners({
 	DependencyInjectionTestExecutionListener.class, 
 	DirtiesContextTestExecutionListener.class,
-	TransactionalTestExecutionListener.class, 
-	DbUnitTestExecutionListener.class})
+	TransactionalTestExecutionListener.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { RepositoryTestConfig.class })
 @DirtiesContext
