@@ -56,10 +56,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-data-store</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>${commons.collections.version}</version>
+		</dependency>		
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>

@@ -68,11 +68,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-data-store</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
 			<artifactId>entitydb-services</artifactId>
 			<version>${project.version}</version>
 		</dependency>
