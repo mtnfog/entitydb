@@ -29,7 +29,7 @@
 		},
 		"EntityDBS3Directory":
 		{
-			"Description": "The S3 directory containing EntityDB files.",
+			"Description": "The S3 bucket and directory containing EntityDB files.",
 			"Type": "String",
 			"Default": "bucket/entitydb/"
 		},
@@ -115,10 +115,7 @@
 							"Effect": "Allow",
 							"Action":
 							[
-								"s3:GetObject",
-								"s3:ListBucket",
-								"s3:ListAllMyBuckets",
-								"s3:ListObjects"
+								"s3:*"
 							],
 							"Resource":
 							{
@@ -130,7 +127,7 @@
 										{
 											"Ref": "EntityDBS3Directory"
 										},
-										"/*"
+										"*"
 									]
 								]
 							}
@@ -139,12 +136,23 @@
 							"Effect": "Allow",
 							"Action": "s3:ListAllMyBuckets",
 							"Resource": "arn:aws:s3:::*"
+						},
+						{
+							"Effect": "Allow",
+							"Action": [
+								"s3:ListBucket",
+								"s3:GetBucketLocation"
+							],
+							"Resource":
+							{
+								"Ref": "EntityDBS3Bucket"
+							}
 						}
 					]
 				},
 				"PolicyName":
 				{
-					"Fn::Join":
+					"Fn::Join":	
 					[
 						"",
 						[

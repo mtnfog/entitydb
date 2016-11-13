@@ -62,7 +62,7 @@
 				"VpcSecurityGroupIds":
 				[
 					{
-						"Ref": "CacheSecurityGroup"
+						"Fn::GetAtt": ["ElasticacheSecurityGroup", "GroupId"]
 					}
 				]
 			}
@@ -79,29 +79,6 @@
 						"Ref": "Subnet1"
 					}
 				]
-			}
-		},
-		"CacheSecurityGroup":
-		{
-			"Type": "AWS::ElastiCache::SecurityGroup",
-			"Properties":
-			{
-				"Description": "Security group for the Elasticache cluster."
-			}
-		},
-		"CacheSecurityGroupIngress":
-		{
-			"Type": "AWS::ElastiCache::SecurityGroupIngress",
-			"Properties":
-			{
-				"CacheSecurityGroupName":
-				{
-					"Ref": "CacheSecurityGroup"
-				},
-				"EC2SecurityGroupName":
-				{
-					"Ref": "EntityDBSecurityGroup"
-				}
 			}
 		},
 		"Queue":
@@ -306,6 +283,38 @@
 			"Type": "AWS::Elasticsearch::Domain",
 			"Properties":
 			{
+				"AccessPolicies":
+				{
+				  "Version": "2012-10-17",
+				  "Statement": [
+				    {
+				      "Effect": "Allow",
+				      "Principal": {
+					"AWS": "*"
+				      },
+				      "Action": "es:*",
+				      "Resource": 
+					{
+					"Fn::Join":	
+					[
+						"",
+						[
+							"arn:aws:es:",
+							{
+								"Ref": "AWS::Region"
+							},
+							":",
+							{
+								"Ref": "AWS::AccountId"
+							},
+							":domain/entitydb-search/*"
+						]
+					]
+					}
+				    }
+				  ]
+				},
+				"DomainName": "entitydb-search",
 				"EBSOptions":
 				{
 					"EBSEnabled": "true",
@@ -391,6 +400,39 @@
 						]
 					}
 				}
+			}
+		},
+		"ElasticacheSecurityGroup":
+		{
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties":
+			{
+				"VpcId":
+				{
+					"Ref": "VPC"
+				},
+				"GroupDescription": "Enable SSH access via port 22",
+				"SecurityGroupIngress":
+				[
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "11211",
+						"ToPort": "11211",
+						"CidrIp":
+						{
+							"Ref": "SSHLocation"
+						}
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "8086",
+						"ToPort": "8086",
+						"SourceSecurityGroupId":
+						{
+							"Ref": "EntityDBSecurityGroup"
+						}
+					}
+				]
 			}
 		},
 		"TickInstanceSecurityGroup":

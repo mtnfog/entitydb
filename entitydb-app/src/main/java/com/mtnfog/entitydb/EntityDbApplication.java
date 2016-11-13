@@ -449,10 +449,17 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			return new InfluxDbMetricReporter(properties.getInfluxDbEndpoint(), properties.getInfluxDbDatabase(), properties.getInfluxDbUsername(), properties.getInfluxDbPassword());
 			
 		} else if(StringUtils.equalsIgnoreCase(EntityDbProperties.CLOUDWATCH, properties.getMetricsProvider())) {
-												
-			return new CloudWatchMetricReporter(getSystemId(), properties.getCloudWatchNamespace(), 
+										
+			if(StringUtils.isNotEmpty(properties.getCloudWatchAccessKey())) {
+			
+				return new CloudWatchMetricReporter(getSystemId(), properties.getCloudWatchNamespace(), 
 					properties.getCloudWatchAccessKey(), properties.getCloudWatchSecretKey(), properties.getCloudWatchEndpoint());
 			
+			} else {
+				
+				return new CloudWatchMetricReporter(getSystemId(), properties.getCloudWatchNamespace(), properties.getCloudWatchEndpoint());
+				
+			}
 			
 		} else {
 			

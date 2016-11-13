@@ -66,7 +66,7 @@ public class StressTest {
 		while(sent < count) {
 			
 			// Make a random number of entities.
-			int randomEntityCount = RandomUtils.nextInt(1, 19);
+			int randomEntityCount = RandomUtils.nextInt(1, 50);
 			
 			sent += randomEntityCount;
 			
