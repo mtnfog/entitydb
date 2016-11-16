@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.annotation.Async;
 
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.MetricDatum;
@@ -61,7 +62,7 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 	 */
 	public CloudWatchMetricReporter(String systemId, String namespace, String accessKey, String secretKey, String endpoint) {
 		
-		cloudWatchClient = new AmazonCloudWatchClient(new BasicAWSCredentials(accessKey, secretKey));
+		cloudWatchClient = new AmazonCloudWatchAsyncClient(new BasicAWSCredentials(accessKey, secretKey));
 		cloudWatchClient.setEndpoint(endpoint);
 		
 		this.systemId = systemId;
@@ -78,7 +79,7 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 	 */
 	public CloudWatchMetricReporter(String systemId, String namespace, String endpoint) {
 		
-		cloudWatchClient = new AmazonCloudWatchClient();
+		cloudWatchClient = new AmazonCloudWatchAsyncClient();
 		cloudWatchClient.setEndpoint(endpoint);
 		
 		this.systemId = systemId;
