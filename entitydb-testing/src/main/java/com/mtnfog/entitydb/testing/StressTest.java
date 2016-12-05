@@ -74,7 +74,7 @@ public class StressTest {
 			
 			Collection<Entity> entities = EntityUtils.createRandomPersonEntities(randomEntityCount);						
 			
-			Response response = client.queue(context, documentId, acl, entities);
+			Response response = client.store(acl, entities);
 			
 			assert(response.getStatus() == 201);
 			
