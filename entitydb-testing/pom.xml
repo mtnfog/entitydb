@@ -31,7 +31,6 @@
 	<artifactId>entitydb-testing</artifactId>
 	<name>entitydb-testing</name>
 	<build>
-		<finalName>entitydb-testing</finalName>
 		<resources>
 			<resource>
 				<filtering>true</filtering>
