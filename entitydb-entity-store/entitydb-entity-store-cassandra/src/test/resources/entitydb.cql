@@ -9,7 +9,7 @@ CREATE TABLE entities (
     documentid text,
     extractiondate bigint,
     acl text,
-    enrichments map<text, text>,
+    metadata map<text, text>,
     visible int,
     timestamp bigint,
     indexed bigint

@@ -49,7 +49,7 @@ import com.mtnfog.entitydb.eql.model.SortOrder;
 
 /**
  * Entity Query Language (EQL) for querying entity stores.
- * EQL is an Idyl SDK domain-specific language (DSL) that provides
+ * EQL is a domain-specific language (DSL) that provides
  * a SQL-like interface for querying entity stores.
  * 
  * The purpose of EQL is to provide a generic interface that

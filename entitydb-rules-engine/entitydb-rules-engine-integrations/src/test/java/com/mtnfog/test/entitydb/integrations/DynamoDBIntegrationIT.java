@@ -16,7 +16,7 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.test.idyl.sdk.integrations;
+package com.mtnfog.test.entitydb.integrations;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +35,7 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.mtnfog.entity.Entity;
-import com.mtnfog.idyl.sdk.integrations.aws.DynamoDBIntegration;
+import com.mtnfog.entitydb.integrations.aws.DynamoDBIntegration;
 
 public class DynamoDBIntegrationIT {		
 

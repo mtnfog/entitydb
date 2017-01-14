@@ -16,7 +16,7 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.idyl.sdk.integrations.aws;
+package com.mtnfog.entitydb.integrations.aws;
 
 import java.util.ArrayList;
 import java.util.Collection;

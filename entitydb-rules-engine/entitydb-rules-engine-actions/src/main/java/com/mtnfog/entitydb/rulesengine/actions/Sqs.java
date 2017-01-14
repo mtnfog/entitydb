@@ -21,7 +21,7 @@ package com.mtnfog.entitydb.rulesengine.actions;
 import java.util.Collection;
 
 import com.mtnfog.entity.Entity;
-import com.mtnfog.idyl.sdk.integrations.aws.SqsIntegration;
+import com.mtnfog.entitydb.integrations.aws.SqsIntegration;
 import com.mtnfog.entitydb.model.integrations.Integration;
 import com.mtnfog.entitydb.model.integrations.IntegrationException;
 

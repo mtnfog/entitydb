@@ -21,9 +21,9 @@ package com.mtnfog.entitydb.rulesengine.actions;
 import java.util.Collection;
 
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.integrations.aws.DynamoDBIntegration;
 import com.mtnfog.entitydb.model.integrations.Integration;
 import com.mtnfog.entitydb.model.integrations.IntegrationException;
-import com.mtnfog.idyl.sdk.integrations.aws.DynamoDBIntegration;
 
 public class DynamoDB extends DynamoDBIntegration implements Integration {
 	

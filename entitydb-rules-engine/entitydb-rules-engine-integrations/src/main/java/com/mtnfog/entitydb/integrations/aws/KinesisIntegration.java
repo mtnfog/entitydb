@@ -16,17 +16,16 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.idyl.sdk.integrations.aws;
+package com.mtnfog.entitydb.integrations.aws;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
-import com.amazonaws.services.kinesisfirehose.model.PutRecordRequest;
-import com.amazonaws.services.kinesisfirehose.model.PutRecordResult;
-import com.amazonaws.services.kinesisfirehose.model.Record;
-import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClient;
+import com.amazonaws.services.kinesis.AmazonKinesisClient;
+import com.amazonaws.services.kinesis.model.PutRecordRequest;
+import com.amazonaws.services.kinesis.model.PutRecordResult;
 import com.google.gson.Gson;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.integrations.Integration;
@@ -37,76 +36,76 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Integration for AWS Kinesis Firehose that publishes the entities to a firehose stream.
+ * Integration for AWS Kinesis that publishes the entities to an AWS Kinesis stream.
  * 
  * @author Mountain Fog, Inc.
  *
  */
-public class KinesisFirehoseIntegration implements Integration {
+public class KinesisIntegration implements Integration {
 	
-	private static final Logger LOGGER = LogManager.getLogger(KinesisFirehoseIntegration.class);
+	private static final Logger LOGGER = LogManager.getLogger(KinesisIntegration.class);
 
-	private AmazonKinesisFirehoseClient kinesisFirehoseClient;
+	private AmazonKinesisClient kinesisClient;
 	private String streamName;
 	private Gson gson;
 	
-	public KinesisFirehoseIntegration(String streamName, Region region) {
+	public KinesisIntegration(String streamName, Region region) {
 		
-		this.kinesisFirehoseClient = new AmazonKinesisFirehoseClient();
+		this.kinesisClient = new AmazonKinesisClient();
 		this.gson = new Gson();		
 		this.streamName = streamName;
-		
-		kinesisFirehoseClient.setRegion(region);
+
+		kinesisClient.setRegion(region);
 		
 	}
 	
-	public KinesisFirehoseIntegration(String streamName, String endpoint) {
+	public KinesisIntegration(String streamName, String endpoint) {
 		
-		this.kinesisFirehoseClient = new AmazonKinesisFirehoseClient();
+		this.kinesisClient = new AmazonKinesisClient();
 		this.gson = new Gson();		
 		this.streamName = streamName;
-		
-		kinesisFirehoseClient.setEndpoint(endpoint);
+
+		kinesisClient.setEndpoint(endpoint);
 		
 	}
 	
-	public KinesisFirehoseIntegration(String streamName, Region region, String accessKey, String secretKey) {
+	public KinesisIntegration(String streamName, Region region, String accessKey, String secretKey) {
 		
 		this.gson = new Gson();
 		
 		if(StringUtils.isEmpty(accessKey)) {
 			
-			this.kinesisFirehoseClient = new AmazonKinesisFirehoseClient();
+			this.kinesisClient = new AmazonKinesisClient();
 			
 		} else {
 
-			this.kinesisFirehoseClient = new AmazonKinesisFirehoseClient(new BasicAWSCredentials(accessKey, secretKey));
+			this.kinesisClient = new AmazonKinesisClient(new BasicAWSCredentials(accessKey, secretKey));
 			
-		}		
+		}						
 		
 		this.streamName = streamName;
 	
-		kinesisFirehoseClient.setRegion(region);
+		kinesisClient.setRegion(region);
 		
 	}
 	
-	public KinesisFirehoseIntegration(String streamName, String endpoint, String accessKey, String secretKey) {
+	public KinesisIntegration(String streamName, String endpoint, String accessKey, String secretKey) {
 		
 		this.gson = new Gson();
 		
 		if(StringUtils.isEmpty(accessKey)) {
 			
-			this.kinesisFirehoseClient = new AmazonKinesisFirehoseClient();
+			this.kinesisClient = new AmazonKinesisClient();
 			
 		} else {
 
-			this.kinesisFirehoseClient = new AmazonKinesisFirehoseClient(new BasicAWSCredentials(accessKey, secretKey));
+			this.kinesisClient = new AmazonKinesisClient(new BasicAWSCredentials(accessKey, secretKey));
 			
-		}		
+		}						
 		
 		this.streamName = streamName;
 	
-		kinesisFirehoseClient.setEndpoint(endpoint);
+		kinesisClient.setEndpoint(endpoint);
 		
 	}
 	
@@ -114,28 +113,26 @@ public class KinesisFirehoseIntegration implements Integration {
 	public void process(Collection<Entity> entities) throws IntegrationException {
 		
 		try {
-			
+						
 			for(Entity entity : entities) {
 			
 				// The json of the object.			
 				String json = gson.toJson(entity);
 				
-				Record record = new Record();
-				record.setData(ByteBuffer.wrap(json.getBytes()));
-				
 				PutRecordRequest request = new PutRecordRequest();
-				request.setDeliveryStreamName(streamName);
-				request.setRecord(record);
-	
-				PutRecordResult result = kinesisFirehoseClient.putRecord(request);
+				request.setStreamName(streamName);
+				request.setData(ByteBuffer.wrap(json.getBytes()));
+				request.setPartitionKey(entity.getContext());
+				
+				PutRecordResult result = kinesisClient.putRecord(request);
 							
-				LOGGER.debug("Put record on Kinesis firehose stream {} with record ID {}.", streamName, result.getRecordId());
-			
+				LOGGER.debug("Put record on Kinesis stream {} with sequence number {}.", streamName, result.getSequenceNumber());
+				
 			}
 			
 		} catch (Exception ex) {
 			
-			throw new IntegrationException("Unable to process Kinesis Firehose integration. Not all entities may have been queued.", ex);
+			throw new IntegrationException("Unable to process Kinesis integration. Not all entities may have been queued.", ex);
 			
 		}
 

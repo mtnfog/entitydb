@@ -39,7 +39,7 @@ public class EqlTest {
 	@Test
 	public void semicolon1() throws Exception {
 		
-		String uri = "http://mtnfog.com/idyl/1.0/George_Washington";
+		String uri = "http://mtnfog.com/1.0/George_Washington";
 		String query = String.format("select * from entities;", uri);
 		LOGGER.debug("Query: {}", query);
 		

@@ -33,7 +33,7 @@ import com.mtnfog.entitydb.testing.AbstractEntityStoreTest;
 
 public class CassandraEntityStoreTest extends AbstractEntityStoreTest<CassandraStoredEntity> {
 
-	private static final String KEYSPACE = "idyle3";
+	private static final String KEYSPACE = "entitydb";
 	
 	@Rule
 	public CassandraCQLUnit embeddedCassandra = new CassandraCQLUnit(new ClassPathCQLDataSet("entitydb.cql", KEYSPACE), null, 120000, 120000);

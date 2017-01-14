@@ -47,7 +47,7 @@ public class MetadataSanitizer {
 	 */
 	public static Map<String, String> sanitizeMetadata(Map<String, String> metadata) {
 		
-		// As noted in IDYLSDK-419 it is a good idea (and required for MongoDB) to 
+		// It is a good idea (and required for MongoDB) to 
 		// sanitize the metadata (field) names prior to storing.
 		// The metadata value does not need sanitized.
 		

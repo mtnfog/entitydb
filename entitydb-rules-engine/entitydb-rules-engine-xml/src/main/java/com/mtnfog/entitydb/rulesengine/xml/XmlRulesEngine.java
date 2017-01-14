@@ -36,6 +36,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.eql.filters.EqlFilters;
+import com.mtnfog.entitydb.integrations.aws.DynamoDBIntegration;
+import com.mtnfog.entitydb.integrations.aws.KinesisFirehoseIntegration;
+import com.mtnfog.entitydb.integrations.aws.KinesisIntegration;
+import com.mtnfog.entitydb.integrations.aws.SesIntegration;
+import com.mtnfog.entitydb.integrations.aws.SnsIntegration;
+import com.mtnfog.entitydb.integrations.aws.SqsIntegration;
 import com.mtnfog.entitydb.model.rulesengine.Condition;
 import com.mtnfog.entitydb.model.rulesengine.DynamoDBRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.EntityCondition;
@@ -51,12 +57,6 @@ import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
 import com.mtnfog.entitydb.model.rulesengine.SesRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.SnsRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.SqsRuleAction;
-import com.mtnfog.idyl.sdk.integrations.aws.DynamoDBIntegration;
-import com.mtnfog.idyl.sdk.integrations.aws.KinesisFirehoseIntegration;
-import com.mtnfog.idyl.sdk.integrations.aws.KinesisIntegration;
-import com.mtnfog.idyl.sdk.integrations.aws.SesIntegration;
-import com.mtnfog.idyl.sdk.integrations.aws.SnsIntegration;
-import com.mtnfog.idyl.sdk.integrations.aws.SqsIntegration;
 
 /**
  * An implementation of {@link RulesEngine} where the rules

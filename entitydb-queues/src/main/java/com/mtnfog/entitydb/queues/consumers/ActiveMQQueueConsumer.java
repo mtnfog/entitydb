@@ -45,9 +45,9 @@ import com.mtnfog.entitydb.model.queue.QueueConstants;
 import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueueIngestMessage;
 import com.mtnfog.entitydb.model.queue.QueueUpdateAclMessage;
+import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 
 /**
  * Implementation of {@link QueueConsumer} that uses an ActiveMQ queue.
@@ -75,7 +75,6 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @param entityStore The {@link EntityStore}.
 	 * @param rulesEngines The list of {@link RulesEngine rules engines}.
 	 * @param searchIndex The {@link SearchIndex}.
-	 * @param idylCache The {@link IdylCache cache}.
 	 * @param brokerURL The ActiveMQ broker URL.
 	 * @param queueName The name of the queue.
 	 * @param timeout The timeout in milliseconds. See the JMX {@link MessageConsumer} documentation
@@ -113,7 +112,6 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 	 * @param entityStore The {@link EntityStore}.
 	 * @param rulesEngines The list of {@link RulesEngine rules engines}.
 	 * @param searchIndex The {@link SearchIndex}.
-	 * @param idylCache The {@link IdylCache cache}.
 	 * @param brokerURL The ActiveMQ broker URL.
 	 * @param queueName The name of the queue.	
 	 * @throws JMSException Thrown if the ActiveMQ consumer cannot be created.

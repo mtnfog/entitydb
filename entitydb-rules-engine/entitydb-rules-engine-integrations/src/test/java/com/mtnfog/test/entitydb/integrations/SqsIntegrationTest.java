@@ -16,7 +16,7 @@
  *
  * For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
  */
-package com.mtnfog.test.idyl.sdk.integrations;
+package com.mtnfog.test.entitydb.integrations;
 
 import static org.junit.Assert.*;
 
@@ -41,7 +41,7 @@ import com.amazonaws.services.sqs.model.CreateQueueResult;
 import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
 import com.amazonaws.services.sqs.model.PurgeQueueRequest;
 import com.mtnfog.entity.Entity;
-import com.mtnfog.idyl.sdk.integrations.aws.SqsIntegration;
+import com.mtnfog.entitydb.integrations.aws.SqsIntegration;
 
 public class SqsIntegrationTest {		
 
