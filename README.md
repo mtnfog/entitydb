@@ -100,7 +100,7 @@ Contributions via pull requests are absolutely always welcome. Before your pull 
 
 ## License
 
-Copyright © 2016 Mountain Fog, Inc.
+Copyright © 2017 Mountain Fog, Inc.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
