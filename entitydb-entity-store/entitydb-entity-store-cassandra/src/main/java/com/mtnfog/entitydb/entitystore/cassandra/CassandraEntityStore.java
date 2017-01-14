@@ -18,22 +18,14 @@
  */
 package com.mtnfog.entitydb.entitystore.cassandra;
 
-import java.util.Set;
-import java.util.UUID;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import static com.datastax.driver.core.querybuilder.QueryBuilder.bindMarker;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.insertInto;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.select;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.gte;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.lte;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.containsKey;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.contains;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.containsKey;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.gte;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.insertInto;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.lte;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.select;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.set;
 
 import java.util.Collection;
@@ -43,6 +35,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.BoundStatement;
@@ -56,9 +55,9 @@ import com.datastax.driver.core.Statement;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.entitystore.cassandra.model.CassandraStoredEntity;
 import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
-import com.mtnfog.entitydb.entitystore.cassandra.model.CassandraStoredEntity;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
@@ -279,7 +278,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					entity.getLanguageCode(),
 					timestamp.getTime(), 
 					acl,
-					entity.getEnrichments(),
+					entity.getMetadata(),
 					System.currentTimeMillis(),
 					1,
 					Long.valueOf(0));
@@ -318,7 +317,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 			cloned.setConfidence(entity.getConfidence());
 			cloned.setContext(entity.getContext());
 			cloned.setDocumentId(entity.getDocumentId());
-			cloned.setEnrichments(entity.getEnrichments());
+			cloned.setMetadata(entity.getMetadata());
 			cloned.setExtractionDate(entity.getExtractionDate());
 			cloned.setLanguage(entity.getLanguage());
 			cloned.setText(entity.getText());
@@ -363,7 +362,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					cloned.getVisible(),
 					System.currentTimeMillis(),
 					cloned.getIndexed(),
-					cloned.getEnrichments());
+					cloned.getMetadata());
 						
 			Statement updateEntityStatement = 
 					QueryBuilder
@@ -771,7 +770,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		cassandraStoredEntity.setDocumentId(row.getString("documentid"));
 		cassandraStoredEntity.setExtractionDate(row.getLong("extractiondate"));
 		cassandraStoredEntity.setLanguage(row.getString("language"));
-		cassandraStoredEntity.setEnrichments(row.getMap("enrichments", String.class, String.class));
+		cassandraStoredEntity.setMetadata(row.getMap("enrichments", String.class, String.class));
 		cassandraStoredEntity.setAcl(row.getString("acl"));
 		cassandraStoredEntity.setVisible(row.getInt("visible"));
 		cassandraStoredEntity.setIndexed(row.getLong("indexed"));

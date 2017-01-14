@@ -20,18 +20,19 @@ package com.mtnfog.entitydb.entitystore.dynamodb;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -46,10 +47,11 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.entitystore.dynamodb.model.DynamoDBEndpoint;
 import com.mtnfog.entitydb.entitystore.dynamodb.model.DynamoDBStoredEntity;
+import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
@@ -57,7 +59,6 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.entity.Entity;
 
 /**
  * Implementation of {@link EntityStore} that utilizes
@@ -378,7 +379,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 			cloned.setConfidence(entity.getConfidence());
 			cloned.setContext(entity.getContext());
 			cloned.setDocumentId(entity.getDocumentId());
-			cloned.setEnrichments(entity.getEnrichments());
+			cloned.setMetadata(entity.getMetadata());
 			cloned.setExtractionDate(entity.getExtractionDate());
 			cloned.setLanguage(entity.getLanguage());
 			cloned.setText(entity.getText());

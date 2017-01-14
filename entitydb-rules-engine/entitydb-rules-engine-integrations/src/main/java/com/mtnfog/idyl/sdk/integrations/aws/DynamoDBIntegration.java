@@ -167,7 +167,7 @@ public class DynamoDBIntegration implements Integration {
 					.withString("type", entity.getType())
 					.withString("context", context)
 					.withString("documentId", documentId)
-					.withMap("enrichments", entity.getEnrichments());
+					.withMap("enrichments", entity.getMetadata());
 					
 				table.putItem(item);
 				

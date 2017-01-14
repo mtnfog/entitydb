@@ -19,20 +19,21 @@
 package com.mtnfog.entitydb.entitystore.dynamodb.model;
 
 import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
-import com.mtnfog.entitydb.model.entitystore.EnrichmentSanitizer;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entity.Entity;
 
 /**
  * Entity able to be persisted to AWS DynamoDB.
@@ -101,7 +102,7 @@ public class DynamoDBStoredEntity extends AbstractStoredEntity {
 	/**
 	 * The enrichments attribute.
 	 */
-	public static final String FIELD_ENRICHMENTS = "enrichments";
+	public static final String FIELD_METADATA = "metadata";
 	
 	/**
 	 * The ACL attribute.
@@ -125,7 +126,7 @@ public class DynamoDBStoredEntity extends AbstractStoredEntity {
 	private String acl;
 	private int visible = 1;
 	private long timestamp = System.currentTimeMillis();
-	private Map<String, String> enrichments;
+	private Map<String, String> metadata;
 	private long indexed = 0;
 	
 	/**
@@ -149,7 +150,7 @@ public class DynamoDBStoredEntity extends AbstractStoredEntity {
 		storedEntity.setUri(entity.getUri());
 		storedEntity.setLanguage(entity.getLanguageCode());
 		storedEntity.setAcl(acl);
-		storedEntity.setEnrichments(EnrichmentSanitizer.sanitizeEnrichments(entity.getEnrichments()));
+		storedEntity.setMetadata(MetadataSanitizer.sanitizeMetadata(entity.getMetadata()));
 		
 		return storedEntity;
 		
@@ -173,7 +174,7 @@ public class DynamoDBStoredEntity extends AbstractStoredEntity {
 		indexedEntity.setUri(getUri());
 		indexedEntity.setLanguageCode(getLanguage());
 		indexedEntity.setAcl(new Acl(getAcl()));
-		indexedEntity.setEnrichments(getEnrichments());
+		indexedEntity.setMetadata(getMetadata());
 		
 		return indexedEntity;
 		
@@ -313,20 +314,20 @@ public class DynamoDBStoredEntity extends AbstractStoredEntity {
 	}
 	
 	/**
-	 * Gets the entity enrichments.
-	 * @return The entity enrichments.
+	 * Gets the entity getMetadata.
+	 * @return The entity getMetadata.
 	 */
-	@DynamoDBAttribute(attributeName=FIELD_ENRICHMENTS)
-	public Map<String, String> getEnrichments() {
-		return enrichments;
+	@DynamoDBAttribute(attributeName=FIELD_METADATA)
+	public Map<String, String> getMetadata() {
+		return metadata;
 	}
 
 	/**
-	 * Sets the entity enrichments.
-	 * @param enrichments The entity enrichments.
+	 * Sets the entity metadata.
+	 * @param metadata The entity metadata.
 	 */
-	public void setEnrichments(Map<String, String> enrichments) {
-		this.enrichments = enrichments;
+	public void setMetadata(Map<String, String> metadata) {
+		this.metadata = metadata;
 	}
 
 	/**

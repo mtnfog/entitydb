@@ -18,7 +18,9 @@
  */
 package com.mtnfog.test.entitydb.eql.filters;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -244,7 +246,7 @@ public class EqlFiltersTest {
 		enrichments.put("time", "1464027942965");
 		
 		Entity entity = new Entity("entity1", 0.5, "date", "[0, 2)");
-		entity.setEnrichments(enrichments);
+		entity.setMetadata(enrichments);
 		
 		Collection<Entity> entities = new ArrayList<Entity>();
 		entities.add(entity);
@@ -262,7 +264,7 @@ public class EqlFiltersTest {
 		enrichments.put("time", "1464027942965");
 		
 		Entity entity = new Entity("entity1", 0.5, "date", "[0, 2)");
-		entity.setEnrichments(enrichments);
+		entity.setMetadata(enrichments);
 		
 		Collection<Entity> entities = new ArrayList<Entity>();
 		entities.add(entity);
@@ -292,17 +294,17 @@ public class EqlFiltersTest {
 	@Test
 	public void datesFilter4() {
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
-		enrichments.put("time", "1464027942965");
+		Map<String, String> metadata = new HashMap<String, String>();
+		metadata.put("time", "1464027942965");
 		
 		Entity entity = new Entity("entity1", 0.5, "date", "[0, 2)");
-		entity.setEnrichments(enrichments);
+		entity.setMetadata(metadata);
 		
-		Map<String, String> enrichments2 = new HashMap<String, String>();
-		enrichments2.put("time", "1464020000000");
+		Map<String, String> metadata2 = new HashMap<String, String>();
+		metadata2.put("time", "1464020000000");
 		
 		Entity entity2 = new Entity("entity1", 0.5, "date", "[0, 2)");
-		entity2.setEnrichments(enrichments2);
+		entity2.setMetadata(metadata2);
 		
 		Collection<Entity> entities = new ArrayList<Entity>();
 		entities.add(entity);

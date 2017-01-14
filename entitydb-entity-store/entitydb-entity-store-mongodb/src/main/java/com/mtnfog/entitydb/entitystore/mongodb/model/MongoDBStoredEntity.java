@@ -19,19 +19,20 @@
 package com.mtnfog.entitydb.entitystore.mongodb.model;
 
 import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWrapper;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
-import com.mtnfog.entitydb.model.entitystore.EnrichmentSanitizer;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entity.Entity;
 
 /**
  * Entity able to be persisted to MongoDB.
@@ -53,7 +54,7 @@ public class MongoDBStoredEntity extends AbstractStoredEntity implements Bson {
 	private String acl;
 	private int visible = 1;
 	private long timestamp = System.currentTimeMillis();
-	private Map<String, String> enrichments;
+	private Map<String, String> metadata;
 	private long indexed = 0;
 	
 	@Override
@@ -83,7 +84,7 @@ public class MongoDBStoredEntity extends AbstractStoredEntity implements Bson {
 		storedEntity.setUri(entity.getUri());
 		storedEntity.setLanguage(entity.getLanguageCode());
 		storedEntity.setAcl(acl);
-		storedEntity.setEnrichments(EnrichmentSanitizer.sanitizeEnrichments(entity.getEnrichments()));
+		storedEntity.setMetadata(MetadataSanitizer.sanitizeMetadata(entity.getMetadata()));
 				
 		return storedEntity;
 		
@@ -107,7 +108,7 @@ public class MongoDBStoredEntity extends AbstractStoredEntity implements Bson {
 		indexedEntity.setUri(getUri());
 		indexedEntity.setLanguageCode(getLanguage());
 		indexedEntity.setAcl(new Acl(getAcl()));
-		indexedEntity.setEnrichments(getEnrichments());
+		indexedEntity.setMetadata(getMetadata());
 		
 		return indexedEntity;
 		
@@ -233,19 +234,19 @@ public class MongoDBStoredEntity extends AbstractStoredEntity implements Bson {
 	}
 	
 	/**
-	 * Gets the entity enrichments.
-	 * @return The entity enrichments.
+	 * Gets the entity metadata.
+	 * @return The entity metadata.
 	 */
-	public Map<String, String> getEnrichments() {
-		return enrichments;
+	public Map<String, String> getMetadata() {
+		return metadata;
 	}
 
 	/**
-	 * Sets the entity enrichments.
-	 * @param enrichments The entity enrichments.
+	 * Sets the entity metadata.
+	 * @param enrichments The entity metadata.
 	 */
-	public void setEnrichments(Map<String, String> enrichments) {
-		this.enrichments = enrichments;
+	public void setMetadata(Map<String, String> metadata) {
+		this.metadata = metadata;
 	}
 
 	/**

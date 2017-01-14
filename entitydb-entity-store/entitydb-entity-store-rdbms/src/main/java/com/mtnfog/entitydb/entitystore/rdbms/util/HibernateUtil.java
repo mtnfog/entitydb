@@ -73,7 +73,7 @@ public class HibernateUtil {
 	    	configuration.setProperty("hibernate.use_sql_comments", "true");
 	    		    	
 	    	configuration.addResource("RdbmsStoredEntity.hbm.xml");
-	    	configuration.addResource("RdbmsStoredEntityEnrichment.hbm.xml");
+	    	configuration.addResource("RdbmsStoredEntityMetadata.hbm.xml");
 	
 	    	ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();    	
 	    	sessionFactory = configuration.buildSessionFactory(serviceRegistry);

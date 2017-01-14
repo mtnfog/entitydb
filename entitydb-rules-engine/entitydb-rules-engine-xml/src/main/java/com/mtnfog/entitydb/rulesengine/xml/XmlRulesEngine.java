@@ -180,9 +180,9 @@ public class XmlRulesEngine implements RulesEngine {
 					
 					EntityEnrichmentCondition entityEnrichmentCondition = (EntityEnrichmentCondition) condition;
 					
-					if(entity.getEnrichments().containsKey(entityEnrichmentCondition.getEnrichment())) {
+					if(entity.getMetadata().containsKey(entityEnrichmentCondition.getEnrichment())) {
 						
-						String value = entity.getEnrichments().get(entityEnrichmentCondition.getEnrichment());
+						String value = entity.getMetadata().get(entityEnrichmentCondition.getEnrichment());
 						
 						if(entityEnrichmentCondition.getTest().equalsIgnoreCase(EntityEnrichmentCondition.MATCHES)) {
 							

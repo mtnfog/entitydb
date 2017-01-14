@@ -346,7 +346,7 @@ public class XmlRulesEngineTest {
 		Entity entity = new Entity();
 		entity.setText("george");
 		entity.setType("person");
-		entity.setEnrichments(enrichments);
+		entity.setMetadata(enrichments);
 		entity.setContext("context");
 		entity.setDocumentId("document");
 				
@@ -375,7 +375,7 @@ public class XmlRulesEngineTest {
 		Entity entity = new Entity();
 		entity.setText("george");
 		entity.setType("person");
-		entity.setEnrichments(enrichments);
+		entity.setMetadata(enrichments);
 		entity.setContext("context");
 		entity.setDocumentId("document");
 

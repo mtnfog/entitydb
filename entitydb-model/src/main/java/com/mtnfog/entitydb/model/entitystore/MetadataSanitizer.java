@@ -27,7 +27,7 @@ import java.util.Map;
  * @author Mountain Fog, Inc.
  *
  */
-public class EnrichmentSanitizer {
+public class MetadataSanitizer {
 
 	/**
 	 * Removes all non-alphanumeric characters from the key.
@@ -41,25 +41,25 @@ public class EnrichmentSanitizer {
 	}
 	
 	/**
-	 * Sanitized the enrichment names prior to insertion into the database.
-	 * @param enrichments The enrichments to sanitized.
-	 * @return The sanitized enrichments.
+	 * Sanitized the metadata names prior to insertion into the database.
+	 * @param enrichments The metadata to sanitized.
+	 * @return The sanitized metadata.
 	 */
-	public static Map<String, String> sanitizeEnrichments(Map<String, String> enrichments) {
+	public static Map<String, String> sanitizeMetadata(Map<String, String> metadata) {
 		
 		// As noted in IDYLSDK-419 it is a good idea (and required for MongoDB) to 
 		// sanitize the enrichment (field) names prior to storing.
 		// The enrichment value does not need sanitized.
 		
-		Map<String, String> sanitizedEnrichments = new HashMap<String, String>();
+		Map<String, String> sanitizedMetadata = new HashMap<String, String>();
 		
-		for(String key : enrichments.keySet()) {
+		for(String key : metadata.keySet()) {
 			
-			sanitizedEnrichments.put(sanitizeKey(key), enrichments.get(key));
+			sanitizedMetadata.put(sanitizeKey(key), metadata.get(key));
 			
 		}
 		
-		return sanitizedEnrichments;
+		return sanitizedMetadata;
 		
 	}
 	

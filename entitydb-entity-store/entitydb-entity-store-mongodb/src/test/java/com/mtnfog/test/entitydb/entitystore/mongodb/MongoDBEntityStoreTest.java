@@ -27,11 +27,11 @@ import com.mtnfog.entitydb.testing.AbstractEntityStoreTest;
 
 public class MongoDBEntityStoreTest extends AbstractEntityStoreTest<MongoDBStoredEntity> {
 
-	// private final String MONGODB_HOST = "ds043962.mongolab.com";	
+	// private final String MONGODB_HOST = "";	
 	// private final int MONGODB_PORT = 43962;
-	// private final String MONGODB_USERNAME = "idyle3";
-	// private final String MONGODB_PASSWORD = "idyle3";
-	private final String DATABASE_NAME = "mtnfogweb";
+	// private final String MONGODB_USERNAME = "";
+	// private final String MONGODB_PASSWORD = "";
+	private final String DATABASE_NAME = "entitydb";
 	private final String COLLECTION_NAME = "entities";	
 	private final String CONTEXT = "context";
 		

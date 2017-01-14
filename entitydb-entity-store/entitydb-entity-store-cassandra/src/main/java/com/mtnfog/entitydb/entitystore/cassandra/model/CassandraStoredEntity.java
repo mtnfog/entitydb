@@ -19,9 +19,10 @@
 package com.mtnfog.entitydb.entitystore.cassandra.model;
 
 import java.util.Map;
+
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
-import com.mtnfog.entitydb.model.entitystore.EnrichmentSanitizer;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
@@ -41,7 +42,7 @@ public class CassandraStoredEntity extends AbstractStoredEntity {
 	private String acl;
 	private int visible = 1;
 	private long timestamp = System.currentTimeMillis();
-	private Map<String, String> enrichments;
+	private Map<String, String> metadata;
 	private long indexed = 0;
 	
 	public static CassandraStoredEntity fromEntity(Entity entity, String acl) {
@@ -58,7 +59,7 @@ public class CassandraStoredEntity extends AbstractStoredEntity {
 		cassandraStoredEntity.setUri(entity.getUri());
 		cassandraStoredEntity.setLanguage(entity.getLanguageCode());
 		cassandraStoredEntity.setAcl(acl);
-		cassandraStoredEntity.setEnrichments(EnrichmentSanitizer.sanitizeEnrichments(entity.getEnrichments()));
+		cassandraStoredEntity.setMetadata(MetadataSanitizer.sanitizeMetadata(entity.getMetadata()));
 		
 		return cassandraStoredEntity;
 		
@@ -82,7 +83,7 @@ public class CassandraStoredEntity extends AbstractStoredEntity {
 		indexedEntity.setUri(getUri());
 		indexedEntity.setLanguageCode(getLanguage());
 		indexedEntity.setAcl(new Acl(getAcl()));
-		indexedEntity.setEnrichments(getEnrichments());
+		indexedEntity.setMetadata(getMetadata());
 		
 		return indexedEntity;
 		
@@ -152,12 +153,12 @@ public class CassandraStoredEntity extends AbstractStoredEntity {
 		this.uri = uri;
 	}
 
-	public Map<String, String> getEnrichments() {
-		return enrichments;
+	public Map<String, String> getMetadata() {
+		return metadata;
 	}
 
-	public void setEnrichments(Map<String, String> enrichments) {
-		this.enrichments = enrichments;
+	public void setMetadata(Map<String, String> metadata) {
+		this.metadata = metadata;
 	}
 
 	public String getLanguage() {

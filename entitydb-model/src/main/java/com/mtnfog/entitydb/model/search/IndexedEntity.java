@@ -18,12 +18,12 @@
  */
 package com.mtnfog.entitydb.model.search;
 
-import io.searchbox.annotations.JestId;
-import io.searchbox.annotations.JestVersion;
-
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.security.Acl;
+
+import io.searchbox.annotations.JestId;
+import io.searchbox.annotations.JestVersion;
 
 /**
  * An entity indexed in Elasticsearch. It is the same as an
@@ -76,7 +76,7 @@ public class IndexedEntity extends Entity {
 		indexedEntity.setConfidence(entity.getConfidence());
 		indexedEntity.setLanguageCode(entity.getLanguageCode());
 		indexedEntity.setUri(entity.getUri());
-		indexedEntity.setEnrichments(entity.getEnrichments());
+		indexedEntity.setMetadata(entity.getMetadata());
 		indexedEntity.setType(entity.getType());
 		indexedEntity.setLocations(entity.getLocations());
 		indexedEntity.setSpan(entity.getSpan());

@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.model.entitystore.EnrichmentSanitizer;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.test.entity.utils.EntityUtils;
 
 public class EnrichmentSanitizerTest {
@@ -41,7 +41,7 @@ public class EnrichmentSanitizerTest {
 		Map<String, String> enrichments = new HashMap<String, String>();
 		enrichments.put("te st", "value");
 		
-		Map<String, String> sanitizedEnrichments = EnrichmentSanitizer.sanitizeEnrichments(enrichments);
+		Map<String, String> sanitizedEnrichments = MetadataSanitizer.sanitizeMetadata(enrichments);
 		
 		for(String k : sanitizedEnrichments.keySet()) {
 			
@@ -58,7 +58,7 @@ public class EnrichmentSanitizerTest {
 		
 			Entity e1 = EntityUtils.createRandomPersonEntity();
 			
-			Map<String, String> sanitizedEnrichments = EnrichmentSanitizer.sanitizeEnrichments(e1.getEnrichments());
+			Map<String, String> sanitizedEnrichments = MetadataSanitizer.sanitizeMetadata(e1.getMetadata());
 			
 			for(String k : sanitizedEnrichments.keySet()) {
 				

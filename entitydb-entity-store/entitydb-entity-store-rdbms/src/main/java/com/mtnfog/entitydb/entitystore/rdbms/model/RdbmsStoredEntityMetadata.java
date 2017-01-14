@@ -29,7 +29,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  * @author Mountain Fog, Inc.
  *
  */
-public class RdbmsStoredEntityEnrichment {
+public class RdbmsStoredEntityMetadata {
 
 	private int id;
 	private String name;
@@ -37,18 +37,18 @@ public class RdbmsStoredEntityEnrichment {
 	private RdbmsStoredEntity entity;
 	
 	/**
-	 * Creates a new {@link RdbmsStoredEntityEnrichment}.
+	 * Creates a new {@link RdbmsStoredEntityMetadata}.
 	 */
-	public RdbmsStoredEntityEnrichment() {
+	public RdbmsStoredEntityMetadata() {
 		
 	}
 	
 	/**
-	 * Creates a new {@link RdbmsStoredEntityEnrichment}.
+	 * Creates a new {@link RdbmsStoredEntityMetadata}.
 	 * @param name The name of the attribute.
 	 * @param value The value of the attribute.
 	 */
-	public RdbmsStoredEntityEnrichment(String name, String value) {
+	public RdbmsStoredEntityMetadata(String name, String value) {
 		
 		this.name = name;
 		this.value = value;
@@ -56,12 +56,12 @@ public class RdbmsStoredEntityEnrichment {
 	}
 	
 	/**
-	 * Creates a new {@link RdbmsStoredEntityEnrichment}.
+	 * Creates a new {@link RdbmsStoredEntityMetadata}.
 	 * @param name The name of the attribute.
 	 * @param value The value of the attribute.
 	 * @param storedEntity The owning {@link StoredEntity entity}.
 	 */
-	public RdbmsStoredEntityEnrichment(String name, String value, RdbmsStoredEntity storedEntity) {
+	public RdbmsStoredEntityMetadata(String name, String value, RdbmsStoredEntity storedEntity) {
 		
 		this.name = name;
 		this.value = value;
@@ -75,11 +75,11 @@ public class RdbmsStoredEntityEnrichment {
 	@Override
     public boolean equals(Object o) {
 		
-        if(!(o instanceof RdbmsStoredEntityEnrichment)) {
+        if(!(o instanceof RdbmsStoredEntityMetadata)) {
             return false;
         }
         
-        RdbmsStoredEntityEnrichment storedEntityEnrichment = (RdbmsStoredEntityEnrichment) o;
+        RdbmsStoredEntityMetadata storedEntityEnrichment = (RdbmsStoredEntityMetadata) o;
       
         EqualsBuilder builder = new EqualsBuilder();
         

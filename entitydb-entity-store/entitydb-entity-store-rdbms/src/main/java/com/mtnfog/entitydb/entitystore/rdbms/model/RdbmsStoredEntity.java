@@ -22,18 +22,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
-import com.mtnfog.entitydb.model.entitystore.EnrichmentSanitizer;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.security.Acl;
-import com.mtnfog.entity.Entity;
 
 /**
  * An entity stored by an implementation of {@link EntityStore}.
@@ -55,7 +56,7 @@ public class RdbmsStoredEntity extends AbstractStoredEntity {
 	private String uri;
 	private int visible = 1;
 	private long timestamp = System.currentTimeMillis();
-	private Set<RdbmsStoredEntityEnrichment> entityEnrichments;
+	private Set<RdbmsStoredEntityMetadata> metadata;
 	private long indexed = 0;
 	
 	/**
@@ -84,15 +85,15 @@ public class RdbmsStoredEntity extends AbstractStoredEntity {
 		indexedEntity.setLanguageCode(getLanguage());
 		indexedEntity.setAcl(new Acl(getAcl()));
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
+		Map<String, String> metadata = new HashMap<String, String>();
 		
-		for(RdbmsStoredEntityEnrichment enrichment : getEntityEnrichments()) {
+		for(RdbmsStoredEntityMetadata m : getEntityEnrichments()) {
 			
-			enrichments.put(enrichment.getName(), enrichment.getValue());
+			metadata.put(m.getName(), m.getValue());
 			
 		}
 		
-		indexedEntity.setEnrichments(enrichments);
+		indexedEntity.setMetadata(metadata);
 		
 		return indexedEntity;
 		
@@ -122,15 +123,15 @@ public class RdbmsStoredEntity extends AbstractStoredEntity {
 		
 		// Convert the enrichments to StoredEntityEnrichments..
 		
-		Set<RdbmsStoredEntityEnrichment> enrichments = new HashSet<RdbmsStoredEntityEnrichment>();
+		Set<RdbmsStoredEntityMetadata> enrichments = new HashSet<RdbmsStoredEntityMetadata>();
 		
-		if(entity.getEnrichments() != null) {
+		if(entity.getMetadata() != null) {
 			
-			Map<String, String> sanitizedEnrichments = EnrichmentSanitizer.sanitizeEnrichments(entity.getEnrichments());
+			Map<String, String> sanitizedEnrichments = MetadataSanitizer.sanitizeMetadata(entity.getMetadata());
 		
 			for(String key : sanitizedEnrichments.keySet()) {
 
-				RdbmsStoredEntityEnrichment enrichment = new RdbmsStoredEntityEnrichment();
+				RdbmsStoredEntityMetadata enrichment = new RdbmsStoredEntityMetadata();
 				enrichment.setName(key);
 				enrichment.setValue(sanitizedEnrichments.get(key));
 				enrichment.setEntity(storedEntity);			
@@ -312,19 +313,19 @@ public class RdbmsStoredEntity extends AbstractStoredEntity {
 	}
 
 	/**
-	 * Gets a set of the {@link RdbmsStoredEntityEnrichment enrichments}.
-	 * @return A set of {@link RdbmsStoredEntityEnrichment enrichments}.
+	 * Gets a set of the {@link RdbmsStoredEntityMetadata enrichments}.
+	 * @return A set of {@link RdbmsStoredEntityMetadata enrichments}.
 	 */
-	public Set<RdbmsStoredEntityEnrichment> getEntityEnrichments() {
-		return entityEnrichments;
+	public Set<RdbmsStoredEntityMetadata> getEntityEnrichments() {
+		return metadata;
 	}
 
 	/**
-	 * Sets the entity {@link RdbmsStoredEntityEnrichment enrichments}.
-	 * @param storedEntityEnrichments The set of {@link RdbmsStoredEntityEnrichment enrichments}.
+	 * Sets the entity {@link RdbmsStoredEntityMetadata enrichments}.
+	 * @param storedEntityEnrichments The set of {@link RdbmsStoredEntityMetadata enrichments}.
 	 */
-	public void setEntityEnrichments(Set<RdbmsStoredEntityEnrichment> storedEntityEnrichments) {
-		this.entityEnrichments = storedEntityEnrichments;
+	public void setEntityEnrichments(Set<RdbmsStoredEntityMetadata> storedEntityEnrichments) {
+		this.metadata = storedEntityEnrichments;
 	}
 
 	/**
@@ -397,6 +398,14 @@ public class RdbmsStoredEntity extends AbstractStoredEntity {
 
 	public void setIndexed(long indexed) {
 		this.indexed = indexed;
+	}
+
+	public Set<RdbmsStoredEntityMetadata> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(Set<RdbmsStoredEntityMetadata> metadata) {
+		this.metadata = metadata;
 	}
 	
 }

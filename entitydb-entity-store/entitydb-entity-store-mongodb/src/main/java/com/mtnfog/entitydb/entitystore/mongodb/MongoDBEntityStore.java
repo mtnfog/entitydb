@@ -18,6 +18,9 @@
  */
 package com.mtnfog.entitydb.entitystore.mongodb;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,11 +53,12 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.entitystore.mongodb.model.MongoDBStoredEntity;
+import com.mtnfog.entitydb.entitystore.mongodb.model.MongoDBStoredEntityCodec;
 import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
 import com.mtnfog.entitydb.eql.model.EntityOrder;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
-import com.mtnfog.entitydb.entitystore.mongodb.model.MongoDBStoredEntity;
-import com.mtnfog.entitydb.entitystore.mongodb.model.MongoDBStoredEntityCodec;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
@@ -62,9 +66,6 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.entity.Entity;
-
-import static com.mongodb.client.model.Filters.*;
 
 /**
  * Implementation of {@link EntityStore} that utilizes
@@ -361,7 +362,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 			cloned.setConfidence(entity.getConfidence());
 			cloned.setContext(entity.getContext());
 			cloned.setDocumentId(entity.getDocumentId());
-			cloned.setEnrichments(entity.getEnrichments());
+			cloned.setMetadata(entity.getMetadata());
 			cloned.setExtractionDate(entity.getExtractionDate());
 			cloned.setLanguage(entity.getLanguage());
 			cloned.setText(entity.getText());

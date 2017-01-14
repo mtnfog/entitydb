@@ -40,11 +40,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
+import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntityMetadata;
+import com.mtnfog.entitydb.entitystore.rdbms.util.HibernateUtil;
 import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
-import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
-import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntityEnrichment;
-import com.mtnfog.entitydb.entitystore.rdbms.util.HibernateUtil;
 import com.mtnfog.entitydb.model.SystemProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
@@ -53,7 +54,6 @@ import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.entity.Entity;
 
 /**
  * Implementation of {@link EntityStore} that uses a JDBC-compliant
@@ -331,7 +331,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 		if(!CollectionUtils.isEmpty(entityQuery.getEntityEnrichmentFilters())) {
 			
-			criteria.createAlias("a.entityEnrichments", "b");
+			criteria.createAlias("a.metadata", "b");
 			
 			for(EntityEnrichmentFilter attribute : entityQuery.getEntityEnrichmentFilters()) {
 				
@@ -475,7 +475,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 			cloned.setConfidence(entity.getConfidence());
 			cloned.setContext(entity.getContext());
 			cloned.setDocumentId(entity.getDocumentId());
-			cloned.setEntityEnrichments(new HashSet<RdbmsStoredEntityEnrichment>(entity.getEntityEnrichments()));
+			cloned.setEntityEnrichments(new HashSet<RdbmsStoredEntityMetadata>(entity.getEntityEnrichments()));
 			cloned.setExtractionDate(entity.getExtractionDate());
 			cloned.setLanguage(entity.getLanguage());
 			cloned.setText(entity.getText());

@@ -19,6 +19,7 @@
 package com.mtnfog.entitydb.entitystore.mongodb.model;
 
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonReader;
 import org.bson.BsonString;
@@ -86,8 +87,8 @@ public class MongoDBStoredEntityCodec implements CollectibleCodec<MongoDBStoredE
 	    	document.put("language", mongoDBStoredEntity.getLanguage());
 	    }    		    	    
     	
-    	if (mongoDBStoredEntity.getEnrichments() != null && !mongoDBStoredEntity.getEnrichments().isEmpty()) {
-    		document.put("enrichments", mongoDBStoredEntity.getEnrichments());
+    	if (mongoDBStoredEntity.getMetadata() != null && !mongoDBStoredEntity.getMetadata().isEmpty()) {
+    		document.put("enrichments", mongoDBStoredEntity.getMetadata());
     	}
     	 	
         // These values are never null.
@@ -124,7 +125,7 @@ public class MongoDBStoredEntityCodec implements CollectibleCodec<MongoDBStoredE
 		
 		// Add the enrichments.
 		Map<String, String> enrichments = (Map<String, String>) document.get("enrichments");
-		mongoDBStoredEntity.setEnrichments(enrichments);		
+		mongoDBStoredEntity.setMetadata(enrichments);		
 		
 		return mongoDBStoredEntity;
 

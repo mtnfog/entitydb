@@ -86,7 +86,7 @@ public class EqlFilters {
 			if(entity.getType().equals("date")) {
 				
 				// The exact milliseconds of the date is stored in an enrichment of the date.
-				String milliseconds = entity.getEnrichments().get("time");
+				String milliseconds = entity.getMetadata().get("time");
 				
 				if(milliseconds != null) {	
 					
@@ -141,7 +141,7 @@ public class EqlFilters {
 			if(entity.getType().equals("date")) {
 				
 				// The exact milliseconds of the date is stored in an enrichment of the date.
-				String milliseconds = entity.getEnrichments().get("time");
+				String milliseconds = entity.getMetadata().get("time");
 				
 				if(milliseconds != null) {	
 					

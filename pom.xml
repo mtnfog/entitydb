@@ -49,7 +49,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Mountain Fog artifact versions -->
 		<commons.version>1.0</commons.version>
-		<entity.model.version>1.0.10</entity.model.version>
+		<entity.model.version>1.0.11-SNAPSHOT</entity.model.version>
 		<!-- Artifact versions -->
 		<activemq.version>5.7.0</activemq.version>
 		<aeonbits.owner.version>1.0.9</aeonbits.owner.version>

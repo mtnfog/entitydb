@@ -17,9 +17,9 @@
       <property name="timestamp" column="timestamp" type="long"/>
       <property name="visible" column="visible" type="int"/>
       <property name="indexed" column="indexed" type="long"/>
-      <set name="entityEnrichments" table="EntityEnrichments" lazy="false" cascade="save-update" fetch="select" inverse="false">
-		<key column="enrichmentId" not-null="true"/>
-		<one-to-many class="RdbmsStoredEntityEnrichment"/>
+      <set name="metadata" table="EntityMetadata" lazy="false" cascade="save-update" fetch="select" inverse="false">
+		<key column="metadataId" not-null="true"/>
+		<one-to-many class="RdbmsStoredEntityMetadata"/>
 	  </set>
    </class>
 </hibernate-mapping>

@@ -18,7 +18,8 @@
  */
 package com.mtnfog.entitydb.testing;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,17 +38,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.eql.model.ConfidenceRange;
+import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityOrder;
+import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
-import com.mtnfog.entitydb.model.entitystore.EnrichmentSanitizer;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.entitydb.eql.model.ConfidenceRange;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
-import com.mtnfog.entitydb.eql.model.EntityOrder;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.test.entity.utils.EntityUtils;
 
 public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
@@ -328,11 +329,11 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		for(IndexedEntity rdbmsStoredEntity : queryResult.getEntities()) {
 			
 			LOGGER.info(rdbmsStoredEntity.toString());
-			LOGGER.info("\tEnrichments = " + rdbmsStoredEntity.getEnrichments().size());
+			LOGGER.info("\tEnrichments = " + rdbmsStoredEntity.getMetadata().size());
 			
-			for(String s : rdbmsStoredEntity.getEnrichments().keySet()) {
+			for(String s : rdbmsStoredEntity.getMetadata().keySet()) {
 				
-				LOGGER.info("\t" + s + " = " + rdbmsStoredEntity.getEnrichments().get(s));
+				LOGGER.info("\t" + s + " = " + rdbmsStoredEntity.getMetadata().get(s));
 				
 			}
 			
@@ -353,7 +354,7 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		Map<String, String> enrichments = new HashMap<String, String>();
 		enrichments.put("name", "value1");		
 		enrichments.put("spouse", "Martha Washington");
-		entity.setEnrichments(enrichments);
+		entity.setMetadata(enrichments);
 		
 		// ------------------
 		
@@ -366,7 +367,7 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		
 		Map<String, String> enrichments2 = new HashMap<String, String>();
 		enrichments2.put("name", "value2");		
-		entity2.setEnrichments(enrichments2);
+		entity2.setMetadata(enrichments2);
 		
 		// ------------------
 		
@@ -379,7 +380,7 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		
 		Map<String, String> enrichments3 = new HashMap<String, String>();
 		enrichments3.put("Birth Date", "1970-07-04");		
-		entity3.setEnrichments(enrichments3);
+		entity3.setMetadata(enrichments3);
 		
 		// ------------------
 
@@ -387,7 +388,7 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		entityStore.storeEntity(entity2, "::1");
 		entityStore.storeEntity(entity3, "::1");
 		
-		String sanitizedKey = EnrichmentSanitizer.sanitizeKey("Birth Date");
+		String sanitizedKey = MetadataSanitizer.sanitizeKey("Birth Date");
 		
 		EntityQuery entityQuery = new EntityQuery();
 		// TODO: Something is causing the date filter to fail on Cassandra.
