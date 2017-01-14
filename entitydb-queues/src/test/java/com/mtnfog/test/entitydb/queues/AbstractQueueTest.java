@@ -45,7 +45,7 @@ import com.mtnfog.entitydb.model.queue.QueueConsumer;
 import com.mtnfog.entitydb.model.queue.QueuePublisher;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.test.entity.utils.EntityUtils;
+import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public abstract class AbstractQueueTest {
 
@@ -91,7 +91,7 @@ public abstract class AbstractQueueTest {
 		
 		// Stored random number of entities.
 		
-		Collection<Entity> entities = EntityUtils.createRandomPersonEntities();
+		Collection<Entity> entities = RandomEntityUtils.createRandomPersonEntities();
 		String acl = "::1";
 		String apiKey = "asdf1234";
 		
@@ -108,7 +108,7 @@ public abstract class AbstractQueueTest {
 		
 		// Duplicate entities so only 1 should be stored.
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		String acl = "::1";
 		String apiKey = "asdf1234";
 		
@@ -129,7 +129,7 @@ public abstract class AbstractQueueTest {
 		
 		// Stored random number of entities.
 		
-		Collection<Entity> entities = EntityUtils.createRandomPersonEntities();
+		Collection<Entity> entities = RandomEntityUtils.createRandomPersonEntities();
 		final String acl = "::1";
 		final String apiKey = "asdf1234";
 		final String originalEntityId = EntityIdGenerator.generateEntityId(entities.iterator().next(), acl);

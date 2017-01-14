@@ -56,7 +56,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.entitystore.mongodb.model.MongoDBStoredEntity;
 import com.mtnfog.entitydb.entitystore.mongodb.model.MongoDBStoredEntityCodec;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
 import com.mtnfog.entitydb.eql.model.EntityOrder;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
@@ -276,12 +276,12 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 			document.append("documentId", entityQuery.getDocumentId());
 		}
 		
-		if(!CollectionUtils.isEmpty(entityQuery.getEntityEnrichmentFilters())) {
+		if(!CollectionUtils.isEmpty(entityQuery.getEntityMetadataFilters())) {
 			
-			for(EntityEnrichmentFilter entityEnrichmentFilter : entityQuery.getEntityEnrichmentFilters()) {
+			for(EntityMetadataFilter entityMetadataFilter : entityQuery.getEntityMetadataFilters()) {
 			
 				document
-					.append("enrichments." + entityEnrichmentFilter.getName(), new Document("$eq", entityEnrichmentFilter.getValue()));
+					.append("metadata." + entityMetadataFilter.getName(), new Document("$eq", entityMetadataFilter.getValue()));
 				
 			}
 			

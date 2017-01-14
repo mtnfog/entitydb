@@ -28,7 +28,7 @@ import retrofit.client.Response;
 
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.driver.EntityDbClient;
-import com.mtnfog.test.entity.utils.EntityUtils;
+import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public class StressTest {
 	
@@ -72,7 +72,7 @@ public class StressTest {
 			
 			LOGGER.info("Sending {} entities to EntityDB. Total sent = {}", randomEntityCount, sent);
 			
-			Collection<Entity> entities = EntityUtils.createRandomPersonEntities(randomEntityCount);						
+			Collection<Entity> entities = RandomEntityUtils.createRandomPersonEntities(randomEntityCount);						
 			
 			Response response = client.store(acl, entities);
 			

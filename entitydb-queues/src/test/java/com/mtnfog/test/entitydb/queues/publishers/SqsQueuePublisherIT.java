@@ -35,7 +35,7 @@ import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.metrics.MetricReporter;
 import com.mtnfog.entitydb.model.security.Acl;
 import com.mtnfog.entitydb.queues.publishers.SqsQueuePublisher;
-import com.mtnfog.test.entity.utils.EntityUtils;
+import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public class SqsQueuePublisherIT {
 
@@ -55,7 +55,7 @@ public class SqsQueuePublisherIT {
 	@Test
 	public void json() {
 		
-		Entity entity = EntityUtils.createRandomPersonEntity();
+		Entity entity = RandomEntityUtils.createRandomPersonEntity();
 		
 		Collection<Entity> entities = new ArrayList<Entity>();
 		entities.add(entity);
@@ -71,8 +71,8 @@ public class SqsQueuePublisherIT {
 	public void store1() throws MalformedAclException, EntityPublisherException {
 		
 		Collection<Entity> entities = new LinkedList<Entity>();
-		entities.add(EntityUtils.createRandomPersonEntity());
-		entities.add(EntityUtils.createRandomPersonEntity());
+		entities.add(RandomEntityUtils.createRandomPersonEntity());
+		entities.add(RandomEntityUtils.createRandomPersonEntity());
 		
 		String[] users = {"user1", "user2"};
 		String[] groups = {"group1", "group2"};
@@ -89,8 +89,8 @@ public class SqsQueuePublisherIT {
 	public void store2() throws MalformedAclException, EntityPublisherException {
 		
 		Collection<Entity> entities = new LinkedList<Entity>();
-		entities.add(EntityUtils.createRandomPersonEntity());
-		entities.add(EntityUtils.createRandomPersonEntity());
+		entities.add(RandomEntityUtils.createRandomPersonEntity());
+		entities.add(RandomEntityUtils.createRandomPersonEntity());
 		
 		String acl = "1234:0";
 		String apiKey = "apikey";

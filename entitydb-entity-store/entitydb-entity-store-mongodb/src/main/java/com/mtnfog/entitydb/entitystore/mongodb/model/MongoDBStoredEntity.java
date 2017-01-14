@@ -28,8 +28,8 @@ import org.bson.conversions.Bson;
 
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
-import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.exceptions.MalformedAclException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
 import com.mtnfog.entitydb.model.security.Acl;
@@ -243,7 +243,7 @@ public class MongoDBStoredEntity extends AbstractStoredEntity implements Bson {
 
 	/**
 	 * Sets the entity metadata.
-	 * @param enrichments The entity metadata.
+	 * @param metadata The entity metadata.
 	 */
 	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;

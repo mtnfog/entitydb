@@ -78,7 +78,6 @@ public class IndexedEntity extends Entity {
 		indexedEntity.setUri(entity.getUri());
 		indexedEntity.setMetadata(entity.getMetadata());
 		indexedEntity.setType(entity.getType());
-		indexedEntity.setLocations(entity.getLocations());
 		indexedEntity.setSpan(entity.getSpan());
 		indexedEntity.setAcl(acl);
 		

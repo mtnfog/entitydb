@@ -35,9 +35,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mtnfog.entity.Entity;
+import com.mtnfog.entitydb.eql.filters.EqlFilters;
+import com.mtnfog.entitydb.model.rulesengine.Condition;
+import com.mtnfog.entitydb.model.rulesengine.DynamoDBRuleAction;
+import com.mtnfog.entitydb.model.rulesengine.EntityCondition;
+import com.mtnfog.entitydb.model.rulesengine.EntityMetadataCondition;
+import com.mtnfog.entitydb.model.rulesengine.EqlCondition;
+import com.mtnfog.entitydb.model.rulesengine.KinesisFirehoseRuleAction;
+import com.mtnfog.entitydb.model.rulesengine.KinesisStreamRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.Rule;
-import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
+import com.mtnfog.entitydb.model.rulesengine.RuleAction;
+import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngine;
+import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
 import com.mtnfog.entitydb.model.rulesengine.SesRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.SnsRuleAction;
 import com.mtnfog.entitydb.model.rulesengine.SqsRuleAction;
@@ -47,16 +57,6 @@ import com.mtnfog.idyl.sdk.integrations.aws.KinesisIntegration;
 import com.mtnfog.idyl.sdk.integrations.aws.SesIntegration;
 import com.mtnfog.idyl.sdk.integrations.aws.SnsIntegration;
 import com.mtnfog.idyl.sdk.integrations.aws.SqsIntegration;
-import com.mtnfog.entitydb.model.rulesengine.RuleAction;
-import com.mtnfog.entitydb.model.rulesengine.Condition;
-import com.mtnfog.entitydb.model.rulesengine.DynamoDBRuleAction;
-import com.mtnfog.entitydb.model.rulesengine.EntityCondition;
-import com.mtnfog.entitydb.model.rulesengine.EntityEnrichmentCondition;
-import com.mtnfog.entitydb.model.rulesengine.EqlCondition;
-import com.mtnfog.entitydb.model.rulesengine.KinesisFirehoseRuleAction;
-import com.mtnfog.entitydb.model.rulesengine.KinesisStreamRuleAction;
-import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
-import com.mtnfog.entitydb.eql.filters.EqlFilters;
 
 /**
  * An implementation of {@link RulesEngine} where the rules
@@ -176,25 +176,25 @@ public class XmlRulesEngine implements RulesEngine {
 					
 					conditionalMatch = EqlFilters.isMatch(entity, eqlCondition.getEql());
 					
-				} else if(condition instanceof EntityEnrichmentCondition) {
+				} else if(condition instanceof EntityMetadataCondition) {
 					
-					EntityEnrichmentCondition entityEnrichmentCondition = (EntityEnrichmentCondition) condition;
+					EntityMetadataCondition entityMetadataCondition = (EntityMetadataCondition) condition;
 					
-					if(entity.getMetadata().containsKey(entityEnrichmentCondition.getEnrichment())) {
+					if(entity.getMetadata().containsKey(entityMetadataCondition.getMetadata())) {
 						
-						String value = entity.getMetadata().get(entityEnrichmentCondition.getEnrichment());
+						String value = entity.getMetadata().get(entityMetadataCondition.getMetadata());
 						
-						if(entityEnrichmentCondition.getTest().equalsIgnoreCase(EntityEnrichmentCondition.MATCHES)) {
+						if(entityMetadataCondition.getTest().equalsIgnoreCase(EntityMetadataCondition.MATCHES)) {
 							
-							if(value.matches(entityEnrichmentCondition.getValue())) {
+							if(value.matches(entityMetadataCondition.getValue())) {
 								
 								conditionalMatch = true;
 								
 							}
 							
-						} if(entityEnrichmentCondition.getTest().equalsIgnoreCase(EntityEnrichmentCondition.EQUALS)) {
+						} if(entityMetadataCondition.getTest().equalsIgnoreCase(EntityMetadataCondition.EQUALS)) {
 						
-							if(value.equalsIgnoreCase(entityEnrichmentCondition.getValue())) {
+							if(value.equalsIgnoreCase(entityMetadataCondition.getValue())) {
 								
 								conditionalMatch = true;
 								

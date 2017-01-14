@@ -23,16 +23,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class EntityEnrichmentCondition extends Condition {
+public class EntityMetadataCondition extends Condition {
 	
 	public static final String EQUALS = "equals";
 	public static final String MATCHES = "matches";
 	
-	public static final String ENRICHMENT = "enrichment";
+	public static final String METADATA = "metadata";
 	public static final String VALUE = "value";
 
 	@XmlAttribute
-	private String enrichment;
+	private String metadata;
 	
 	@XmlAttribute
 	private String value;
@@ -40,21 +40,21 @@ public class EntityEnrichmentCondition extends Condition {
 	@XmlAttribute
 	private String test;
 	
-	public EntityEnrichmentCondition() {				
+	public EntityMetadataCondition() {				
 		
 	}
 	
-	public EntityEnrichmentCondition(String enrichment, String value) {
+	public EntityMetadataCondition(String metadata, String value) {
 		
-		this.enrichment = enrichment;
+		this.metadata = metadata;
 		this.value = value;
 		this.test = EQUALS;
 		
 	}
 	
-	public EntityEnrichmentCondition(String enrichment, String value, String test) {
+	public EntityMetadataCondition(String metadata, String value, String test) {
 		
-		this.enrichment = enrichment;
+		this.metadata = metadata;
 		this.value = value;
 		this.test = test;
 		
@@ -68,20 +68,20 @@ public class EntityEnrichmentCondition extends Condition {
 		this.value = value;
 	}
 
-	public String getEnrichment() {
-		return enrichment;
-	}
-
-	public void setEnrichment(String enrichment) {
-		this.enrichment = enrichment;
-	}
-
 	public String getTest() {
 		return test;
 	}
 
 	public void setTest(String test) {
 		this.test = test;
+	}
+
+	public String getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(String metadata) {
+		this.metadata = metadata;
 	}
 	
 }

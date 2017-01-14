@@ -18,12 +18,12 @@ public class EqlParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__11=1, T__10=2, T__9=3, T__8=4, T__7=5, T__6=6, T__5=7, T__4=8, T__3=9, 
-		T__2=10, T__1=11, T__0=12, ENRICHMENT_FIELD=13, NUMERIC_FIELD=14, OPTION_FIELD=15, 
+		T__2=10, T__1=11, T__0=12, METADATA_FIELD=13, NUMERIC_FIELD=14, OPTION_FIELD=15, 
 		STRING_FIELD=16, SORT_ORDER_FIELD=17, INTEGERS=18, STRING=19, WS=20;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'<='", "'select * from entities'", "'order by'", "'!='", 
 		"'between'", "'and'", "'>='", "';'", "'<'", "'='", "'>'", "'select * from entities where'", 
-		"'enrichment'", "'confidence'", "OPTION_FIELD", "STRING_FIELD", "SORT_ORDER_FIELD", 
+		"'metadata'", "'confidence'", "OPTION_FIELD", "STRING_FIELD", "SORT_ORDER_FIELD", 
 		"INTEGERS", "STRING", "WS"
 	};
 	public static final int
@@ -258,7 +258,6 @@ public class EqlParser extends Parser {
 		public Token value2;
 		public TerminalNode STRING_FIELD() { return getToken(EqlParser.STRING_FIELD, 0); }
 		public TerminalNode NUMERIC_FIELD() { return getToken(EqlParser.NUMERIC_FIELD, 0); }
-		public TerminalNode ENRICHMENT_FIELD() { return getToken(EqlParser.ENRICHMENT_FIELD, 0); }
 		public List<TerminalNode> INTEGERS() { return getTokens(EqlParser.INTEGERS); }
 		public TerminalNode INTEGERS(int i) {
 			return getToken(EqlParser.INTEGERS, i);
@@ -271,6 +270,7 @@ public class EqlParser extends Parser {
 			return getToken(EqlParser.WS, i);
 		}
 		public List<TerminalNode> WS() { return getTokens(EqlParser.WS); }
+		public TerminalNode METADATA_FIELD() { return getToken(EqlParser.METADATA_FIELD, 0); }
 		public ConditionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -376,7 +376,7 @@ public class EqlParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(83); match(WS);
-				setState(84); match(ENRICHMENT_FIELD);
+				setState(84); match(METADATA_FIELD);
 				setState(85); match(WS);
 				setState(86); ((ConditionContext)_localctx).value1 = match(STRING);
 				setState(88);

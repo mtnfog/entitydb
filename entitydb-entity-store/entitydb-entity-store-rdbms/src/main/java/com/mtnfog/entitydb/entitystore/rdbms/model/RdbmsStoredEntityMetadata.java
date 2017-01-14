@@ -79,12 +79,12 @@ public class RdbmsStoredEntityMetadata {
             return false;
         }
         
-        RdbmsStoredEntityMetadata storedEntityEnrichment = (RdbmsStoredEntityMetadata) o;
+        RdbmsStoredEntityMetadata storedEntityMetadata = (RdbmsStoredEntityMetadata) o;
       
         EqualsBuilder builder = new EqualsBuilder();
         
-        builder.append(name, storedEntityEnrichment.getName());
-        builder.append(value, storedEntityEnrichment.getValue());
+        builder.append(name, storedEntityMetadata.getName());
+        builder.append(value, storedEntityMetadata.getValue());
         
         return builder.isEquals();
         

@@ -41,7 +41,7 @@ import com.mtnfog.entitydb.search.ElasticSearchIndex;
 import com.mtnfog.entitydb.search.EmbeddedElasticsearchServer;
 import com.mtnfog.entitydb.eql.Eql;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
-import com.mtnfog.test.entity.utils.EntityUtils;
+import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public class ElasticSearchIndexTest {
 	
@@ -70,7 +70,7 @@ public class ElasticSearchIndexTest {
 	@Test
 	public void index() throws IOException, URISyntaxException, MalformedAclException {
 		
-		Entity entity = EntityUtils.createRandomPersonEntity();
+		Entity entity = RandomEntityUtils.createRandomPersonEntity();
 		entity.setContext("context");
 		entity.setDocumentId("document");
 		
@@ -86,7 +86,7 @@ public class ElasticSearchIndexTest {
 	@Test
 	public void getEntity1() throws IOException, URISyntaxException, MalformedAclException, InterruptedException {
 		
-		Entity entity = EntityUtils.createRandomPersonEntity();
+		Entity entity = RandomEntityUtils.createRandomPersonEntity();
 		entity.setContext("context");
 		entity.setDocumentId("document");
 		
@@ -110,11 +110,11 @@ public class ElasticSearchIndexTest {
 	@Test
 	public void queryForIndexedEntities1() throws Exception {
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
 		entity1.setType("person");
 		
-		Entity entity2 = EntityUtils.createRandomPersonEntity();
+		Entity entity2 = RandomEntityUtils.createRandomPersonEntity();
 		entity2.setText("john");
 		entity2.setType("place");
 		
@@ -155,11 +155,11 @@ public class ElasticSearchIndexTest {
 		
 		// Only one entity is visible to the user.
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
 		entity1.setType("person");
 		
-		Entity entity2 = EntityUtils.createRandomPersonEntity();
+		Entity entity2 = RandomEntityUtils.createRandomPersonEntity();
 		entity2.setText("morgantown");
 		entity2.setType("place");
 		
@@ -197,11 +197,11 @@ public class ElasticSearchIndexTest {
 		
 		// Neither entity is visible to the user.
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
 		entity1.setType("person");
 		
-		Entity entity2 = EntityUtils.createRandomPersonEntity();
+		Entity entity2 = RandomEntityUtils.createRandomPersonEntity();
 		entity2.setText("morgantown");
 		entity2.setType("place");
 		
@@ -234,11 +234,11 @@ public class ElasticSearchIndexTest {
 		
 		// Entities' user/groups don't match but they're visible to the world.
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
 		entity1.setType("person");
 		
-		Entity entity2 = EntityUtils.createRandomPersonEntity();
+		Entity entity2 = RandomEntityUtils.createRandomPersonEntity();
 		entity2.setText("morgantown");
 		entity2.setType("place");
 		
@@ -271,11 +271,11 @@ public class ElasticSearchIndexTest {
 		
 		// One entity has a group that matches the user's groups.
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
 		entity1.setType("person");
 		
-		Entity entity2 = EntityUtils.createRandomPersonEntity();
+		Entity entity2 = RandomEntityUtils.createRandomPersonEntity();
 		entity2.setText("morgantown");
 		entity2.setType("place");
 		
@@ -308,11 +308,11 @@ public class ElasticSearchIndexTest {
 		
 		// UserEntity has multiple groups.
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
 		entity1.setType("person");
 		
-		Entity entity2 = EntityUtils.createRandomPersonEntity();
+		Entity entity2 = RandomEntityUtils.createRandomPersonEntity();
 		entity2.setText("morgantown");
 		entity2.setType("place");
 		
@@ -346,11 +346,11 @@ public class ElasticSearchIndexTest {
 		
 		// UserEntity and entities have multiple groups.
 		
-		Entity entity1 = EntityUtils.createRandomPersonEntity();
+		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
 		entity1.setText("john");
 		entity1.setType("person");
 		
-		Entity entity2 = EntityUtils.createRandomPersonEntity();
+		Entity entity2 = RandomEntityUtils.createRandomPersonEntity();
 		entity2.setText("morgantown");
 		entity2.setType("place");
 		

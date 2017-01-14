@@ -18,7 +18,9 @@
  */
 package com.mtnfog.test.entitydb.rulesengine.xml;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -36,16 +38,16 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.rulesengine.xml.XmlRulesEngine;
-import com.mtnfog.entitydb.model.rulesengine.RuleAction;
 import com.mtnfog.entitydb.model.rulesengine.Condition;
 import com.mtnfog.entitydb.model.rulesengine.EntityCondition;
-import com.mtnfog.entitydb.model.rulesengine.EntityEnrichmentCondition;
+import com.mtnfog.entitydb.model.rulesengine.EntityMetadataCondition;
 import com.mtnfog.entitydb.model.rulesengine.EqlCondition;
 import com.mtnfog.entitydb.model.rulesengine.Rule;
+import com.mtnfog.entitydb.model.rulesengine.RuleAction;
 import com.mtnfog.entitydb.model.rulesengine.RuleEvaluationResult;
 import com.mtnfog.entitydb.model.rulesengine.RulesEngineException;
 import com.mtnfog.entitydb.model.rulesengine.SesRuleAction;
+import com.mtnfog.entitydb.rulesengine.xml.XmlRulesEngine;
 
 public class XmlRulesEngineTest {
 	
@@ -332,7 +334,7 @@ public class XmlRulesEngineTest {
 	public void matchTest12() throws RulesEngineException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
-		conditions.add(new EntityEnrichmentCondition("age", "50"));
+		conditions.add(new EntityMetadataCondition("age", "50"));
 		
 		List<RuleAction> list = new ArrayList<RuleAction>();
 		
@@ -340,13 +342,13 @@ public class XmlRulesEngineTest {
 		rule.setConditions(conditions);
 		rule.setActions(list);	
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
-		enrichments.put("age", "50");
+		Map<String, String> metadata = new HashMap<String, String>();
+		metadata.put("age", "50");
 		
 		Entity entity = new Entity();
 		entity.setText("george");
 		entity.setType("person");
-		entity.setMetadata(enrichments);
+		entity.setMetadata(metadata);
 		entity.setContext("context");
 		entity.setDocumentId("document");
 				
@@ -361,7 +363,7 @@ public class XmlRulesEngineTest {
 	public void matchTest13() throws RulesEngineException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
-		conditions.add(new EntityEnrichmentCondition("spouse", "^mar.*$", "matches"));
+		conditions.add(new EntityMetadataCondition("spouse", "^mar.*$", "matches"));
 		
 		List<RuleAction> list = new ArrayList<RuleAction>();
 		
@@ -369,13 +371,13 @@ public class XmlRulesEngineTest {
 		rule.setConditions(conditions);
 		rule.setActions(list);	
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
-		enrichments.put("spouse", "martha");
+		Map<String, String> metadata = new HashMap<String, String>();
+		metadata.put("spouse", "martha");
 		
 		Entity entity = new Entity();
 		entity.setText("george");
 		entity.setType("person");
-		entity.setMetadata(enrichments);
+		entity.setMetadata(metadata);
 		entity.setContext("context");
 		entity.setDocumentId("document");
 

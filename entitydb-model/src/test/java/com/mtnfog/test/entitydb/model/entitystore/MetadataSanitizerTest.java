@@ -18,7 +18,8 @@
  */
 package com.mtnfog.test.entitydb.model.entitystore;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,21 +30,21 @@ import org.junit.Test;
 
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
-import com.mtnfog.test.entity.utils.EntityUtils;
+import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
-public class EnrichmentSanitizerTest {
+public class MetadataSanitizerTest {
 	
-	private static final Logger LOGGER = LogManager.getLogger(EnrichmentSanitizerTest.class);
+	private static final Logger LOGGER = LogManager.getLogger(MetadataSanitizerTest.class);
 
 	@Test
-	public void sanitizeEnrichmentsTest() {
+	public void sanitizeMetadataTest() {
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
-		enrichments.put("te st", "value");
+		Map<String, String> metadata = new HashMap<String, String>();
+		metadata.put("te st", "value");
 		
-		Map<String, String> sanitizedEnrichments = MetadataSanitizer.sanitizeMetadata(enrichments);
+		Map<String, String> sanitizedMetadata = MetadataSanitizer.sanitizeMetadata(metadata);
 		
-		for(String k : sanitizedEnrichments.keySet()) {
+		for(String k : sanitizedMetadata.keySet()) {
 			
 			assertFalse(k.contains(" "));
 			assertEquals("te_st", k);
@@ -52,15 +53,15 @@ public class EnrichmentSanitizerTest {
 	}
 	
 	@Test
-	public void sanitizeRandomEnrichmentsTest() {
+	public void sanitizeRandomMetadataTest() {
 		
 		for(int x=0; x<10; x++) {
 		
-			Entity e1 = EntityUtils.createRandomPersonEntity();
+			Entity e1 = RandomEntityUtils.createRandomPersonEntity();
 			
-			Map<String, String> sanitizedEnrichments = MetadataSanitizer.sanitizeMetadata(e1.getMetadata());
+			Map<String, String> sanitizedMetadata = MetadataSanitizer.sanitizeMetadata(e1.getMetadata());
 			
-			for(String k : sanitizedEnrichments.keySet()) {
+			for(String k : sanitizedMetadata.keySet()) {
 				
 				LOGGER.info("Verifying sanitized entity: {}", k);
 				

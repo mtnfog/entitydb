@@ -18,7 +18,9 @@
  */
 package com.mtnfog.test.entitydb.eql;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -227,16 +229,16 @@ public class EqlTest {
 	@Test
 	public void limit3() throws Exception {
 		
-		EntityQuery entityQuery = Eql.generate("select * from entities where enrichment \"birth_date\" = \"10-20-1945\" limit 3");
+		EntityQuery entityQuery = Eql.generate("select * from entities where metadata \"birth_date\" = \"10-20-1945\" limit 3");
         
 		assertNotNull(entityQuery);
 		assertEquals(3, entityQuery.getLimit());
         assertTrue(StringUtils.isEmpty(entityQuery.getContext()));
         assertTrue(StringUtils.isEmpty(entityQuery.getDocumentId()));
         assertTrue(StringUtils.isEmpty(entityQuery.getText()));
-        assertEquals(1, entityQuery.getEntityEnrichmentFilters().size());
-		assertEquals("birth_date", entityQuery.getEntityEnrichmentFilters().get(0).getName());
-		assertEquals("10-20-1945", entityQuery.getEntityEnrichmentFilters().get(0).getValue());
+        assertEquals(1, entityQuery.getEntityMetadataFilters().size());
+		assertEquals("birth_date", entityQuery.getEntityMetadataFilters().get(0).getName());
+		assertEquals("10-20-1945", entityQuery.getEntityMetadataFilters().get(0).getValue());
         
 	}	
 	
@@ -257,7 +259,7 @@ public class EqlTest {
 	@Test
 	public void offset1() throws Exception {
 		
-		EntityQuery entityQuery = Eql.generate("select * from entities where enrichment \"birth_date\" = \"10-20-1945\" limit 3 offset 10");
+		EntityQuery entityQuery = Eql.generate("select * from entities where metadata \"birth_date\" = \"10-20-1945\" limit 3 offset 10");
         
 		assertNotNull(entityQuery);
 		assertEquals(3, entityQuery.getLimit());
@@ -265,9 +267,9 @@ public class EqlTest {
         assertTrue(StringUtils.isEmpty(entityQuery.getContext()));
         assertTrue(StringUtils.isEmpty(entityQuery.getDocumentId()));
         assertTrue(StringUtils.isEmpty(entityQuery.getText()));
-        assertEquals(1, entityQuery.getEntityEnrichmentFilters().size());
-		assertEquals("birth_date", entityQuery.getEntityEnrichmentFilters().get(0).getName());
-		assertEquals("10-20-1945", entityQuery.getEntityEnrichmentFilters().get(0).getValue());		
+        assertEquals(1, entityQuery.getEntityMetadataFilters().size());
+		assertEquals("birth_date", entityQuery.getEntityMetadataFilters().get(0).getName());
+		assertEquals("10-20-1945", entityQuery.getEntityMetadataFilters().get(0).getValue());		
         
 	}
 	
@@ -285,40 +287,40 @@ public class EqlTest {
 	}
 		
 	@Test
-	public void enrichment1() throws Exception {
+	public void metadata1() throws Exception {
 		
-		EntityQuery entityQuery = Eql.generate("select * from entities where enrichment \"birth_date\" = \"10-20-1945\"");
+		EntityQuery entityQuery = Eql.generate("select * from entities where metadata \"birth_date\" = \"10-20-1945\"");
         
 		assertNotNull(entityQuery);
-		assertEquals(1, entityQuery.getEntityEnrichmentFilters().size());
-		assertEquals("birth_date", entityQuery.getEntityEnrichmentFilters().get(0).getName());
-		assertEquals("10-20-1945", entityQuery.getEntityEnrichmentFilters().get(0).getValue());
+		assertEquals(1, entityQuery.getEntityMetadataFilters().size());
+		assertEquals("birth_date", entityQuery.getEntityMetadataFilters().get(0).getName());
+		assertEquals("10-20-1945", entityQuery.getEntityMetadataFilters().get(0).getValue());
 		
 	}
 	
 	@Test
-	public void enrichment2() throws Exception {
+	public void metadata2() throws Exception {
 		
-		EntityQuery entityQuery = Eql.generate("select * from entities where enrichment \"birth_date\" = \"10-20-1945\" and enrichment \"death_date\" = \"7-13-1987\"");
+		EntityQuery entityQuery = Eql.generate("select * from entities where metadata \"birth_date\" = \"10-20-1945\" and metadata \"death_date\" = \"7-13-1987\"");
         
 		assertNotNull(entityQuery);
-		assertTrue(entityQuery.getEntityEnrichmentFilters().size() == 2);
-		assertEquals("birth_date", entityQuery.getEntityEnrichmentFilters().get(0).getName());
-		assertEquals("10-20-1945", entityQuery.getEntityEnrichmentFilters().get(0).getValue());
-		assertTrue(entityQuery.getEntityEnrichmentFilters().get(1).getName().equalsIgnoreCase("death_date"));
-		assertTrue(entityQuery.getEntityEnrichmentFilters().get(1).getValue().equalsIgnoreCase("7-13-1987"));
+		assertTrue(entityQuery.getEntityMetadataFilters().size() == 2);
+		assertEquals("birth_date", entityQuery.getEntityMetadataFilters().get(0).getName());
+		assertEquals("10-20-1945", entityQuery.getEntityMetadataFilters().get(0).getValue());
+		assertTrue(entityQuery.getEntityMetadataFilters().get(1).getName().equalsIgnoreCase("death_date"));
+		assertTrue(entityQuery.getEntityMetadataFilters().get(1).getValue().equalsIgnoreCase("7-13-1987"));
 		
 	}
 	
 	@Test
-	public void enrichment3() throws Exception {
+	public void metadata3() throws Exception {
 		
-		EntityQuery entityQuery = Eql.generate("select * from entities where enrichment \"birth_date\" = \"10/20/1945\"");
+		EntityQuery entityQuery = Eql.generate("select * from entities where metadata \"birth_date\" = \"10/20/1945\"");
         
 		assertNotNull(entityQuery);
-		assertEquals(1, entityQuery.getEntityEnrichmentFilters().size());
-		assertEquals("birth_date", entityQuery.getEntityEnrichmentFilters().get(0).getName());
-		assertEquals("10/20/1945", entityQuery.getEntityEnrichmentFilters().get(0).getValue());
+		assertEquals(1, entityQuery.getEntityMetadataFilters().size());
+		assertEquals("birth_date", entityQuery.getEntityMetadataFilters().get(0).getName());
+		assertEquals("10/20/1945", entityQuery.getEntityMetadataFilters().get(0).getValue());
 		
 	}
 	

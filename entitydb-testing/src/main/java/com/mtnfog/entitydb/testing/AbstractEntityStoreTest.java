@@ -39,17 +39,17 @@ import org.junit.Test;
 
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.eql.model.ConfidenceRange;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
 import com.mtnfog.entitydb.eql.model.EntityOrder;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.model.entitystore.AbstractStoredEntity;
-import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
+import com.mtnfog.entitydb.model.entitystore.MetadataSanitizer;
 import com.mtnfog.entitydb.model.entitystore.QueryResult;
 import com.mtnfog.entitydb.model.exceptions.EntityStoreException;
 import com.mtnfog.entitydb.model.exceptions.NonexistantEntityException;
 import com.mtnfog.entitydb.model.search.IndexedEntity;
-import com.mtnfog.test.entity.utils.EntityUtils;
+import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 	
@@ -250,7 +250,7 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 	@Test
 	public void updateAclTest() throws EntityStoreException, NonexistantEntityException {
 		
-		Entity entity = EntityUtils.createRandomPersonEntity();
+		Entity entity = RandomEntityUtils.createRandomPersonEntity();
 		entity.setContext("context");
 		
 		String entityId1 = entityStore.storeEntity(entity, "user:group:1");
@@ -318,8 +318,8 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 	public void storeEntities2() throws EntityStoreException {
 		
 		Set<Entity> entities = new HashSet<Entity>();
-		entities.add(EntityUtils.createRandomPersonEntity());
-		entities.add(EntityUtils.createRandomPersonEntity());
+		entities.add(RandomEntityUtils.createRandomPersonEntity());
+		entities.add(RandomEntityUtils.createRandomPersonEntity());
 		
 		entityStore.storeEntities(entities, "::1");
 		
@@ -329,7 +329,7 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		for(IndexedEntity rdbmsStoredEntity : queryResult.getEntities()) {
 			
 			LOGGER.info(rdbmsStoredEntity.toString());
-			LOGGER.info("\tEnrichments = " + rdbmsStoredEntity.getMetadata().size());
+			LOGGER.info("\tMetadata = " + rdbmsStoredEntity.getMetadata().size());
 			
 			for(String s : rdbmsStoredEntity.getMetadata().keySet()) {
 				
@@ -351,10 +351,10 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		entity.setDocumentId("doc1");
 		entity.setContext("context");
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
-		enrichments.put("name", "value1");		
-		enrichments.put("spouse", "Martha Washington");
-		entity.setMetadata(enrichments);
+		Map<String, String> metadata = new HashMap<String, String>();
+		metadata.put("name", "value1");		
+		metadata.put("spouse", "Martha Washington");
+		entity.setMetadata(metadata);
 		
 		// ------------------
 		
@@ -365,9 +365,9 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		entity2.setDocumentId("doc2");
 		entity2.setContext("context");
 		
-		Map<String, String> enrichments2 = new HashMap<String, String>();
-		enrichments2.put("name", "value2");		
-		entity2.setMetadata(enrichments2);
+		Map<String, String> metadata2 = new HashMap<String, String>();
+		metadata2.put("name", "value2");		
+		entity2.setMetadata(metadata2);
 		
 		// ------------------
 		
@@ -378,9 +378,9 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		entity3.setDocumentId("doc3");
 		entity3.setContext("context");
 		
-		Map<String, String> enrichments3 = new HashMap<String, String>();
-		enrichments3.put("Birth Date", "1970-07-04");		
-		entity3.setMetadata(enrichments3);
+		Map<String, String> metadata3 = new HashMap<String, String>();
+		metadata3.put("Birth Date", "1970-07-04");		
+		entity3.setMetadata(metadata3);
 		
 		// ------------------
 
@@ -392,8 +392,8 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		
 		EntityQuery entityQuery = new EntityQuery();
 		// TODO: Something is causing the date filter to fail on Cassandra.
-		//entityQuery.setEntityEnrichmentFilters(Arrays.asList(new EntityEnrichmentFilter(sanitizedKey, "1970-07-04")));
-		entityQuery.setEntityEnrichmentFilters(Arrays.asList(new EntityEnrichmentFilter("spouse", "Martha Washington")));
+		//entityQuery.setEntityMetadataFilters(Arrays.asList(new EntityMetadataFilter(sanitizedKey, "1970-07-04")));
+		entityQuery.setEntityMetadataFilters(Arrays.asList(new EntityMetadataFilter("spouse", "Martha Washington")));
 		
 		QueryResult queryResult = entityStore.query(entityQuery);
 		

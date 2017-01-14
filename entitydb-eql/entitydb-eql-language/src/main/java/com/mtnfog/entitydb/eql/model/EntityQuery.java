@@ -63,7 +63,7 @@ public class EntityQuery {
 	private int limit = 25;
 	private int offset = 0;
 
-	private List<EntityEnrichmentFilter> entityEnrichmentFilters;
+	private List<EntityMetadataFilter> entityMetadataFilters;
 	private EntityOrder entityOrder = EntityOrder.ID;
 	private SortOrder sortOrder = SortOrder.DESC;
 	
@@ -275,19 +275,19 @@ public class EntityQuery {
 	}
 
 	/**
-	 * Gets the list of entity enrichment filters for the query.
-	 * @return A list of {@link EntityEnrichmentFilter}.
+	 * Gets the list of entity metadata filters for the query.
+	 * @return A list of {@link EntityMetadataFilter}.
 	 */
-	public List<EntityEnrichmentFilter> getEntityEnrichmentFilters() {
-		return entityEnrichmentFilters;
+	public List<EntityMetadataFilter> getEntityMetadataFilters() {
+		return entityMetadataFilters;
 	}
 
 	/**
-	 * Sets the list of entity enrichment filters for the query.
-	 * @param entityEnrichmentFilters A list of {@link EntityEnrichmentFilter}.
+	 * Sets the list of entity metadata filters for the query.
+	 * @param entityMetadataFilters A list of {@link EntityMetadataFilter}.
 	 */
-	public void setEntityEnrichmentFilters(List<EntityEnrichmentFilter> entityEnrichmentFilters) {
-		this.entityEnrichmentFilters = entityEnrichmentFilters;
+	public void setEntityMetadataFilters(List<EntityMetadataFilter> entityMetadataFilters) {
+		this.entityMetadataFilters = entityMetadataFilters;
 	}
 
 	/**

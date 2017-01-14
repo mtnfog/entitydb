@@ -25,7 +25,7 @@ condition:
 	  WS NUMERIC_FIELD (WS)? operator=('='|'>'|'<'|'>='|'<=') (WS)? value=INTEGERS
 	| WS NUMERIC_FIELD WS 'between' WS value1=INTEGERS WS 'and' WS value2=INTEGERS
 	| WS STRING_FIELD (WS)? operator=('='|'!=') (WS)? value=STRING 
-	| WS ENRICHMENT_FIELD WS value1=STRING (WS)? '=' (WS)? value2=STRING 
+	| WS METADATA_FIELD WS value1=STRING (WS)? '=' (WS)? value2=STRING 
 	;
 
 option:
@@ -37,7 +37,7 @@ sort:
 	  WS 'order by' WS (NUMERIC_FIELD | STRING_FIELD) (WS SORT_ORDER_FIELD)?
 	;
 
-ENRICHMENT_FIELD: 'enrichment';
+METADATA_FIELD: 'metadata';
 NUMERIC_FIELD: 'confidence';
 OPTION_FIELD: 'limit' | 'offset' ;
 STRING_FIELD: 'id' | 'context' | 'documentid' | 'text' | 'type' | 'uri' | 'language' ;

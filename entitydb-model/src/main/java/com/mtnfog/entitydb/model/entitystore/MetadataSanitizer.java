@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Sanitizer for entity enrichments.
+ * Sanitizer for entity metadata.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -42,14 +42,14 @@ public class MetadataSanitizer {
 	
 	/**
 	 * Sanitized the metadata names prior to insertion into the database.
-	 * @param enrichments The metadata to sanitized.
+	 * @param metadata The metadata to sanitized.
 	 * @return The sanitized metadata.
 	 */
 	public static Map<String, String> sanitizeMetadata(Map<String, String> metadata) {
 		
 		// As noted in IDYLSDK-419 it is a good idea (and required for MongoDB) to 
-		// sanitize the enrichment (field) names prior to storing.
-		// The enrichment value does not need sanitized.
+		// sanitize the metadata (field) names prior to storing.
+		// The metadata value does not need sanitized.
 		
 		Map<String, String> sanitizedMetadata = new HashMap<String, String>();
 		

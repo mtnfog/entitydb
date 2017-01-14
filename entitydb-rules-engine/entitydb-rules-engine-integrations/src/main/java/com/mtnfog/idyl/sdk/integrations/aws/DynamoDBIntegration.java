@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -31,10 +35,6 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.model.integrations.Integration;
 import com.mtnfog.entitydb.model.integrations.IntegrationException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Integration for AWS DynamoDB that stores the entities in a DynamoDB table.
@@ -167,7 +167,7 @@ public class DynamoDBIntegration implements Integration {
 					.withString("type", entity.getType())
 					.withString("context", context)
 					.withString("documentId", documentId)
-					.withMap("enrichments", entity.getMetadata());
+					.withMap("metadata", entity.getMetadata());
 					
 				table.putItem(item);
 				

@@ -100,7 +100,7 @@ public class DynamoDBStoredEntity extends AbstractStoredEntity {
 	public static final String FIELD_LANGUAGE = "language";
 	
 	/**
-	 * The enrichments attribute.
+	 * The metadata attribute.
 	 */
 	public static final String FIELD_METADATA = "metadata";
 	

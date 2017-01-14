@@ -88,7 +88,7 @@ public class MongoDBStoredEntityCodec implements CollectibleCodec<MongoDBStoredE
 	    }    		    	    
     	
     	if (mongoDBStoredEntity.getMetadata() != null && !mongoDBStoredEntity.getMetadata().isEmpty()) {
-    		document.put("enrichments", mongoDBStoredEntity.getMetadata());
+    		document.put("metadata", mongoDBStoredEntity.getMetadata());
     	}
     	 	
         // These values are never null.
@@ -123,9 +123,9 @@ public class MongoDBStoredEntityCodec implements CollectibleCodec<MongoDBStoredE
 		mongoDBStoredEntity.setTimestamp(document.getLong("timestamp"));
 		mongoDBStoredEntity.setIndexed(document.getLong("indexed"));
 		
-		// Add the enrichments.
-		Map<String, String> enrichments = (Map<String, String>) document.get("enrichments");
-		mongoDBStoredEntity.setMetadata(enrichments);		
+		// Add the metadata.
+		Map<String, String> metadata = (Map<String, String>) document.get("metadata");
+		mongoDBStoredEntity.setMetadata(metadata);		
 		
 		return mongoDBStoredEntity;
 

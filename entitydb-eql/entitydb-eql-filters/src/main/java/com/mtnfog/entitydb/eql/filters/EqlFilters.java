@@ -24,15 +24,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mtnfog.entitydb.eql.filters.comparisons.DateComparison;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.eql.Eql;
 import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
+import com.mtnfog.entitydb.eql.filters.comparisons.DateComparison;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 /**
@@ -85,7 +86,7 @@ public class EqlFilters {
 						
 			if(entity.getType().equals("date")) {
 				
-				// The exact milliseconds of the date is stored in an enrichment of the date.
+				// The exact milliseconds of the date is stored in the metadata of the date.
 				String milliseconds = entity.getMetadata().get("time");
 				
 				if(milliseconds != null) {	
@@ -102,7 +103,7 @@ public class EqlFilters {
 						
 					} else {
 						
-						// For some reason this date is missing its milliseconds enrichment value. Do not include it since we don't know.
+						// For some reason this date is missing its milliseconds metadata value. Do not include it since we don't know.
 					}
 				
 				}
@@ -140,7 +141,7 @@ public class EqlFilters {
 			
 			if(entity.getType().equals("date")) {
 				
-				// The exact milliseconds of the date is stored in an enrichment of the date.
+				// The exact milliseconds of the date is stored in an metadata of the date.
 				String milliseconds = entity.getMetadata().get("time");
 				
 				if(milliseconds != null) {	
@@ -155,7 +156,7 @@ public class EqlFilters {
 					
 				} else {
 					
-					// For some reason this date is missing its milliseconds enrichment value. Do not include it since we don't know.
+					// For some reason this date is missing its milliseconds metadata value. Do not include it since we don't know.
 				}
 				
 			} else {

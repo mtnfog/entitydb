@@ -44,7 +44,7 @@ import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import com.mtnfog.entitydb.entitystore.rdbms.model.RdbmsStoredEntityMetadata;
 import com.mtnfog.entitydb.entitystore.rdbms.util.HibernateUtil;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.model.SystemProperties;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
@@ -63,7 +63,7 @@ import com.mtnfog.entitydb.model.search.IndexedEntity;
  * external SQL queries.
  * 
  * This entity store supports case-sensitive querying of entity
- * enrichments.
+ * metadata.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -329,11 +329,11 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 			
 		}
 		
-		if(!CollectionUtils.isEmpty(entityQuery.getEntityEnrichmentFilters())) {
+		if(!CollectionUtils.isEmpty(entityQuery.getEntityMetadataFilters())) {
 			
 			criteria.createAlias("a.metadata", "b");
 			
-			for(EntityEnrichmentFilter attribute : entityQuery.getEntityEnrichmentFilters()) {
+			for(EntityMetadataFilter attribute : entityQuery.getEntityMetadataFilters()) {
 				
 				String name = replaceWildCards(attribute.getName());
 				String value = replaceWildCards(attribute.getValue());
@@ -475,7 +475,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 			cloned.setConfidence(entity.getConfidence());
 			cloned.setContext(entity.getContext());
 			cloned.setDocumentId(entity.getDocumentId());
-			cloned.setEntityEnrichments(new HashSet<RdbmsStoredEntityMetadata>(entity.getEntityEnrichments()));
+			cloned.setMetadata(new HashSet<RdbmsStoredEntityMetadata>(entity.getMetadata()));
 			cloned.setExtractionDate(entity.getExtractionDate());
 			cloned.setLanguage(entity.getLanguage());
 			cloned.setText(entity.getText());

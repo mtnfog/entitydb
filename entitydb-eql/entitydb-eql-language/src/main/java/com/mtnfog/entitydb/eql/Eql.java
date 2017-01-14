@@ -42,7 +42,7 @@ import com.mtnfog.entitydb.eql.antlr.EqlParser.ConditionContext;
 import com.mtnfog.entitydb.eql.antlr.EqlParser.OptionContext;
 import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
 import com.mtnfog.entitydb.eql.model.ConfidenceRange;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
 import com.mtnfog.entitydb.eql.model.EntityOrder;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.eql.model.SortOrder;
@@ -71,7 +71,7 @@ public class Eql {
 	private static final String OFFSET = "offset";
 	private static final String URI = "uri";
 	private static final String TYPE = "type";
-	private static final String ENRICHMENT = "enrichment";
+	private static final String METADATA = "metadata";
 	
 	private Eql() {
 		// This is a utility class.
@@ -88,7 +88,7 @@ public class Eql {
 		
 		EntityQuery entityQuery = new EntityQuery();
 		
-		List<EntityEnrichmentFilter> entityEnrichmentFilters = new LinkedList<EntityEnrichmentFilter>();		
+		List<EntityMetadataFilter> entityMetadataFilters = new LinkedList<EntityMetadataFilter>();		
 		
 		try {
 					
@@ -301,12 +301,12 @@ public class Eql {
 	            			
 	            		}
 	            		
-	            	} else if(ctx.ENRICHMENT_FIELD() != null && !StringUtils.isEmpty(ctx.ENRICHMENT_FIELD().getText())) {	            			            			            			            		
+	            	} else if(ctx.METADATA_FIELD() != null && !StringUtils.isEmpty(ctx.METADATA_FIELD().getText())) {	            			            			            			            		
 	            				
-            			String enrichmentName = ctx.STRING().get(0).getText();
-            			String enrichmentValue = ctx.STRING().get(1).getText();	            			
+            			String metadataName = ctx.STRING().get(0).getText();
+            			String metadataValue = ctx.STRING().get(1).getText();	            			
  
-            			entityEnrichmentFilters.add(new EntityEnrichmentFilter(enrichmentName, enrichmentValue));
+            			entityMetadataFilters.add(new EntityMetadataFilter(metadataName, metadataValue));
             			
 	            	}
 	    
@@ -314,7 +314,7 @@ public class Eql {
 
 	        });
 	        
-	        entityQuery.setEntityEnrichmentFilters(entityEnrichmentFilters);
+	        entityQuery.setEntityMetadataFilters(entityMetadataFilters);
 	        
 	        // Parse the EQL.
 	        parser.command();

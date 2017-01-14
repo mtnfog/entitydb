@@ -21,12 +21,12 @@ package com.mtnfog.entitydb.eql.model;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
- * Used to query on entity enrichments in an entity store.
+ * Used to query on entity metadata in an entity store.
  * 
  * @author Mountain Fog, Inc.
  *
  */
-public class EntityEnrichmentFilter {
+public class EntityMetadataFilter {
 
 	private String name;
 	private String value;
@@ -34,11 +34,11 @@ public class EntityEnrichmentFilter {
 	private String comparator = "equals";
 	
 	/**
-	 * Creates a new {@link StoredEntityEnrichment}.
+	 * Creates a new {@link StoredEntityMetadata}.
 	 * @param name The name of the attribute.
 	 * @param value The value of the attribute.
 	 */
-	public EntityEnrichmentFilter(String name, String value) {
+	public EntityMetadataFilter(String name, String value) {
 		
 		this.name = name;
 		this.value = value;
@@ -46,12 +46,12 @@ public class EntityEnrichmentFilter {
 	}
 	
 	/**
-	 * Creates a new {@link StoredEntityEnrichment}.
+	 * Creates a new {@link StoredEntityMetadata}.
 	 * @param name The name of the attribute.
 	 * @param value The value of the attribute.
 	 * @param isCaseSensitive Set to true to do a case-sensitive query.
 	 */
-	public EntityEnrichmentFilter(String name, String value, boolean isCaseSensitive) {
+	public EntityMetadataFilter(String name, String value, boolean isCaseSensitive) {
 		
 		this.name = name;
 		this.value = value;
@@ -60,13 +60,13 @@ public class EntityEnrichmentFilter {
 	}
 	
 	/**
-	 * Creates a new {@link StoredEntityEnrichment}.
+	 * Creates a new {@link EntityMetadataFilter}.
 	 * @param name The name of the attribute.
 	 * @param value The value of the attribute.
 	 * @param isCaseSensitive Set to true to do a case-sensitive query.
 	 * @param comparator How to do the comparison.
 	 */
-	public EntityEnrichmentFilter(String name, String value, boolean isCaseSensitive, String comparator) {
+	public EntityMetadataFilter(String name, String value, boolean isCaseSensitive, String comparator) {
 		
 		this.name = name;
 		this.value = value;
@@ -116,22 +116,22 @@ public class EntityEnrichmentFilter {
 	}
 
 	/**
-	 * Gets if the query on enrichments should be case-sensitive. Not all
+	 * Gets if the query on metadata should be case-sensitive. Not all
 	 * entity stores will be able to respect this value. Refer to the
 	 * entity store implementation documentation to see if the entity store
 	 * supports case-sensitive querying.
-	 * @return True if the query on enrichments should be case-sensitive.
+	 * @return True if the query on metadata should be case-sensitive.
 	 */
 	public boolean isCaseSensitive() {
 		return isCaseSensitive;
 	}
 
 	/**
-	 * Sets if the query on enrichments should be case-sensitive. Not all
+	 * Sets if the query on metadata should be case-sensitive. Not all
 	 * entity stores will be able to respect this value. Refer to the
 	 * entity store implementation documentation to see if the entity store
 	 * supports case-sensitive querying.
-	 * @param isCaseSensitive True if the query on enrichments should be case-sensitive.
+	 * @param isCaseSensitive True if the query on metadata should be case-sensitive.
 	 */
 	public void setCaseSensitive(boolean isCaseSensitive) {
 		this.isCaseSensitive = isCaseSensitive;

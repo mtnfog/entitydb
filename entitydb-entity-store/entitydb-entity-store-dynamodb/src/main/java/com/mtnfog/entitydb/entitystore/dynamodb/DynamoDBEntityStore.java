@@ -50,7 +50,7 @@ import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.entitystore.dynamodb.model.DynamoDBEndpoint;
 import com.mtnfog.entitydb.entitystore.dynamodb.model.DynamoDBStoredEntity;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
@@ -68,7 +68,7 @@ import com.mtnfog.entitydb.model.search.IndexedEntity;
  * better queries can be written using low level DynamoDB APIs.
  * 
  * This entity store does not support case-sensitive querying of entity
- * enrichments.
+ * metadata.
  * 
  * @author Mountain Fog, Inc.
  *
@@ -495,12 +495,12 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 						
 		}
 				
-		if(!CollectionUtils.isEmpty(entityQuery.getEntityEnrichmentFilters())) {
+		if(!CollectionUtils.isEmpty(entityQuery.getEntityMetadataFilters())) {
 									
-			for(EntityEnrichmentFilter filter : entityQuery.getEntityEnrichmentFilters()) {					
+			for(EntityMetadataFilter filter : entityQuery.getEntityMetadataFilters()) {					
 
 				expressionAttributeValues.put(":" + filter.getName(), new AttributeValue().withS(filter.getValue()));			
-				sb.append("(enrichments." + filter.getName() + " = :" + filter.getName() + ") and ");
+				sb.append("(metadata." + filter.getName() + " = :" + filter.getName() + ") and ");
 				
 			}										
 			

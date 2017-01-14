@@ -242,11 +242,11 @@ public class EqlFiltersTest {
 	@Test
 	public void datesFilter1() {
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
-		enrichments.put("time", "1464027942965");
+		Map<String, String> metadata = new HashMap<String, String>();
+		metadata.put("time", "1464027942965");
 		
 		Entity entity = new Entity("entity1", 0.5, "date", "[0, 2)");
-		entity.setMetadata(enrichments);
+		entity.setMetadata(metadata);
 		
 		Collection<Entity> entities = new ArrayList<Entity>();
 		entities.add(entity);
@@ -260,11 +260,11 @@ public class EqlFiltersTest {
 	@Test
 	public void datesFilter2() {
 		
-		Map<String, String> enrichments = new HashMap<String, String>();
-		enrichments.put("time", "1464027942965");
+		Map<String, String> metadata = new HashMap<String, String>();
+		metadata.put("time", "1464027942965");
 		
 		Entity entity = new Entity("entity1", 0.5, "date", "[0, 2)");
-		entity.setMetadata(enrichments);
+		entity.setMetadata(metadata);
 		
 		Collection<Entity> entities = new ArrayList<Entity>();
 		entities.add(entity);

@@ -56,7 +56,7 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
 import com.mtnfog.entity.Entity;
 import com.mtnfog.entitydb.entitystore.cassandra.model.CassandraStoredEntity;
-import com.mtnfog.entitydb.eql.model.EntityEnrichmentFilter;
+import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
 import com.mtnfog.entitydb.eql.model.EntityQuery;
 import com.mtnfog.entitydb.model.entitystore.EntityIdGenerator;
 import com.mtnfog.entitydb.model.entitystore.EntityStore;
@@ -262,7 +262,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					.value("language", bindMarker())
 					.value("extractiondate", bindMarker())
 					.value("acl", bindMarker())
-					.value("enrichments", bindMarker())
+					.value("metadata", bindMarker())
 					.value("timestamp", bindMarker())
 					.value("visible", bindMarker())
 					.value("indexed", bindMarker()));
@@ -346,7 +346,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					.value("visible", bindMarker())
 					.value("timestamp", bindMarker())
 					.value("indexed", bindMarker())
-					.value("enrichments", bindMarker()));		
+					.value("metadata", bindMarker()));		
 			
 			BoundStatement boundEntityInsert = entityInsert.bind(
 					newEntityId, 
@@ -507,12 +507,12 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 			
 		}
 		
-		if(CollectionUtils.isNotEmpty(entityQuery.getEntityEnrichmentFilters())) {
+		if(CollectionUtils.isNotEmpty(entityQuery.getEntityMetadataFilters())) {
 			
-			for(EntityEnrichmentFilter entityEnrichmentFilter : entityQuery.getEntityEnrichmentFilters()) {
+			for(EntityMetadataFilter entityMetadataFilter : entityQuery.getEntityMetadataFilters()) {
 			
-				select.where(containsKey("enrichments", entityEnrichmentFilter.getName()))
-					.and(contains("enrichments", entityEnrichmentFilter.getValue()));				
+				select.where(containsKey("metadata", entityMetadataFilter.getName()))
+					.and(contains("metadata", entityMetadataFilter.getValue()));				
 					
 			}
 			
@@ -770,7 +770,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		cassandraStoredEntity.setDocumentId(row.getString("documentid"));
 		cassandraStoredEntity.setExtractionDate(row.getLong("extractiondate"));
 		cassandraStoredEntity.setLanguage(row.getString("language"));
-		cassandraStoredEntity.setMetadata(row.getMap("enrichments", String.class, String.class));
+		cassandraStoredEntity.setMetadata(row.getMap("metadata", String.class, String.class));
 		cassandraStoredEntity.setAcl(row.getString("acl"));
 		cassandraStoredEntity.setVisible(row.getInt("visible"));
 		cassandraStoredEntity.setIndexed(row.getLong("indexed"));
