@@ -18,7 +18,9 @@
 
     For proprietary licenses contact support@mtnfog.com or visit http://www.mtnfog.com.
 
---><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mtnfog.entitydb</groupId>
 	<artifactId>entitydb</artifactId>
@@ -84,6 +86,7 @@
 		<jest.version>2.0.3</jest.version>
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.12</junit.version>
+		<kotlin.version>1.0.6</kotlin.version>
 		<log4j.version>2.6.2</log4j.version>
 		<lucene.version>5.5.0</lucene.version>
 		<mariadb.java.client.version>1.5.4</mariadb.java.client.version>
@@ -173,12 +176,12 @@
 		<module>entitydb-eql</module>
 		<module>entitydb-rules-engine</module>
 		<module>entitydb-search</module>
-		<module>entitydb-queues</module>		
+		<module>entitydb-queues</module>
 		<module>entitydb-data-store</module>
 		<module>entitydb-configuration</module>
 		<module>entitydb-services</module>
 		<module>entitydb-caching</module>
-    		<module>entitydb-metrics</module>
+		<module>entitydb-metrics</module>
 		<module>entitydb-testing</module>
 	</modules>
 	<build>
@@ -198,6 +201,28 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<version>${kotlin.version}</version>
+				<configuration />
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
@@ -270,15 +295,28 @@
 		</plugins>
 	</build>
 	<dependencyManagement>
-     <dependencies>
-        <dependency>
-            <!-- Import dependency management from Spring Boot -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>1.4.1.RELEASE</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
+		<dependencies>
+			<dependency>
+				<!-- Import dependency management from Spring Boot -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>1.4.1.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-test</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
