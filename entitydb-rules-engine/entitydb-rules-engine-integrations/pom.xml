@@ -110,14 +110,14 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-eql-language</artifactId>
-			<version>${project.version}</version>
+			<groupId>com.mtnfog</groupId>
+			<artifactId>eql-language</artifactId>
+			<version>${eql.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog.entitydb</groupId>
-			<artifactId>entitydb-eql-filters</artifactId>
-			<version>${project.version}</version>
+			<groupId>com.mtnfog</groupId>
+			<artifactId>eql-filters</artifactId>
+			<version>${eql.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>
