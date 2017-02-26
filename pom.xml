@@ -48,7 +48,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Mountain Fog artifact versions -->
-		<entity.model.version>1.0.11-SNAPSHOT</entity.model.version>
+		<entity.model.version>1.0.11</entity.model.version>
 		<eql.version>1.0</eql.version>
 		<!-- Artifact versions -->
 		<activemq.version>5.7.0</activemq.version>
