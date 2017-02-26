@@ -18,17 +18,8 @@
  */
 package com.mtnfog.entitydb.testing;
 
-import java.util.Collection;
-
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import retrofit.client.Response;
-
-import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.driver.EntityDbClient;
-import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public class StressTest {
 	
@@ -55,7 +46,7 @@ public class StressTest {
 	
 	public void run(String endpoint, String apiKey, int count) {
 		
-		EntityDbClient client = new EntityDbClient(endpoint, apiKey);
+		/*EntityDbClient client = new EntityDbClient(endpoint, apiKey);
 		
 		String context = "context1";
 		String documentId = "documentId1";
@@ -78,7 +69,7 @@ public class StressTest {
 			
 			assert(response.getStatus() == 201);
 			
-		}		
+		}		*/
 		
 	}
 	
