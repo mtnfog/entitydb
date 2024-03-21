@@ -42,7 +42,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.Match;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.rulesengine.Rule;
 import ai.philterd.entitydb.model.rulesengine.RuleEvaluationResult;
 import ai.philterd.entitydb.model.rulesengine.RulesEngineException;

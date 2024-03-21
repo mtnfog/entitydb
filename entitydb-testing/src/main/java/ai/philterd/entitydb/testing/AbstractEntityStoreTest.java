@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ai.philterd.entitydb.model.eql.ConfidenceRange;
+import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
+import ai.philterd.entitydb.model.eql.EntityOrder;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,11 +43,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.eql.model.ConfidenceRange;
-import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
-import com.mtnfog.entitydb.eql.model.EntityOrder;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.entitystore.AbstractStoredEntity;
 import ai.philterd.entitydb.model.entitystore.EntityStore;
 import ai.philterd.entitydb.model.entitystore.MetadataSanitizer;

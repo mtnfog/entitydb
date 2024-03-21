@@ -63,12 +63,12 @@
 			<version>2.3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
-			<artifactId>entity-model</artifactId>
-			<version>${entity.model.version}</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>${commons.collections.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cai.philterd.entitydb</groupId>
+			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-language</artifactId>
 			<version>${project.version}</version>
 		</dependency>

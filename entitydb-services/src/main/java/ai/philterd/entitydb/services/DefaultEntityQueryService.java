@@ -37,7 +37,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.configuration.EntityDbProperties;
 import ai.philterd.entitydb.datastore.repository.ContinuousQueryRepository;
 import ai.philterd.entitydb.datastore.repository.NotificationRepository;

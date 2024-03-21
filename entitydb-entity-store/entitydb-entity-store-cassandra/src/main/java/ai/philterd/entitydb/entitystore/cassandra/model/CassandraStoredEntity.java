@@ -22,7 +22,7 @@ package ai.philterd.entitydb.entitystore.cassandra.model;
 
 import java.util.Map;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.entitystore.AbstractStoredEntity;
 import ai.philterd.entitydb.model.entitystore.MetadataSanitizer;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;

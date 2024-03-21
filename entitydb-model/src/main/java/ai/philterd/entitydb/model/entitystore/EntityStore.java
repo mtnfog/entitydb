@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.eql.EntityQuery;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.EntityStoreException;
 import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
 import ai.philterd.entitydb.model.security.Acl;

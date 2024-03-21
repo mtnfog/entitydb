@@ -20,9 +20,9 @@
  */
 package ai.philterd.entitydb.model.services;
 
-import com.mtnfog.entity.Entity;
 import ai.philterd.entitydb.model.domain.ContinuousQuery;
 import ai.philterd.entitydb.model.domain.User;
+import ai.philterd.entitydb.model.entity.Entity;
 
 public interface NotificationService {
 

@@ -23,7 +23,7 @@ package ai.philterd.entitydb.rulesengine.actions;
 import java.util.Collection;
 import java.util.Date;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import com.mtnfog.entitydb.eql.filters.EqlFilters;
 import com.mtnfog.entitydb.eql.filters.comparisons.DateComparison;
 

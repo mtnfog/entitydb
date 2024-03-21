@@ -28,7 +28,7 @@ import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.rulesengine.RuleEvaluationResult;
 import ai.philterd.entitydb.model.rulesengine.RulesEngineException;
 import ai.philterd.entitydb.rulesengine.drools.DroolsRulesEngine;

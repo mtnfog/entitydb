@@ -20,9 +20,9 @@
  */
 package ai.philterd.entitydb.model.rulesengine;
 
-import java.util.List;
+import ai.philterd.entitydb.model.entity.Entity;
 
-import com.mtnfog.entity.Entity;
+import java.util.List;
 
 /**
  * Interface for rules engines.

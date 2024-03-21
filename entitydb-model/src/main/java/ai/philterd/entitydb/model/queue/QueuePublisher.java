@@ -22,7 +22,7 @@ package ai.philterd.entitydb.model.queue;
 
 import java.util.Collection;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.EntityPublisherException;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;
 

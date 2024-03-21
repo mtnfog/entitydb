@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.EntityPublisherException;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;
 import ai.philterd.entitydb.model.queue.QueuePublisher;

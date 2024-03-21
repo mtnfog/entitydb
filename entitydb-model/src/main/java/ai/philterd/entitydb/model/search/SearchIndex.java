@@ -23,8 +23,8 @@ package ai.philterd.entitydb.model.search;
 import java.util.List;
 import java.util.Set;
 
-import ai.philterd.entitydb.eql.model.EntityQuery;
 import ai.philterd.entitydb.model.domain.User;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import ai.philterd.entitydb.model.exceptions.InvalidQueryException;
 
 /**
@@ -71,7 +71,7 @@ public interface SearchIndex {
 	/**
 	 * Execute a query against the index.
 	 * @param entityQuery The {@link EntityQuery query} to execute.
-	 * @param user The {@link UserEntity user} executing the query.
+	 * @param user The user executing the query.
 	 * @return A list of entity IDs for the matching entities.
 	 * @throws InvalidQueryException Thrown if the query is invalid.
 	 */
@@ -80,7 +80,7 @@ public interface SearchIndex {
 	/**
 	 * Execute a query against the index.
 	 * @param entityQuery The {@link EntityQuery query} to execute.
-	 * @param user The {@link UserEntity user} executing the query.
+	 * @param user The user executing the query.
 	 * @return A list of {@link IndexedEntity entities}.
 	 * @throws InvalidQueryException Thrown if the query is invalid.
 	 */

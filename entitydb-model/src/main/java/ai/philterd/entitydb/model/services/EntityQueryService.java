@@ -23,7 +23,7 @@ package ai.philterd.entitydb.model.services;
 import java.util.Collection;
 import java.util.List;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.datastore.entities.ContinuousQueryEntity;
 import ai.philterd.entitydb.model.datastore.entities.UserEntity;
 import ai.philterd.entitydb.model.entitystore.QueryResult;

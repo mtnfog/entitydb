@@ -28,7 +28,7 @@ import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import ai.philterd.entitydb.model.entitystore.EntityStore;

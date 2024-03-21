@@ -1,34 +1,34 @@
-T__9=3
-T__8=4
-T__7=5
-T__6=6
-T__5=7
-T__4=8
-SORT_ORDER_FIELD=17
-STRING_FIELD=16
+T__0=1
+T__1=2
+T__2=3
+T__3=4
+T__4=5
+T__5=6
+T__6=7
+T__7=8
+T__8=9
+T__9=10
+T__10=11
+T__11=12
+METADATA_FIELD=13
 NUMERIC_FIELD=14
 OPTION_FIELD=15
+STRING_FIELD=16
+SORT_ORDER_FIELD=17
 INTEGERS=18
-T__11=1
-T__3=9
-T__2=10
 STRING=19
-T__1=11
-T__0=12
 WS=20
-T__10=2
-METADATA_FIELD=13
-'metadata'=13
-'and'=6
-'between'=5
-'<='=1
-'>'=11
-'select * from entities where'=12
-'='=10
-'<'=9
-'>='=7
-';'=8
-'order by'=3
-'!='=4
-'confidence'=14
+';'=1
 'select * from entities'=2
+'select * from entities where'=3
+'and'=4
+'='=5
+'>'=6
+'<'=7
+'>='=8
+'<='=9
+'between'=10
+'!='=11
+'order by'=12
+'metadata'=13
+'confidence'=14

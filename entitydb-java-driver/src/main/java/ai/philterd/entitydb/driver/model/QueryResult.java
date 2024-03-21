@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mtnfog.entitydb.driver.model;
+package ai.philterd.entitydb.driver.model;
 
 import java.util.List;
 

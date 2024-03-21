@@ -18,16 +18,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.mtnfog.entitydb.driver;
+package ai.philterd.entitydb.driver;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
+import ai.philterd.entitydb.driver.model.QueryResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.driver.model.QueryResult;
+import ai.philterd.entitydb.model.entity.Entity;
 import com.mtnfog.entitydb.driver.model.exceptions.EntityDbClientException;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -67,7 +67,7 @@ public class EntityDbClient implements EntityDb {
 				.setRequestInterceptor(requestInterceptor)
 				.setEndpoint(endpoint).build(); 
 	
-		entityDbApi = restAdapter.create(EntityDb.class);		
+		entityDbApi = restAdapter.create(EntityDb.class);
 		
 	}
 	

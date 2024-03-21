@@ -55,7 +55,7 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.mongodb.model.MongoDBStoredEntity;
 import ai.philterd.entitydb.entitystore.mongodb.model.MongoDBStoredEntityCodec;
 import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;

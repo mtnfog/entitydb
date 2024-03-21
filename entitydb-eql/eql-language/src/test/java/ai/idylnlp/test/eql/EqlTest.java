@@ -40,9 +40,9 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import ai.philterd.entitydb.eql.Eql;
-import ai.philterd.entitydb.eql.model.EntityOrder;
-import ai.philterd.entitydb.eql.model.EntityQuery;
-import ai.philterd.entitydb.eql.model.SortOrder;
+import ai.philterd.entitydb.model.eql.EntityOrder;
+import ai.philterd.entitydb.model.eql.EntityQuery;
+import ai.philterd.entitydb.model.eql.SortOrder;
 
 public class EqlTest {
 

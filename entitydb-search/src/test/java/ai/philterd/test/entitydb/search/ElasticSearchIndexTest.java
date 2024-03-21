@@ -29,20 +29,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import ai.philterd.entitydb.eql.Eql;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.domain.User;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;
 import ai.philterd.entitydb.model.search.IndexedEntity;
 import ai.philterd.entitydb.search.ElasticSearchIndex;
 import ai.philterd.entitydb.search.EmbeddedElasticsearchServer;
-import com.mtnfog.entitydb.eql.Eql;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
+
 import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public class ElasticSearchIndexTest {

@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.audit.AuditAction;
 import ai.philterd.entitydb.model.audit.AuditLogger;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;

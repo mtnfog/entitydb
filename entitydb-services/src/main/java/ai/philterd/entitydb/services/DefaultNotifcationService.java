@@ -23,7 +23,7 @@ package ai.philterd.entitydb.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.domain.ContinuousQuery;
 import ai.philterd.entitydb.model.domain.User;
 import ai.philterd.entitydb.model.metrics.MetricReporter;

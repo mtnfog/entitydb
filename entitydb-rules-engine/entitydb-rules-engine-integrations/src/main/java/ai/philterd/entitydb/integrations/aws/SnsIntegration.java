@@ -31,7 +31,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.google.gson.Gson;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.integrations.Integration;
 import ai.philterd.entitydb.model.integrations.IntegrationException;
 

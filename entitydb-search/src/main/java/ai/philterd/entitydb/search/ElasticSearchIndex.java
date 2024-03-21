@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import ai.philterd.entitydb.model.eql.EntityOrder;
+import ai.philterd.entitydb.model.eql.SortOrder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -39,9 +41,7 @@ import ai.philterd.entitydb.model.domain.User;
 import ai.philterd.entitydb.model.exceptions.InvalidQueryException;
 import ai.philterd.entitydb.model.search.IndexedEntity;
 import ai.philterd.entitydb.model.search.SearchIndex;
-import com.mtnfog.entitydb.eql.model.EntityOrder;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
-import com.mtnfog.entitydb.eql.model.SortOrder;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
@@ -113,9 +113,8 @@ public class ElasticSearchIndex implements SearchIndex {
 	/**
 	 * Creates a new Elasticsearch client with authentication.
 	 * @param host The hostname of the Elasticsearch cluster.
-	 * @param settings The settings and mappings.
-	 * @username The Elasticsearch username.
-	 * @password The Elasticsearch password.
+	 * @param username The Elasticsearch username.
+	 * @param password The Elasticsearch password.
 	 */
 	public ElasticSearchIndex(String host, String username, String password) {
 		

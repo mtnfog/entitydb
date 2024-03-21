@@ -20,7 +20,7 @@
  */
 package ai.philterd.entitydb.model.search;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;
 import ai.philterd.entitydb.model.security.Acl;
 

@@ -18,37 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-/*******************************************************************************
- * Copyright 2019 Mountain Fog, Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-/*
- * (C) Copyright 2017 Mountain Fog, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package ai.philterd.entitydb.eql;
 
 import java.io.ByteArrayInputStream;
@@ -73,12 +42,11 @@ import ai.philterd.entitydb.eql.antlr.EqlLexer;
 import ai.philterd.entitydb.eql.antlr.EqlParser;
 import ai.philterd.entitydb.eql.antlr.EqlParser.ConditionContext;
 import ai.philterd.entitydb.eql.antlr.EqlParser.OptionContext;
-import ai.philterd.entitydb.eql.exceptions.QueryGenerationException;
-import ai.philterd.entitydb.eql.model.ConfidenceRange;
-import ai.philterd.entitydb.eql.model.EntityMetadataFilter;
-import ai.philterd.entitydb.eql.model.EntityOrder;
-import ai.philterd.entitydb.eql.model.EntityQuery;
-import ai.philterd.entitydb.eql.model.SortOrder;
+import ai.philterd.entitydb.model.eql.ConfidenceRange;
+import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
+import ai.philterd.entitydb.model.eql.EntityOrder;
+import ai.philterd.entitydb.model.eql.EntityQuery;
+import ai.philterd.entitydb.model.eql.SortOrder;
 
 /**
  * Entity Query Language (EQL) for querying entity stores.

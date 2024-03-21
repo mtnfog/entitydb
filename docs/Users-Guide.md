@@ -167,7 +167,7 @@ Note that if you are running Idyl E3 on AWS the rule can retrieve your SES crede
 Drools implementation:
 
 ```
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import com.mtnfog.entity.EntityExtractionAttributes;
 import com.mtnfog.idyl.sdk.rulesengine.drools.model.EntitiesHolder;
 import com.mtnfog.idyl.e3.rules.Ses;

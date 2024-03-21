@@ -21,7 +21,7 @@
 package ai.philterd.entitydb.model.integrations;
 
 import java.util.Collection;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 
 /**
  * An interface for post-extraction integrations.

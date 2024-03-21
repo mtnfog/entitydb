@@ -22,7 +22,7 @@ package ai.philterd.entitydb.rulesengine.actions;
 
 import java.util.Collection;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.integrations.aws.SnsIntegration;
 import ai.philterd.entitydb.model.integrations.Integration;
 import ai.philterd.entitydb.model.integrations.IntegrationException;

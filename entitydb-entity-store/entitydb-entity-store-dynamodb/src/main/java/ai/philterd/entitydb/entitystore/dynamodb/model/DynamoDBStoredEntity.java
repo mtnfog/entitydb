@@ -28,7 +28,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.dynamodb.DynamoDBEntityStore;
 import ai.philterd.entitydb.model.entitystore.AbstractStoredEntity;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;

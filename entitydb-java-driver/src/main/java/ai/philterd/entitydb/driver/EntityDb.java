@@ -18,12 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.mtnfog.entitydb.driver;
+package ai.philterd.entitydb.driver;
 
 import java.util.Collection;
 
-import com.mtnfog.entity.Entity;
-import com.mtnfog.entitydb.driver.model.QueryResult;
+import ai.philterd.entitydb.driver.model.QueryResult;
+import ai.philterd.entitydb.model.entity.Entity;
 
 import retrofit.client.Response;
 import retrofit.http.Body;

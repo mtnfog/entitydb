@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.api.exceptions.BadRequestException;
 import ai.philterd.entitydb.api.exceptions.InternalServerErrorException;
 import ai.philterd.entitydb.api.exceptions.NotFoundException;

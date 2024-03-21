@@ -37,7 +37,7 @@ import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.gson.Gson;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.EntityPublisherException;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;
 import ai.philterd.entitydb.model.metrics.MetricReporter;

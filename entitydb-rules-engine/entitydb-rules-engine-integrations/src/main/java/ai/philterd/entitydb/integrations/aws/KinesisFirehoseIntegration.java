@@ -30,7 +30,7 @@ import com.amazonaws.services.kinesisfirehose.model.PutRecordResult;
 import com.amazonaws.services.kinesisfirehose.model.Record;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClient;
 import com.google.gson.Gson;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.integrations.Integration;
 import ai.philterd.entitydb.model.integrations.IntegrationException;
 

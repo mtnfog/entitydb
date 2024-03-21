@@ -42,7 +42,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntityMetadata;
 import ai.philterd.entitydb.entitystore.rdbms.util.HibernateUtil;

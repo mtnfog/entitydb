@@ -20,7 +20,7 @@
  */
 package ai.philterd.entitydb.model.queue;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 
 /**
  * A message that describes an entity for ingest that is

@@ -17,7 +17,7 @@
 				<artifactId>antlr4-maven-plugin</artifactId>
 				<version>${antlr.version}</version>
 				<configuration>
-					<outputDirectory>${basedir}/src/main/java/ai/idylnlp/eql/antlr</outputDirectory>
+					<outputDirectory>${basedir}/src/main/java/ai/philterd/entitydb/eql/antlr</outputDirectory>
 				</configuration>
 				<executions>
 					<execution>
@@ -59,7 +59,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ai.philterd.entitydb</groupId>
-			<artifactId>idylnlp-model</artifactId>
+			<artifactId>entitydb-model</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

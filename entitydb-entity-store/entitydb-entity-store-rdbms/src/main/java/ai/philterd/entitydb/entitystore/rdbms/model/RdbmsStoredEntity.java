@@ -29,7 +29,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.entitystore.AbstractStoredEntity;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
 import ai.philterd.entitydb.model.entitystore.EntityStore;

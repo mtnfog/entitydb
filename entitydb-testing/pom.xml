@@ -123,11 +123,7 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			</dependency>
-		<dependency>
-			<groupId>com.mtnfog</groupId>
-			<artifactId>entity-model</artifactId>
-			<version>${entity.model.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>com.mtnfog</groupId>
 			<artifactId>entity-model</artifactId>

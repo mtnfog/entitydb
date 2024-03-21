@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.metrics.DefaultMetricReporter;
 import ai.philterd.entitydb.model.exceptions.EntityPublisherException;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;

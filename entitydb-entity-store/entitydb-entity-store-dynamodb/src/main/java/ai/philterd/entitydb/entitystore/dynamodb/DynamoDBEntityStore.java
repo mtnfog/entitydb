@@ -49,7 +49,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.dynamodb.model.DynamoDBEndpoint;
 import ai.philterd.entitydb.entitystore.dynamodb.model.DynamoDBStoredEntity;
 import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;

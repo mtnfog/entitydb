@@ -20,7 +20,7 @@
  */
 package ai.philterd.entitydb.model.entitystore;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 
 /**
  * Generates entity IDs.

@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import ai.philterd.entitydb.eql.model.EntityQuery;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 
 public class EntityQueryTest {
 

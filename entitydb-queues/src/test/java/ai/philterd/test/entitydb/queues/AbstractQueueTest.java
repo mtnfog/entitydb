@@ -31,7 +31,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mtnfog.entity.Entity;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.audit.FileAuditLogger;
 import ai.philterd.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;

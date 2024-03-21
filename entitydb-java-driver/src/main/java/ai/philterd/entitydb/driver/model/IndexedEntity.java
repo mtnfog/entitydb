@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.mtnfog.entitydb.driver.model;
+package ai.philterd.entitydb.driver.model;
 
-import com.mtnfog.entity.Entity;
+import  ai.philterd.entitydb.model.entity.Entity;
 
 public class IndexedEntity extends Entity {
 
