@@ -4,7 +4,7 @@ EntityDB is an application that integrates several components to provide a unifi
 
 As EntityDB matures and gets closer to a 1.0 release, the project's goals are to provide a means for storing and querying entities that's scalable, efficient, and useful to the community.
 
-For help using and configuring EntityDB please refer to the [wiki](https://github.com/philterd/entitydb/wiki), especially the [Quick Start Guide](https://github.com/mtnfog/entitydb/wiki/Quick-Start-Guide). More information about EntityDB may be available on our website at http://www.philterd.ai/products/entitydb/.
+For help using and configuring EntityDB please see the [docs](https://github.com/philterd/docs).
 
 ## Architectural Overview
 
@@ -16,7 +16,7 @@ The following are brief high-level descriptions of EntityDB's main features. Ref
 
 ### API
 
-The [API](https://github.com/mtnfog/entitydb/wiki/API) is built on REST and JSON. The API allows for entity ingestion, status and health monitoring, and entity querying through the Entity Query Language (EQL).
+The API is built on REST and JSON. The API allows for entity ingestion, status and health monitoring, and entity querying through the Entity Query Language (EQL).
 
 ### Entity Store
 
@@ -83,4 +83,3 @@ When integrated directly with your application entities can be ingested through 
 * [EntityDB Java Driver](https://github.com/mtnfog/entitydb-java-driver)
 
 Copyright © 2024 Philterd, LLC.
-
