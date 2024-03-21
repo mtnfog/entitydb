@@ -57,14 +57,8 @@ EntityDB is easily scaled horizontally since its components are all distributed.
 During EntityDB's build tests will be run. Some of the unit tests are more like integration tests and this is an area for improvement.
 
 ```
-git clone https://github.com/philterd/entitydb.git
-cd entitydb
 mvn clean install
 ```
-
-### Build Status
-
-[![Build Status](https://travis-ci.org/mtnfog/entitydb.svg?branch=master)](https://travis-ci.org/mtnfog/entitydb)
 
 ## Running
 
