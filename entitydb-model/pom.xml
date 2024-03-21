@@ -68,9 +68,9 @@
 			<version>${entity.model.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
+			<groupId>cai.philterd.entitydb</groupId>
 			<artifactId>eql-language</artifactId>
-			<version>${eql.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>

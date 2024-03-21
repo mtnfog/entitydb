@@ -1,7 +1,7 @@
 grammar Eql;
 
 @header {
- 	package ai.idylnlp.eql.antlr;
+ 	package ai.philterd.entitydb.eql.antlr;
 }
  	
 command:

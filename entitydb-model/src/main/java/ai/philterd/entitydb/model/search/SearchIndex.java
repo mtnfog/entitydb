@@ -23,9 +23,9 @@ package ai.philterd.entitydb.model.search;
 import java.util.List;
 import java.util.Set;
 
+import ai.philterd.entitydb.eql.model.EntityQuery;
 import ai.philterd.entitydb.model.domain.User;
 import ai.philterd.entitydb.model.exceptions.InvalidQueryException;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 /**
  * Interface to a search index.

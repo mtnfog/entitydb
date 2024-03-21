@@ -28,7 +28,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ai.idylnlp.eql.pig;
+package ai.philterd.entitydb.eql.pig;
 
 import java.io.IOException;
 
@@ -36,9 +36,6 @@ import org.apache.pig.FilterFunc;
 import org.apache.pig.data.Tuple;
 
 import com.google.gson.Gson;
-
-import ai.idylnlp.eql.filters.EqlFilters;
-import ai.idylnlp.model.entity.Entity;
 
 /**
  * Pig UDF that executes an EQL statement on an entity.

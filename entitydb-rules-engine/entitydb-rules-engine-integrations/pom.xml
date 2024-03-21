@@ -111,14 +111,14 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
+			<groupId>cai.philterd.entitydb</groupId>
 			<artifactId>eql-language</artifactId>
-			<version>${eql.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mtnfog</groupId>
 			<artifactId>eql-filters</artifactId>
-			<version>${eql.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>

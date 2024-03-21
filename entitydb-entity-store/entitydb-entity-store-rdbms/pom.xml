@@ -46,9 +46,9 @@
 			<version>${commons.collections.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
+			<groupId>ai.philterd</groupId>
 			<artifactId>eql-language</artifactId>
-			<version>${eql.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>

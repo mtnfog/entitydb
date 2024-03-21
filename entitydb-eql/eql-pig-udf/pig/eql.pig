@@ -1,6 +1,6 @@
 REGISTER eql-pig-udf.jar;
-DEFINE EqlFilter ai.idylnlp.eql.pig.EqlFilterFunc('select * from entities');
-DEFINE EqlMatch ai.idylnlp.eql.pig.EqlMatchFunc('select * from entities');
+DEFINE EqlFilter ai.philterd.entitydb.eql.pig.EqlFilterFunc('select * from entities');
+DEFINE EqlMatch ai.philterd.entitydb.eql.pig.EqlMatchFunc('select * from entities');
 
 rawDS = load 'input' using PigStorage() as (entity:chararray);
 

@@ -28,13 +28,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ai.idylnlp.test.eql.model.test;
+package ai.philterd.entitydb.test.eql.model.test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import ai.idylnlp.eql.model.EntityQuery;
+import ai.philterd.entitydb.eql.model.EntityQuery;
 
 public class EntityQueryTest {
 

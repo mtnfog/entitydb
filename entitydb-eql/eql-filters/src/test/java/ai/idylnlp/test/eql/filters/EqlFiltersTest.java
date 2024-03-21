@@ -28,7 +28,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ai.idylnlp.test.eql.filters;
+package ai.philterd.entitydb.test.eql.filters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -43,9 +43,9 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import ai.idylnlp.eql.filters.EqlFilters;
-import ai.idylnlp.eql.filters.comparisons.DateComparison;
-import ai.idylnlp.model.entity.Entity;
+import ai.philterd.entitydb.eql.filters.EqlFilters;
+import ai.philterd.entitydb.eql.filters.DateComparison;
+import ai.philterd.entitydb.model.entity.Entity;
 
 public class EqlFiltersTest {
 

@@ -29,7 +29,6 @@ import com.mtnfog.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.EntityStoreException;
 import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
 import ai.philterd.entitydb.model.security.Acl;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 /**
  * Interface for entity stores.
@@ -47,7 +46,6 @@ public interface EntityStore<T extends AbstractStoredEntity> {
 	
 	/**
 	 * Gets a list of visible entities that have not been indexed.
-	 * @param The maximum number of entities to retrieve.
 	 * @return A list of visible entities that have not been indexed.
 	 */
 	List<T> getNonIndexedEntities(int limit);

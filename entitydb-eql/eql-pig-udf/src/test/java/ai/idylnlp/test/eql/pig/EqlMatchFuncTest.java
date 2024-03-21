@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package ai.idylnlp.test.eql.pig;
+package ai.philterd.entitydb.test.eql.pig;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,8 +27,8 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
-import ai.idylnlp.eql.pig.EqlMatchFunc;
-import ai.idylnlp.model.entity.Entity;
+import ai.philterd.entitydb.eql.pig.EqlMatchFunc;
+import ai.philterd.entitydb.model.entity.Entity;
 
 public class EqlMatchFuncTest {
 

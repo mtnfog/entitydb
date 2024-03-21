@@ -28,7 +28,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ai.idylnlp.test.eql;
+package ai.philterd.entitydb.test.eql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -39,10 +39,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
-import ai.idylnlp.eql.Eql;
-import ai.idylnlp.eql.model.EntityOrder;
-import ai.idylnlp.eql.model.EntityQuery;
-import ai.idylnlp.eql.model.SortOrder;
+import ai.philterd.entitydb.eql.Eql;
+import ai.philterd.entitydb.eql.model.EntityOrder;
+import ai.philterd.entitydb.eql.model.EntityQuery;
+import ai.philterd.entitydb.eql.model.SortOrder;
 
 public class EqlTest {
 
