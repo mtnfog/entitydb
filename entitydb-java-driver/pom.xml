@@ -1,40 +1,13 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.mtnfog.entitydb</groupId>
-	<version>1.1-SNAPSHOT</version>
+	<parent>
+		<groupId>ai.philterd.entitydb</groupId>
+		<artifactId>entitydb</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
 	<artifactId>entitydb-java-driver</artifactId>
 	<name>entitydb-java-driver</name>
-	<organization>
-		<name>Mountain Fog, Inc.</name>
-		<url>http://www.mtnfog.com</url>
-	</organization>
-	<description>Java client driver for EntityDB.</description>
-	<url>http://www.github.com/mtnfog/entitydb-java-driver</url>
-	<scm>
-		<connection>scm:git:ssh://git@github.com:mtnfog/entitydb-java-driver.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:mtnfog/entitydb-java-driver.git</developerConnection>
-		<url>https://github.com/mtnfog/entitydb-java-driver.git</url>
-		<tag>HEAD</tag>
-	</scm>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
-	<developers>
-		<developer>
-			<name>Mountain Fog</name>
-			<email>support@mtnfog.com</email>
-			<organization>Mountain Fog</organization>
-			<organizationUrl>http://www.mtnfog.com</organizationUrl>
-		</developer>
-	</developers>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
