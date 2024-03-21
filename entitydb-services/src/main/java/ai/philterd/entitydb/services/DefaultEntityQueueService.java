@@ -23,6 +23,7 @@ package ai.philterd.entitydb.services;
 import java.util.Collection;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +71,7 @@ public class DefaultEntityQueueService implements EntityQueueService {
 			
 		    @Override
 		    public void run() {
-		    	
+
 		    	executeContinuousQueries(entities, entityAcl);
 		    	
 		    }
@@ -79,7 +80,7 @@ public class DefaultEntityQueueService implements EntityQueueService {
 		
 	}
 	
-	private void executeContinuousQueries(final Collection<Entity> entities, final Acl acl) {
+	private void executeContinuousQueries(final Collection<Entity> entities, final Acl acl)  {
 			
 		long timestamp = System.currentTimeMillis();
 		

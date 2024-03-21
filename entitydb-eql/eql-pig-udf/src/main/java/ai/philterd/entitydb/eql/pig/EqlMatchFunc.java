@@ -32,6 +32,9 @@ package ai.philterd.entitydb.eql.pig;
 
 import java.io.IOException;
 
+import ai.philterd.entitydb.eql.filters.EqlFilters;
+import ai.philterd.entitydb.model.entity.Entity;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import org.apache.pig.FilterFunc;
 import org.apache.pig.data.Tuple;
 
@@ -64,7 +67,7 @@ public class EqlMatchFunc extends FilterFunc {
 
 		} else {
 
-			Entity entity = gson.fromJson(input.get(0).toString(), Entity.class);
+			final Entity entity = gson.fromJson(input.get(0).toString(), Entity.class);
 
 			return EqlFilters.isMatch(entity, eql);
 

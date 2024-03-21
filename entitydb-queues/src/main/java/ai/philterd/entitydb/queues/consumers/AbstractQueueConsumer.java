@@ -20,9 +20,11 @@
  */
 package ai.philterd.entitydb.queues.consumers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,9 +65,8 @@ public abstract class AbstractQueueConsumer {
 	/**
 	 * Base constructor for queue consumers.
 	 * @param entityStore An {@link EntityStore}.
-	 * @param rulesEngines A list of {@link RuleEngine}.
+	 * @param rulesEngines A list of rules engines.
 	 * @param auditLogger An {@link AuditLogger}.
-	 * @param entityQueryService An {@link EntityQueryService}.
 	 * @param metricReporter A {@link MetricReporter}.
 	 * @param indexerCache The indexer's cache.
 	 */
@@ -220,12 +221,18 @@ public abstract class AbstractQueueConsumer {
 		String acl = StringUtils.EMPTY;
 		
 		for(RulesEngine rulesEngine : rulesEngines) {
-		
-			// Process through the rules engine.
-			RuleEvaluationResult result = rulesEngine.evaluate(entity);
-			
-			if(StringUtils.isNotEmpty(result.getAcl())) {
-				acl = result.getAcl();
+
+			try {
+
+				// Process through the rules engine.
+				RuleEvaluationResult result = rulesEngine.evaluate(entity);
+
+				if (StringUtils.isNotEmpty(result.getAcl())) {
+					acl = result.getAcl();
+				}
+
+			} catch (QueryGenerationException ex) {
+				// TODO: Handle this exception.
 			}
 		
 		}	

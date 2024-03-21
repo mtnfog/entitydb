@@ -92,9 +92,7 @@ public class MongoDBStoredEntity extends AbstractStoredEntity implements Bson {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public IndexedEntity toIndexedEntity() throws MalformedAclException {
 				

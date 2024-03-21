@@ -48,12 +48,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cai.philterd.entitydb</groupId>
+			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-language</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
+			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-filters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -104,6 +104,18 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>ai.philterd.entitydb</groupId>
+            <artifactId>eql-language</artifactId>
+            <version>0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+		<dependency>
+			<groupId>ai.philterd.entitydb</groupId>
+			<artifactId>eql-filters</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

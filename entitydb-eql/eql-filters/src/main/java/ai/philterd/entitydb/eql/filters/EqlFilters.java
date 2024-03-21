@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ai.philterd.entitydb.eql.Eql;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

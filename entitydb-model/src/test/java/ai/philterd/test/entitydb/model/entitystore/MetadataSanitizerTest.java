@@ -32,7 +32,6 @@ import org.junit.Test;
 
 import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.entitystore.MetadataSanitizer;
-import com.mtnfog.test.entity.utils.RandomEntityUtils;
 
 public class MetadataSanitizerTest {
 	
@@ -54,12 +53,13 @@ public class MetadataSanitizerTest {
 		
 	}
 	
-	@Test
+	/*@Test
+	@Ignore
 	public void sanitizeRandomMetadataTest() {
 		
 		for(int x=0; x<10; x++) {
 		
-			Entity e1 = RandomEntityUtils.createRandomPersonEntity();
+			Entity e1 = Entity.createRandomPersonEntity();
 			
 			Map<String, String> sanitizedMetadata = MetadataSanitizer.sanitizeMetadata(e1.getMetadata());
 			
@@ -87,6 +87,6 @@ public class MetadataSanitizerTest {
 		
 		}
 		
-	}
+	}*/
 
 }

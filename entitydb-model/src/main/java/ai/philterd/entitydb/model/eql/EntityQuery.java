@@ -193,9 +193,7 @@ public class EntityQuery {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);

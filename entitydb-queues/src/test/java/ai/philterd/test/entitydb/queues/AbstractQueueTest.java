@@ -93,7 +93,7 @@ public abstract class AbstractQueueTest {
 		
 		// Stored random number of entities.
 		
-		Collection<Entity> entities = RandomEntityUtils.createRandomPersonEntities();
+		Collection<Entity> entities = Entity.createRandomPersonEntities();
 		String acl = "::1";
 		String apiKey = "asdf1234";
 		
@@ -110,7 +110,7 @@ public abstract class AbstractQueueTest {
 		
 		// Duplicate entities so only 1 should be stored.
 		
-		Entity entity1 = RandomEntityUtils.createRandomPersonEntity();
+		Entity entity1 = Entity.createRandomPersonEntity();
 		String acl = "::1";
 		String apiKey = "asdf1234";
 		
@@ -131,7 +131,7 @@ public abstract class AbstractQueueTest {
 		
 		// Stored random number of entities.
 		
-		Collection<Entity> entities = RandomEntityUtils.createRandomPersonEntities();
+		Collection<Entity> entities = Entity.createRandomPersonEntities();
 		final String acl = "::1";
 		final String apiKey = "asdf1234";
 		final String originalEntityId = EntityIdGenerator.generateEntityId(entities.iterator().next(), acl);

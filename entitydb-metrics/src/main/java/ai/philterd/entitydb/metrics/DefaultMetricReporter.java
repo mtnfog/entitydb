@@ -39,9 +39,7 @@ public class DefaultMetricReporter extends AbstractMetricReporter implements Met
 
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMetricReporter.class);
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void report(String measurement, List<Metric> metrics) {
 
@@ -55,9 +53,7 @@ public class DefaultMetricReporter extends AbstractMetricReporter implements Met
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void report(String measurement, String field, long value, Unit unit) {
 		
@@ -65,9 +61,7 @@ public class DefaultMetricReporter extends AbstractMetricReporter implements Met
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void reportElapsedTime(String measurement, String field, long startTime) {
 		

@@ -67,9 +67,7 @@ public class CassandraStoredEntity extends AbstractStoredEntity {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public IndexedEntity toIndexedEntity() throws MalformedAclException {
 				

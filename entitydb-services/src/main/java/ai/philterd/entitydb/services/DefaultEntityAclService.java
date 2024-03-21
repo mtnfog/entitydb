@@ -56,9 +56,7 @@ public class DefaultEntityAclService implements EntityAclService {
 	@Autowired
 	private MetricReporter metricReporter;
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void queueEntityAclUpdate(String entityId, String acl, String apiKey) throws MalformedAclException, NonexistantEntityException, EntityPublisherException {
 		

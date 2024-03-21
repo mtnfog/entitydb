@@ -33,6 +33,7 @@ import javax.xml.bind.Unmarshaller;
 
 import ai.philterd.entitydb.eql.filters.EqlFilters;
 import ai.philterd.entitydb.model.entity.Entity;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -74,9 +75,7 @@ public class XmlRulesEngine implements RulesEngine {
 	private JAXBContext jaxb;
 	private List<Rule> rules;
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<String> getRules() {
 		
@@ -126,7 +125,7 @@ public class XmlRulesEngine implements RulesEngine {
 		
 		try {
 		
-			jaxb = JAXBContext.newInstance(new Class[] {Rule.class, EntityCondition.class, SesRuleAction.class});
+			jaxb = JAXBContext.newInstance(Rule.class, EntityCondition.class, SesRuleAction.class);
 		
 		} catch (JAXBException ex) {
 			
@@ -148,7 +147,7 @@ public class XmlRulesEngine implements RulesEngine {
 			
 		try {
 		
-			jaxb = JAXBContext.newInstance(new Class[] {Rule.class, EntityCondition.class, SesRuleAction.class});
+			jaxb = JAXBContext.newInstance(Rule.class, EntityCondition.class, SesRuleAction.class);
 		
 		} catch (JAXBException ex) {
 			
@@ -158,11 +157,8 @@ public class XmlRulesEngine implements RulesEngine {
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public RuleEvaluationResult evaluate(Entity entity) {
+	public RuleEvaluationResult evaluate(Entity entity) throws QueryGenerationException {
 		
 		boolean executeActions = true;
 		
@@ -306,7 +302,7 @@ public class XmlRulesEngine implements RulesEngine {
 	
 					}
 					
-					if(conditionalMatch == false) {
+					if(!conditionalMatch) {
 						
 						// All conditions much evaluate to true (AND'd).
 						// If one is false then the evaluation is false.
@@ -442,9 +438,7 @@ public class XmlRulesEngine implements RulesEngine {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public Rule read(String rule) throws RulesEngineException {
 				

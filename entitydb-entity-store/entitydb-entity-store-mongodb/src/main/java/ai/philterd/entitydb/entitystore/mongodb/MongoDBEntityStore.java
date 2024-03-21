@@ -58,9 +58,9 @@ import com.mongodb.client.result.UpdateResult;
 import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.mongodb.model.MongoDBStoredEntity;
 import ai.philterd.entitydb.entitystore.mongodb.model.MongoDBStoredEntityCodec;
-import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
-import com.mtnfog.entitydb.eql.model.EntityOrder;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
+import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
+import ai.philterd.entitydb.model.eql.EntityOrder;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
 import ai.philterd.entitydb.model.entitystore.EntityStore;
 import ai.philterd.entitydb.model.entitystore.QueryResult;
@@ -136,9 +136,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String getStatus() {
 	
@@ -146,9 +144,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<MongoDBStoredEntity> getNonIndexedEntities(int limit) {
 		
@@ -166,9 +162,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean markEntityAsIndexed(String entityId) {
 
@@ -193,9 +187,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 			
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long markEntitiesAsIndexed(Collection<String> entityIds) {
 
@@ -213,9 +205,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<MongoDBStoredEntity> getEntitiesByIds(List<String> entityIds, boolean maskAcl) {
 		
@@ -340,9 +330,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String updateAcl(String entityId, String acl) throws EntityStoreException, NonexistantEntityException {
 		
@@ -387,9 +375,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public MongoDBStoredEntity getEntityById(String id) {
 		
@@ -412,9 +398,7 @@ public class MongoDBEntityStore implements EntityStore<MongoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteEntity(String entityId) {
 		

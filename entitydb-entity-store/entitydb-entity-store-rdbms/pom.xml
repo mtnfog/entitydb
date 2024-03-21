@@ -46,7 +46,7 @@
 			<version>${commons.collections.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ai.philterd</groupId>
+			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-language</artifactId>
 			<version>${project.version}</version>
 		</dependency>

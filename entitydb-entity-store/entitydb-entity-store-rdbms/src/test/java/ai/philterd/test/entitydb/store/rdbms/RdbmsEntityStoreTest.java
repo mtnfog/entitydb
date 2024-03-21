@@ -25,6 +25,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashSet;
 import java.util.Set;
 
+import ai.philterd.entitydb.model.eql.EntityOrder;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -35,8 +37,6 @@ import ai.philterd.entitydb.model.entitystore.EntityStore;
 import ai.philterd.entitydb.model.entitystore.QueryResult;
 import ai.philterd.entitydb.model.exceptions.EntityStoreException;
 import ai.philterd.entitydb.testing.AbstractEntityStoreTest;
-import com.mtnfog.entitydb.eql.model.EntityOrder;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
 
 public class RdbmsEntityStoreTest extends AbstractEntityStoreTest<RdbmsStoredEntity> {
 

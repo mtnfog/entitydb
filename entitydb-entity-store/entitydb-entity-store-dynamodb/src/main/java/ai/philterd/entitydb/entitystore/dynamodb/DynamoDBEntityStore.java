@@ -52,8 +52,8 @@ import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.dynamodb.model.DynamoDBEndpoint;
 import ai.philterd.entitydb.entitystore.dynamodb.model.DynamoDBStoredEntity;
-import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
+import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
 import ai.philterd.entitydb.model.entitystore.EntityStore;
 import ai.philterd.entitydb.model.entitystore.QueryResult;
@@ -153,9 +153,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String getStatus() {
 	
@@ -163,9 +161,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<DynamoDBStoredEntity> getNonIndexedEntities(int limit) {
 		
@@ -207,9 +203,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean markEntityAsIndexed(String entityId) {
 
@@ -239,9 +233,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long markEntitiesAsIndexed(Collection<String> entityIds) {
 		
@@ -261,9 +253,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String storeEntity(Entity entity, String acl) throws EntityStoreException {
 		
@@ -291,9 +281,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 	        
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public Map<Entity, String> storeEntities(Set<Entity> entities, String acl) {
 		
@@ -319,9 +307,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<DynamoDBStoredEntity> getEntitiesByIds(List<String> entityIds, boolean maskAcl) {
 		
@@ -343,9 +329,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteEntity(String entityId) {
 		
@@ -566,9 +550,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public DynamoDBStoredEntity getEntityById(String id) {
 				
@@ -605,9 +587,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long getEntityCount(String context) {
 
@@ -623,9 +603,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
         
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<String> getContexts() {
 
@@ -635,9 +613,7 @@ public class DynamoDBEntityStore implements EntityStore<DynamoDBStoredEntity> {
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteContext(String context) {
 		

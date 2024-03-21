@@ -152,9 +152,7 @@ public class CloudWatchMetricReporter extends AbstractMetricReporter implements 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void reportElapsedTime(String measurement, String field, long startTime) {
 		

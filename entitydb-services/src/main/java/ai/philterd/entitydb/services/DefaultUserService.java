@@ -60,9 +60,7 @@ public class DefaultUserService implements UserService {
 	@Autowired
 	private EntityQueryService entityQueryService;
 		
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public User getUserByApiKey(String apiKey) {
 				
@@ -72,9 +70,7 @@ public class DefaultUserService implements UserService {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean authenticate(String apiKey) {
 	
@@ -92,9 +88,7 @@ public class DefaultUserService implements UserService {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<Notification> getUserNotifications(String apiKey) {
 		
@@ -127,9 +121,7 @@ public class DefaultUserService implements UserService {
 					
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<ContinuousQuery> getUserContinuousQueries(String apiKey) {
 		

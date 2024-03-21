@@ -25,6 +25,7 @@ import java.util.Collection;
 import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.EntityPublisherException;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 
 /**
  * Interface for entity queue services.
@@ -42,6 +43,6 @@ public interface EntityQueueService {
 	 * @throws MalformedAclException Thrown if the ACL is malformed.
 	 * @throws EntityPublisherException Thrown if the entities cannot be queued.
 	 */
-	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException;
+	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException, QueryGenerationException;
 	
 }

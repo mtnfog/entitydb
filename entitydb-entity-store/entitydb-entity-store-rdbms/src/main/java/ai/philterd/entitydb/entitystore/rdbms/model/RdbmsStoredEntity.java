@@ -68,13 +68,11 @@ public class RdbmsStoredEntity extends AbstractStoredEntity {
 				
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public IndexedEntity toIndexedEntity() throws MalformedAclException {
 				
-		IndexedEntity indexedEntity = new IndexedEntity();
+		final IndexedEntity indexedEntity = new IndexedEntity();
 
 		indexedEntity.setEntityId(getId());
 		indexedEntity.setText(getText());
@@ -87,7 +85,7 @@ public class RdbmsStoredEntity extends AbstractStoredEntity {
 		indexedEntity.setLanguageCode(getLanguage());
 		indexedEntity.setAcl(new Acl(getAcl()));
 		
-		Map<String, String> metadata = new HashMap<String, String>();
+		Map<String, String> metadata = new HashMap<>();
 		
 		for(RdbmsStoredEntityMetadata m : getMetadata()) {
 			

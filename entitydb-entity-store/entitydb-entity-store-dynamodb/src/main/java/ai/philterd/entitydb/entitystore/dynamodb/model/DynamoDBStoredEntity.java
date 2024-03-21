@@ -158,9 +158,7 @@ public class DynamoDBStoredEntity extends AbstractStoredEntity {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public IndexedEntity toIndexedEntity() throws MalformedAclException {
 				

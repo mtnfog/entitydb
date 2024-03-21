@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import ai.philterd.entitydb.eql.Eql;
+import ai.philterd.entitydb.eql.filters.EqlFilters;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -64,10 +67,7 @@ import ai.philterd.entitydb.model.search.SearchIndex;
 import ai.philterd.entitydb.model.security.Acl;
 import ai.philterd.entitydb.model.services.EntityQueryService;
 import ai.philterd.entitydb.model.services.NotificationService;
-import com.mtnfog.entitydb.eql.Eql;
-import com.mtnfog.entitydb.eql.exceptions.QueryGenerationException;
-import com.mtnfog.entitydb.eql.filters.EqlFilters;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 
 /**
  * Default implementation of {@link EntityQueryService}.
@@ -103,45 +103,35 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	@Autowired
 	private MetricReporter metricReporter;
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	@Cacheable("nonExpiredContinuousQueries")
 	public List<ContinuousQueryEntity> getNonExpiredContinuousQueries() {		
 		return continuousQueryRepository.getNonExpiredContinuousQueries();		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	@Cacheable("continuousQueriesByUser")
 	public List<ContinuousQueryEntity> findByUserOrderByIdDesc(UserEntity userEntity) {
 		return continuousQueryRepository.findByUserOrderByIdDesc(userEntity);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	@CachePut("nonExpiredContinuousQueries")
 	public ContinuousQueryEntity save(ContinuousQueryEntity continuousQueryEntity) {
 		return continuousQueryRepository.save(continuousQueryEntity);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	@CacheEvict(value = "nonExpiredContinuousQueries", allEntries=true)
 	public void delete(ContinuousQueryEntity continuousQueryEntity) {
 		continuousQueryRepository.delete(continuousQueryEntity);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public QueryResult eql(String query, String apiKey, int continuous, int days) throws MalformedQueryException, QueryExecutionException {
 				
@@ -203,10 +193,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 		return queryResult;
 		
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void executeContinuousQueries(Collection<Entity> entities, Acl acl, long entitiesReceivedTimestamp) {
 		
@@ -234,29 +221,35 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				boolean isVisible = Acl.isEntityVisibleToUser(acl, user);
 				
 				if(isVisible) {
-				
-					boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());		
-					
-					if(match) {
-							
-						// Notify the owner of the continuous query of the match.
-						
-						String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
-						
-						NotificationEntity notificationEntity = new NotificationEntity();
-						notificationEntity.setUser(continuousQueryEntity.getUser());
-						notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
-						notificationEntity.setNotification(notification);
-						
-						notificationRepository.save(notificationEntity);
-						
-						// Generate a notification for the user.
-						ContinuousQuery continuousQuery = ContinuousQuery.fromEntity(continuousQueryEntity);
-						notificationService.sendContinuousQueryNotification(continuousQuery, entity);
-						
-						// Record this time-to-alert metric.
-						metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "timeToAlert", entitiesReceivedTimestamp);
-							
+
+					try {
+
+						boolean match = EqlFilters.isMatch(entity, continuousQueryEntity.getQuery());
+
+						if (match) {
+
+							// Notify the owner of the continuous query of the match.
+
+							String notification = String.format("Continuous query %s matched on entity %s.", continuousQueryEntity.getId(), entityId);
+
+							NotificationEntity notificationEntity = new NotificationEntity();
+							notificationEntity.setUser(continuousQueryEntity.getUser());
+							notificationEntity.setType(NotificationType.CONTINUOUS_QUERY.getValue());
+							notificationEntity.setNotification(notification);
+
+							notificationRepository.save(notificationEntity);
+
+							// Generate a notification for the user.
+							ContinuousQuery continuousQuery = ContinuousQuery.fromEntity(continuousQueryEntity);
+							notificationService.sendContinuousQueryNotification(continuousQuery, entity);
+
+							// Record this time-to-alert metric.
+							metricReporter.reportElapsedTime(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "timeToAlert", entitiesReceivedTimestamp);
+
+						}
+
+					} catch (QueryGenerationException ex) {
+						// TODO: Handle this exception.
 					}
 					
 				}

@@ -71,9 +71,7 @@ public class RdbmsStoredEntityMetadata {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
     public boolean equals(Object o) {
 		
@@ -92,9 +90,7 @@ public class RdbmsStoredEntityMetadata {
         
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
+
     @Override
     public int hashCode() {
     	

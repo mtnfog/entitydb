@@ -139,9 +139,7 @@ public class DroolsRulesEngine implements RulesEngine {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<String> getRules() {
 		

@@ -27,6 +27,9 @@ import ai.philterd.entitydb.model.security.Acl;
 import io.searchbox.annotations.JestId;
 import io.searchbox.annotations.JestVersion;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * An entity indexed in Elasticsearch. It is the same as an
  * {@link Entity entity} from which it is created but with
@@ -39,8 +42,9 @@ import io.searchbox.annotations.JestVersion;
  * @author Philterd, LLC
  *
  */
-public class IndexedEntity extends Entity {
+public class IndexedEntity extends Entity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 7914241851081226141L;
 	
 	@JestId
@@ -53,9 +57,7 @@ public class IndexedEntity extends Entity {
 	private Acl acl;
 	
 	public IndexedEntity(String entityId) {
-		
 		this.entityId = entityId;
-		
 	}
 	
 	public IndexedEntity() {

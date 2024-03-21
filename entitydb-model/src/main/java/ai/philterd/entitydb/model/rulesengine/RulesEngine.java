@@ -21,7 +21,9 @@
 package ai.philterd.entitydb.model.rulesengine;
 
 import ai.philterd.entitydb.model.entity.Entity;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public interface RulesEngine {
 	 * @param entity The {@link Entity entity}.
 	 * @return A {RuleEvaluationResult result}.
 	 */
-	public RuleEvaluationResult evaluate(Entity entity);
+	RuleEvaluationResult evaluate(Entity entity) throws QueryGenerationException;
 			
 	/**
 	 * Reads a rule.
@@ -45,7 +47,7 @@ public interface RulesEngine {
 	 * @return A configured {@link Rule rule}.
 	 * @throws RulesEngineException Thrown if the rule cannot be read successfully.
 	 */
-	public Rule read(String rule) throws RulesEngineException;
+	Rule read(String rule) throws RulesEngineException;
 	
 	/**
 	 * Gets the rules.

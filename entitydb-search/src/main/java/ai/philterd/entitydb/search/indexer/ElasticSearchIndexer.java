@@ -56,9 +56,7 @@ public class ElasticSearchIndexer extends AbstractIndexer implements Indexer {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long index() {
 	

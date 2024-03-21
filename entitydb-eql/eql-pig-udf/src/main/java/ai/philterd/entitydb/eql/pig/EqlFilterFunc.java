@@ -22,6 +22,7 @@ package ai.philterd.entitydb.eql.pig;
 
 import java.io.IOException;
 
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;
 
@@ -61,14 +62,17 @@ public class EqlFilterFunc extends EvalFunc<String> {
 
 			Entity entity = gson.fromJson(entityJson, Entity.class);
 
-			if(EqlFilters.isMatch(entity, eql)) {
+			try {
 
-				return entityJson;
+				if (EqlFilters.isMatch(entity, eql)) {
+					return entityJson;
+				} else {
+					return "";
+				}
 
-			} else {
-
+			} catch (QueryGenerationException ex) {
+				// TODO: Handle this exception.
 				return "";
-
 			}
 
 		}

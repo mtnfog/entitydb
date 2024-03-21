@@ -69,9 +69,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void shutdown() {
 		
@@ -79,9 +77,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void consume() {
 		
@@ -135,9 +131,7 @@ public class InternalQueueConsumer extends AbstractQueueConsumer implements Queu
 			
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public int getSize() {
 		

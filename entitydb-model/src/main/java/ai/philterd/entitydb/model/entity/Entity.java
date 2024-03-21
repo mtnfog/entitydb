@@ -21,6 +21,9 @@
 
 package ai.philterd.entitydb.model.entity;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Entity {
@@ -33,6 +36,37 @@ public class Entity {
     private String type;
     private double confidence;
     private Map<String, String> metadata;
+    private Span span;
+    private long extractionDate;
+
+    public Entity() {
+
+    }
+
+    public Entity(final String text) {
+        this.text = text;
+    }
+
+    public Entity(final String text, final double confidence, final String type, final String span, final String context, final String documentId) {
+        this.text = text;
+        this.confidence = confidence;
+        this.type = type;
+        this.span = new Span(span);
+        this.context = context;
+        this.documentId = documentId;
+    }
+
+    public static Entity createRandomPersonEntity() {
+        // TODO: Finish this function.
+        return new Entity("George Washington");
+    }
+
+    public static Collection<Entity> createRandomPersonEntities() {
+        // TODO: Finish this function.
+        final Collection<Entity> entities = new LinkedList<>();
+        entities.add(new Entity("George Washington"));
+        return entities;
+    }
 
     public String getType() {
         return type;
@@ -96,5 +130,21 @@ public class Entity {
 
     public void setConfidence(double confidence) {
         this.confidence = confidence;
+    }
+
+    public Span getSpan() {
+        return span;
+    }
+
+    public void setSpan(Span span) {
+        this.span = span;
+    }
+
+    public long getExtractionDate() {
+        return extractionDate;
+    }
+
+    public void setExtractionDate(long extractionDate) {
+        this.extractionDate = extractionDate;
     }
 }

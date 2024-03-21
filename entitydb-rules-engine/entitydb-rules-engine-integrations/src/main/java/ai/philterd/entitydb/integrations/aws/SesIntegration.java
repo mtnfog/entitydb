@@ -129,9 +129,7 @@ public class SesIntegration implements Integration {
 
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void process(Collection<Entity> entities) throws IntegrationException {
 

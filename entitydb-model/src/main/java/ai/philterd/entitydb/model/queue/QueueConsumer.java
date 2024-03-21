@@ -20,6 +20,8 @@
  */
 package ai.philterd.entitydb.model.queue;
 
+import java.io.IOException;
+
 /**
  * A consumer of a queue to process entities.
  * 

@@ -20,6 +20,7 @@
  */
 package ai.philterd.entitydb.queues.consumers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -126,19 +127,14 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void shutdown() {;
 		
 		consume = false;
 		
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void consume() {
 		
@@ -148,7 +144,7 @@ public class ActiveMQQueueConsumer extends AbstractQueueConsumer implements Queu
 		
 	        MessageConsumer consumer = session.createConsumer(destination);
 			
-	        while(consume == true) {
+	        while(consume) {
 	        
 				// Wait for a message
 		        Message message = consumer.receive(timeout);

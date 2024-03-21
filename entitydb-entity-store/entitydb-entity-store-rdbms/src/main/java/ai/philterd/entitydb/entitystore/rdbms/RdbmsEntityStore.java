@@ -20,17 +20,20 @@
  */
 package ai.philterd.entitydb.entitystore.rdbms;
 
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
+import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntityMetadata;
+import ai.philterd.entitydb.entitystore.rdbms.util.HibernateUtil;
+import ai.philterd.entitydb.model.SystemProperties;
+import ai.philterd.entitydb.model.entity.Entity;
+import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
+import ai.philterd.entitydb.model.entitystore.EntityStore;
+import ai.philterd.entitydb.model.entitystore.QueryResult;
+import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
+import ai.philterd.entitydb.model.eql.EntityQuery;
+import ai.philterd.entitydb.model.exceptions.EntityStoreException;
+import ai.philterd.entitydb.model.exceptions.MalformedAclException;
+import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
+import ai.philterd.entitydb.model.search.IndexedEntity;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -42,20 +45,16 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import ai.philterd.entitydb.model.entity.Entity;
-import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
-import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntityMetadata;
-import ai.philterd.entitydb.entitystore.rdbms.util.HibernateUtil;
-import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
-import ai.philterd.entitydb.model.SystemProperties;
-import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
-import ai.philterd.entitydb.model.entitystore.EntityStore;
-import ai.philterd.entitydb.model.entitystore.QueryResult;
-import ai.philterd.entitydb.model.exceptions.EntityStoreException;
-import ai.philterd.entitydb.model.exceptions.MalformedAclException;
-import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
-import ai.philterd.entitydb.model.search.IndexedEntity;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Implementation of {@link EntityStore} that uses a JDBC-compliant
@@ -153,7 +152,6 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 	
 	/**
 	 * Creates a new entity store backed by a RDBMs.
-	 * @param enabled If the session store is enabled.
 	 * @param jdbcUrl The JDBC connection string for the database.
 	 * @param jdbcDriver The JDBC driver name.
 	 * @param userName The database user name.
@@ -170,9 +168,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String getStatus() {
 		
@@ -180,9 +176,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RdbmsStoredEntity> getNonIndexedEntities(int limit) {
@@ -202,9 +196,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long markEntitiesAsIndexed(Collection<String> entityIds) {
 		
@@ -230,9 +222,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean markEntityAsIndexed(String entityId) {
 		
@@ -335,12 +325,12 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 			
 			criteria.createAlias("a.metadata", "b");
 			
-			for(EntityMetadataFilter attribute : entityQuery.getEntityMetadataFilters()) {
+			for(final EntityMetadataFilter attribute : entityQuery.getEntityMetadataFilters()) {
 				
 				String name = replaceWildCards(attribute.getName());
 				String value = replaceWildCards(attribute.getValue());
 				
-				if(attribute.isCaseSensitive() == true) {
+				if(attribute.isCaseSensitive()) {
 				
 					criteria.add(Restrictions.ilike("b.name", name));
 					criteria.add(Restrictions.ilike("b.value", value));
@@ -391,9 +381,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteEntity(String entityId) {
 		
@@ -410,9 +398,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RdbmsStoredEntity> getEntitiesByIds(List<String> entityIds, boolean maskAcl) {
@@ -449,9 +435,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String updateAcl(String entityId, String acl) throws EntityStoreException, NonexistantEntityException {
 		
@@ -508,9 +492,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public RdbmsStoredEntity getEntityById(String id) {
 		
@@ -527,9 +509,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long getEntityCount() {
 		
@@ -547,9 +527,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long getEntityCount( String context) {
 		
@@ -567,9 +545,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<String> getContexts() {
 		
@@ -588,9 +564,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String storeEntity(Entity entity, String acl) throws EntityStoreException {
 		
@@ -624,9 +598,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
         
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public Map<Entity, String> storeEntities(Set<Entity> entities, String acl) {
 		
@@ -674,9 +646,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteContext(String context) {
 
@@ -692,9 +662,7 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteDocument(String documentId) {
 		

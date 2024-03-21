@@ -57,7 +57,7 @@ public class SqsQueuePublisherIT {
 	@Test
 	public void json() {
 		
-		Entity entity = RandomEntityUtils.createRandomPersonEntity();
+		final Entity entity = Entity.createRandomPersonEntity();
 		
 		Collection<Entity> entities = new ArrayList<Entity>();
 		entities.add(entity);
@@ -72,9 +72,9 @@ public class SqsQueuePublisherIT {
 	@Test
 	public void store1() throws MalformedAclException, EntityPublisherException {
 		
-		Collection<Entity> entities = new LinkedList<Entity>();
-		entities.add(RandomEntityUtils.createRandomPersonEntity());
-		entities.add(RandomEntityUtils.createRandomPersonEntity());
+		Collection<Entity> entities = new LinkedList<>();
+		entities.add(Entity.createRandomPersonEntity());
+		entities.add(Entity.createRandomPersonEntity());
 		
 		String[] users = {"user1", "user2"};
 		String[] groups = {"group1", "group2"};
@@ -91,8 +91,8 @@ public class SqsQueuePublisherIT {
 	public void store2() throws MalformedAclException, EntityPublisherException {
 		
 		Collection<Entity> entities = new LinkedList<Entity>();
-		entities.add(RandomEntityUtils.createRandomPersonEntity());
-		entities.add(RandomEntityUtils.createRandomPersonEntity());
+		entities.add(Entity.createRandomPersonEntity());
+		entities.add(Entity.createRandomPersonEntity());
 		
 		String acl = "1234:0";
 		String apiKey = "apikey";

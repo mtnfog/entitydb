@@ -18,29 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ai.philterd.entitydb.model.exceptions;
 
-import java.io.IOException;
+package ai.philterd.entitydb.model.entity;
 
-public abstract class EntityDbException extends IOException {
+public class Span {
 
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 */
-	public EntityDbException(String message) {
-		super(message);
-	}
-	
-	/**
-	 * Creates a new exception.
-	 * @param message The message of the exception.
-	 * @param throwable The exception.
-	 */
-	public EntityDbException(String message, Throwable throwable) {
-		super(message, throwable);
-	}
+    private String span;
+
+    public Span(final String span) {
+        this.span = span;
+    }
+
+    public String getSpan() {
+        return span;
+    }
+
+    public void setSpan(String span) {
+        this.span = span;
+    }
 
 }

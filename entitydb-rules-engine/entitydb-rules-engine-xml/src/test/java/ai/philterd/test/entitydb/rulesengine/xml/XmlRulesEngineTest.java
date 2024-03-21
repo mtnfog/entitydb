@@ -20,25 +20,6 @@
  */
 package ai.philterd.test.entitydb.rulesengine.xml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-
 import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.rulesengine.Condition;
 import ai.philterd.entitydb.model.rulesengine.EntityCondition;
@@ -50,13 +31,30 @@ import ai.philterd.entitydb.model.rulesengine.RuleEvaluationResult;
 import ai.philterd.entitydb.model.rulesengine.RulesEngineException;
 import ai.philterd.entitydb.model.rulesengine.SesRuleAction;
 import ai.philterd.entitydb.rulesengine.xml.XmlRulesEngine;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Test;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class XmlRulesEngineTest {
 	
 	private static final Logger LOGGER = LogManager.getLogger(XmlRulesEngineTest.class);
 	
 	@Test
-	public void matchTest1() throws RulesEngineException {
+	public void matchTest1() throws RulesEngineException, IOException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditions.add(new EntityCondition(EntityCondition.TEXT, "george"));
@@ -80,7 +78,7 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest2() throws RulesEngineException {
+	public void matchTest2() throws RulesEngineException, IOException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditions.add(new EntityCondition(EntityCondition.TEXT, "george"));
@@ -104,7 +102,7 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest3() throws RulesEngineException {
+	public void matchTest3() throws RulesEngineException, IOException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditions.add(new EntityCondition(EntityCondition.CONFIDENCE, "50"));
@@ -129,7 +127,7 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest4() throws RulesEngineException {
+	public void matchTest4() throws RulesEngineException, IOException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditions.add(new EntityCondition(EntityCondition.CONFIDENCE, "50", EntityCondition.LESS_THAN));
@@ -154,7 +152,7 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest5() throws RulesEngineException {
+	public void matchTest5() throws RulesEngineException, IOException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditions.add(new EntityCondition(EntityCondition.CONFIDENCE, "50", EntityCondition.GREATER_THAN));
@@ -179,7 +177,7 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest6() throws RulesEngineException {
+	public void matchTest6() throws RulesEngineException, IOException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditions.add(new EntityCondition("type", "person"));
@@ -205,7 +203,7 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest7() throws RulesEngineException {
+	public void matchTest7() throws RulesEngineException, IOException {
 		
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditions.add(new EntityCondition("type", "place"));
@@ -231,13 +229,13 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest8() throws RulesEngineException {
+	public void matchTest8() throws RulesEngineException, IOException {
 		
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditions.add(new EntityCondition(EntityCondition.TYPE, "person"));
 		conditions.add(new EntityCondition(EntityCondition.TEXT, "george"));
 		
-		List<RuleAction> list = new ArrayList<RuleAction>();
+		List<RuleAction> list = new ArrayList<>();
 				
 		Rule rule = new Rule();
 		rule.setConditions(conditions);
@@ -257,12 +255,12 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest9() throws RulesEngineException {
+	public void matchTest9() throws RulesEngineException, IOException {
 		
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditions.add(new EntityCondition(EntityCondition.TEXT, "^g.*$", EntityCondition.MATCHES));
 		
-		List<RuleAction> list = new ArrayList<RuleAction>();
+		List<RuleAction> list = new ArrayList<>();
 				
 		Rule rule = new Rule();
 		rule.setConditions(conditions);
@@ -282,12 +280,12 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest10() throws RulesEngineException {
+	public void matchTest10() throws RulesEngineException, IOException {
 		
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditions.add(new EntityCondition(EntityCondition.CONTEXT, "^con.*$", EntityCondition.MATCHES));
 		
-		List<RuleAction> list = new ArrayList<RuleAction>();		
+		List<RuleAction> list = new ArrayList<>();
 		
 		Rule rule = new Rule();
 		rule.setConditions(conditions);
@@ -308,12 +306,12 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest11() throws RulesEngineException {
+	public void matchTest11() throws RulesEngineException, IOException {
 		
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditions.add(new EqlCondition("select * from entities"));
 		
-		List<RuleAction> list = new ArrayList<RuleAction>();
+		List<RuleAction> list = new ArrayList<>();
 		
 		Rule rule = new Rule();
 		rule.setConditions(conditions);
@@ -333,9 +331,9 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest12() throws RulesEngineException {
+	public void matchTest12() throws RulesEngineException, IOException {
 		
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditions.add(new EntityMetadataCondition("age", "50"));
 		
 		List<RuleAction> list = new ArrayList<RuleAction>();
@@ -344,7 +342,7 @@ public class XmlRulesEngineTest {
 		rule.setConditions(conditions);
 		rule.setActions(list);	
 		
-		Map<String, String> metadata = new HashMap<String, String>();
+		Map<String, String> metadata = new HashMap<>();
 		metadata.put("age", "50");
 		
 		Entity entity = new Entity();
@@ -362,18 +360,18 @@ public class XmlRulesEngineTest {
 	}
 	
 	@Test
-	public void matchTest13() throws RulesEngineException {
+	public void matchTest13() throws RulesEngineException, IOException {
 		
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditions.add(new EntityMetadataCondition("spouse", "^mar.*$", "matches"));
 		
-		List<RuleAction> list = new ArrayList<RuleAction>();
+		List<RuleAction> list = new ArrayList<>();
 		
 		Rule rule = new Rule();
 		rule.setConditions(conditions);
 		rule.setActions(list);	
 		
-		Map<String, String> metadata = new HashMap<String, String>();
+		Map<String, String> metadata = new HashMap<>();
 		metadata.put("spouse", "martha");
 		
 		Entity entity = new Entity();
@@ -393,10 +391,10 @@ public class XmlRulesEngineTest {
 	@Test
 	public void readWriteRuleTest() throws Exception {
 	
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditions.add(new EntityCondition(EntityCondition.TEXT, "george"));
 		
-		List<RuleAction> list = new ArrayList<RuleAction>();
+		List<RuleAction> list = new ArrayList<>();
 		list.add(new SesRuleAction());
 		
 		Rule rule = new Rule();
@@ -421,7 +419,7 @@ public class XmlRulesEngineTest {
 		
 		try {
 		
-			JAXBContext jaxb = JAXBContext.newInstance(new Class[] {Rule.class, EntityCondition.class, SesRuleAction.class});
+			JAXBContext jaxb = JAXBContext.newInstance(Rule.class, EntityCondition.class, SesRuleAction.class);
 			
 			Marshaller jaxbMarshaller = jaxb.createMarshaller();
 			

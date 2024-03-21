@@ -62,9 +62,7 @@ public class FileAuditLogger extends AbstractAuditLogger implements AuditLogger 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean audit(String entityId, long timestamp, String userIdentifier, AuditAction auditAction) {
 
@@ -84,9 +82,7 @@ public class FileAuditLogger extends AbstractAuditLogger implements AuditLogger 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean audit(String query, long timestamp, String userName) {
 		
@@ -106,9 +102,7 @@ public class FileAuditLogger extends AbstractAuditLogger implements AuditLogger 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void close() {
 

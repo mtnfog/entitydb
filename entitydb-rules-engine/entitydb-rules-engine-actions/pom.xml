@@ -33,14 +33,14 @@
 	<name>entitydb-rules-engine-actions</name>
 	<dependencies>
 		<dependency>
-			<groupId>cai.philterd.entitydb</groupId>
-			<artifactId>eql-language</artifactId>
+			<groupId>ai.philterd.entitydb</groupId>
+			<artifactId>eql-filters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-filters</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.philterd.entitydb</groupId>

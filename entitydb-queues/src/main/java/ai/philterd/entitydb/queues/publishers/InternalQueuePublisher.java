@@ -58,9 +58,7 @@ public class InternalQueuePublisher implements QueuePublisher {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void queueUpdateAcl(String entityId, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 		
@@ -88,9 +86,7 @@ public class InternalQueuePublisher implements QueuePublisher {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void queueIngest(Collection<Entity> entities, String acl, String apiKey) throws MalformedAclException, EntityPublisherException {
 

@@ -47,9 +47,7 @@ public class FluentdAuditLogger extends AbstractAuditLogger implements AuditLogg
 		super(systemId);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean audit(String entityId, long timestamp, String userIdentifier, AuditAction auditAction) {
 		
@@ -65,9 +63,7 @@ public class FluentdAuditLogger extends AbstractAuditLogger implements AuditLogg
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean audit(String query, long timestamp, String userName) {
 		
@@ -83,9 +79,7 @@ public class FluentdAuditLogger extends AbstractAuditLogger implements AuditLogg
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void close() {
 		

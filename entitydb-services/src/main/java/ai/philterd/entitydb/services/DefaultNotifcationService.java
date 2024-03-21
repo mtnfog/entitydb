@@ -41,9 +41,7 @@ public class DefaultNotifcationService implements NotificationService {
 	@Autowired
 	private MetricReporter metricReporter;
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void sendContinuousQueryNotification(ContinuousQuery continuousQuery, Entity entity) {
 
@@ -51,9 +49,7 @@ public class DefaultNotifcationService implements NotificationService {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String createNotificationTopic(User user) {
 		

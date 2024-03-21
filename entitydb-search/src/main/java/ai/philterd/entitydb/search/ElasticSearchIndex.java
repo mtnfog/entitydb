@@ -140,9 +140,7 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String getStatus() {
 		
@@ -150,9 +148,7 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long getLastIndexedId() {	
 		
@@ -465,9 +461,7 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long getCount() {
 		
@@ -495,9 +489,7 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public IndexedEntity getEntity(String entityId) {
 		
@@ -521,9 +513,7 @@ public class ElasticSearchIndex implements SearchIndex {
 			
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean index(IndexedEntity indexedEntity) {
 		
@@ -553,9 +543,7 @@ public class ElasticSearchIndex implements SearchIndex {
         
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public Set<String> index(Set<IndexedEntity> indexedEntities) {
 				
@@ -605,9 +593,7 @@ public class ElasticSearchIndex implements SearchIndex {
         
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean update(IndexedEntity indexedEntity) {
 		
@@ -629,9 +615,7 @@ public class ElasticSearchIndex implements SearchIndex {
 
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean delete(String entityId) {
 		
@@ -657,9 +641,7 @@ public class ElasticSearchIndex implements SearchIndex {
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void close() {
 		

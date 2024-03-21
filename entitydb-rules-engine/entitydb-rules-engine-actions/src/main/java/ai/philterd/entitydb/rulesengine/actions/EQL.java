@@ -20,16 +20,17 @@
  */
 package ai.philterd.entitydb.rulesengine.actions;
 
+import ai.philterd.entitydb.eql.filters.DateComparison;
+import ai.philterd.entitydb.eql.filters.EqlFilters;
+import ai.philterd.entitydb.model.entity.Entity;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
+
 import java.util.Collection;
 import java.util.Date;
 
-import ai.philterd.entitydb.model.entity.Entity;
-import com.mtnfog.entitydb.eql.filters.EqlFilters;
-import com.mtnfog.entitydb.eql.filters.comparisons.DateComparison;
-
 public class EQL {
 	
-	public static boolean isMatch(Entity entity, String eqlStatement) {
+	public static boolean isMatch(Entity entity, String eqlStatement) throws QueryGenerationException {
 		
 		return EqlFilters.isMatch(entity, eqlStatement);
 		

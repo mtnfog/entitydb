@@ -20,6 +20,7 @@
  */
 package ai.philterd.entitydb.queues.consumers;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -106,18 +107,12 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 		this.visibilityTimeout = visibilityTimeout;
 		
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void shutdown() {
 		
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void consume() {
 		
@@ -147,14 +142,13 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 			if(StringUtils.equalsIgnoreCase(action, QueueConstants.ACTION_INGEST)) {
 			
 				// Ingest the entity.
-				
 				QueueIngestMessage queueIngestMessage = gson.fromJson(message.getBody(), QueueIngestMessage.class);						
 				
 				try {
 				
 					processed = ingestEntity(queueIngestMessage);					
 				
-				} catch (MalformedAclException ex) {
+				} catch (IOException ex) {
 										
 					LOGGER.error("The received ACL " + queueIngestMessage.getAcl() + " is malformed.", ex);
 					
@@ -163,7 +157,6 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 			} else if(StringUtils.equalsIgnoreCase(action, QueueConstants.ACTION_UPDATE_ACL)) {
 				
 				// Update the entity's ACL.
-				
 				QueueUpdateAclMessage queuUpdateAclMessage = gson.fromJson(message.getBody(), QueueUpdateAclMessage.class);
 				
 				try {
@@ -210,9 +203,7 @@ public class SqsQueueConsumer extends AbstractQueueConsumer implements QueueCons
 				
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public int getSize() {
 		

@@ -29,6 +29,7 @@ import ai.philterd.entitydb.model.datastore.entities.UserEntity;
 import ai.philterd.entitydb.model.entitystore.QueryResult;
 import ai.philterd.entitydb.model.exceptions.MalformedQueryException;
 import ai.philterd.entitydb.model.exceptions.QueryExecutionException;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 import ai.philterd.entitydb.model.security.Acl;
 
 /**
@@ -72,13 +73,13 @@ public interface EntityQueryService {
 	 * @param apiKey The user's API key.
 	 * @param continuous <code>1</code> if the query is to be a continuous query. 
 	 * @param days The number of days to be continuous.
-	 * @return The {@link ExternalQueryResult result}.
+	 * @return The {@link QueryResult result}.
 	 */
 	public QueryResult eql(String query, String apiKey, int continuous, int days) throws MalformedQueryException, QueryExecutionException;
 	
 	/**
 	 * Executes all continuous queries against the entity.
-	 * @param entity A collection {@link Entity entities}.
+	 * @param entities A collection {@link Entity entities}.
 	 * @param acl The {@link Acl ACL} of the entity.
 	 * @param entitiesReceivedTimestamp The timestamp of when the entities were received.
 	 */

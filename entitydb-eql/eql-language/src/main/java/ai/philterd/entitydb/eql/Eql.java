@@ -47,6 +47,7 @@ import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
 import ai.philterd.entitydb.model.eql.EntityOrder;
 import ai.philterd.entitydb.model.eql.EntityQuery;
 import ai.philterd.entitydb.model.eql.SortOrder;
+import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
 
 /**
  * Entity Query Language (EQL) for querying entity stores.

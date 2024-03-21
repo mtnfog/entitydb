@@ -58,8 +58,8 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
 import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.entitystore.cassandra.model.CassandraStoredEntity;
-import com.mtnfog.entitydb.eql.model.EntityMetadataFilter;
-import com.mtnfog.entitydb.eql.model.EntityQuery;
+import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
+import ai.philterd.entitydb.model.eql.EntityQuery;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
 import ai.philterd.entitydb.model.entitystore.EntityStore;
 import ai.philterd.entitydb.model.entitystore.QueryResult;
@@ -122,9 +122,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String getStatus() {
 	
@@ -132,9 +130,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<CassandraStoredEntity> getNonIndexedEntities(int limit) {
 
@@ -176,9 +172,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public boolean markEntityAsIndexed(String entityId) {
 		
@@ -216,9 +210,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long markEntitiesAsIndexed(Collection<String> entityIds) {
 		
@@ -238,9 +230,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String storeEntity(Entity entity, String acl) throws EntityStoreException {
 
@@ -299,9 +289,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 				
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String updateAcl(String entityId, String acl) throws EntityStoreException, NonexistantEntityException {
 		
@@ -395,9 +383,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public Map<Entity, String> storeEntities(Set<Entity> entities, String acl) throws EntityStoreException {
 		
@@ -415,9 +401,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteEntity(String entityId) {
 		
@@ -429,9 +413,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<CassandraStoredEntity> getEntitiesByIds(List<String> entityIds, boolean maskAcl) {
 		
@@ -597,9 +579,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public CassandraStoredEntity getEntityById(String id) {
 	
@@ -635,9 +615,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long getEntityCount() throws EntityStoreException {
 		
@@ -664,9 +642,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public long getEntityCount(String context) throws EntityStoreException {		
 		
@@ -693,9 +669,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 				
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public List<String> getContexts() throws EntityStoreException {
 		
@@ -706,9 +680,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteContext(String context) throws EntityStoreException {
 
@@ -728,9 +700,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void deleteDocument(String documentId) throws EntityStoreException {
 		

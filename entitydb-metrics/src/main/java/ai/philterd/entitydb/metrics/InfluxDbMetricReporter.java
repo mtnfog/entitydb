@@ -118,9 +118,7 @@ public class InfluxDbMetricReporter extends AbstractMetricReporter implements Me
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public void reportElapsedTime(String measurement, String field, long startTime) {
 		
