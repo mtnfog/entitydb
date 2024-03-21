@@ -45,9 +45,8 @@ public class CassandraEntityStoreTest extends AbstractEntityStoreTest<CassandraS
 	public EntityStore<CassandraStoredEntity> getEntityStore() {
 
 		final CqlSession session = embeddedCassandra.getSession();
-		final CassandraEntityStore cassandraEntityStore = new CassandraEntityStore(session, KEYSPACE);
-				
-		return cassandraEntityStore;
+
+        return new CassandraEntityStore(session, KEYSPACE);
 		
 	}
 	
