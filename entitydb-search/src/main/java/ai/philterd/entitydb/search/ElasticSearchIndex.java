@@ -377,10 +377,10 @@ public class ElasticSearchIndex implements SearchIndex {
 		for(String group : user.getGroups()) {
 			sb.append(String.format("[,]?%s[,]?|", group));
 		}
-		
+
 		String groupRegEx = StringUtils.EMPTY;
 		
-		if(sb.toString().length() > 0) {
+		if(!sb.toString().isEmpty()) {
 			// Remove the last pipe in the regex.
 			groupRegEx = sb.toString().subSequence(0, sb.toString().length() - 1).toString();
 		}

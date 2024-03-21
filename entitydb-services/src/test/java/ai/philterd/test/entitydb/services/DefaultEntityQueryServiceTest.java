@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import ai.philterd.entitydb.search.EmbeddedElasticsearchServer;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -63,7 +64,6 @@ import ai.philterd.entitydb.model.services.EntityQueryService;
 import ai.philterd.entitydb.queues.consumers.InternalQueueConsumer;
 import ai.philterd.entitydb.queues.publishers.InternalQueuePublisher;
 import ai.philterd.entitydb.search.ElasticSearchIndex;
-import ai.philterd.entitydb.search.EmbeddedElasticsearchServer;
 import ai.philterd.entitydb.services.DefaultEntityQueryService;
 
 @Ignore

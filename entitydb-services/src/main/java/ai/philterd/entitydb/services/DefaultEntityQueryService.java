@@ -137,14 +137,14 @@ public class DefaultEntityQueryService implements EntityQueryService {
 				
 		long startTime = System.currentTimeMillis();
 
-		QueryResult queryResult = null;
+		final QueryResult queryResult;
 		
 		try {
 			
 			EntityQuery entityQuery = Eql.generate(query);
 			
 				// Audit this query.
-				boolean auditResult = auditLogger.audit(query, System.currentTimeMillis(), apiKey);
+			final boolean auditResult = auditLogger.audit(query, System.currentTimeMillis(), apiKey);
 				
 				if(auditResult) {
 				
@@ -196,29 +196,29 @@ public class DefaultEntityQueryService implements EntityQueryService {
 
 	@Override
 	public void executeContinuousQueries(Collection<Entity> entities, Acl acl, long entitiesReceivedTimestamp) {
-		
-		long startTime = System.currentTimeMillis();
-		
-		List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
+
+		final long startTime = System.currentTimeMillis();
+
+		final List<ContinuousQueryEntity> continuousQueryEntities = continuousQueryRepository.getNonExpiredContinuousQueries();
 		
 		// Report the number of continuous queries being executed.
 		metricReporter.report(MetricReporter.MEASUREMENT_CONTINUOUS_QUERY, "count", continuousQueryEntities.size(), Unit.COUNT);
 		
-		for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
+		for(final ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
 				
 			// Execute the query on each entity.
-			for(Entity entity : entities) {
+			for(final Entity entity : entities) {
 			
 				// Generate the entity's ID.
 				final String entityId = EntityIdGenerator.generateEntityId(entity, acl.toString());
 				
 				// Get the user (owner) of the continuous query.
-				UserEntity userEntity = continuousQueryEntity.getUser();
-				User user = User.fromEntity(userEntity);
+				final UserEntity userEntity = continuousQueryEntity.getUser();
+				final User user = User.fromEntity(userEntity);
 				
 				// Make sure the owner of this continuous query is actually able to see this entity.
 				// This check is likely cheaper than evaluating the continuous query so do it first.
-				boolean isVisible = Acl.isEntityVisibleToUser(acl, user);
+				final boolean isVisible = Acl.isEntityVisibleToUser(acl, user);
 				
 				if(isVisible) {
 
@@ -264,24 +264,24 @@ public class DefaultEntityQueryService implements EntityQueryService {
 	}
 	
 	private QueryResult executeQuery(EntityQuery entityQuery, User user) throws QueryGenerationException, EntityStoreException, InvalidQueryException {
-		
-		QueryResult queryResult = null;
+
+		final QueryResult queryResult;
 				
 		LOGGER.trace("Executing search against the search index.");
 		
 		// Give an ID to this query.
-		String queryId = UUID.randomUUID().toString();
+		final String queryId = UUID.randomUUID().toString();
 		
 		// Execute the entity query against the search index.
-		List<IndexedEntity> indexedEntities = searchIndex.queryForIndexedEntities(entityQuery, user);
+		final List<IndexedEntity> indexedEntities = searchIndex.queryForIndexedEntities(entityQuery, user);
 				
 		if(CollectionUtils.isNotEmpty(indexedEntities)) {
-			
-			Iterator<IndexedEntity> it = indexedEntities.iterator(); 
+
+			final Iterator<IndexedEntity> it = indexedEntities.iterator();
 			
 			while(it.hasNext()) {
 				
-				IndexedEntity indexedEntity = (IndexedEntity) it.next();
+				IndexedEntity indexedEntity = it.next();
 				
 				// Set to true by default in case auditing is not enabled.
 				boolean auditResult = true;

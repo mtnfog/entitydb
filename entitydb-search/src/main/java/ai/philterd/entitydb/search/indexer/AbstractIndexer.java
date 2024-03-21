@@ -45,9 +45,9 @@ public abstract class AbstractIndexer {
 
 	private static final Logger LOGGER = LogManager.getLogger(AbstractIndexer.class);
 	
-	private SearchIndex searchIndex;
-	private EntityStore<?> entityStore;
-	private ConcurrentLinkedQueue<IndexedEntity> indexerCache;
+	private final SearchIndex searchIndex;
+	private final EntityStore<?> entityStore;
+	private final ConcurrentLinkedQueue<IndexedEntity> indexerCache;
 	
 	/**
 	 * Base constructor for indexers.
@@ -77,8 +77,8 @@ public abstract class AbstractIndexer {
 		
 		long indexed = 0;
 		
-		Set<IndexedEntity> entitiesToIndex = new LinkedHashSet<IndexedEntity>();
-		Set<String> entityIds = new LinkedHashSet<String>();	
+		final Set<IndexedEntity> entitiesToIndex = new LinkedHashSet<>();
+		final Set<String> entityIds = new LinkedHashSet<>();
 	
 		if(!indexerCache.isEmpty()) {
 
@@ -87,8 +87,8 @@ public abstract class AbstractIndexer {
 				// The entity is removed from the queue. If something happens and the entity fails to
 				// index the entity will not be on the queue anymore but it will be picked up when
 				// the indexer looks at the database for non-indexed entities.
-				
-				IndexedEntity indexedEntity = indexerCache.poll();
+
+				final IndexedEntity indexedEntity = indexerCache.poll();
 				
 				if(indexedEntity != null) {
 						
@@ -104,8 +104,8 @@ public abstract class AbstractIndexer {
 			}						
 			
 		} else {
-		
-			List<?> entities = entityStore.getNonIndexedEntities(limit);
+
+			final List<?> entities = entityStore.getNonIndexedEntities(limit);
 					
 			if(CollectionUtils.isNotEmpty(entities)) {
 				
@@ -132,8 +132,8 @@ public abstract class AbstractIndexer {
 		}
 		
 		if(CollectionUtils.isNotEmpty(entitiesToIndex)) {
-		
-			Set<String> failedIndexEntityIds = searchIndex.index(entitiesToIndex);
+
+			final Set<String> failedIndexEntityIds = searchIndex.index(entitiesToIndex);
 			entityIds.removeAll(failedIndexEntityIds);
 			
 			indexed = entityStore.markEntitiesAsIndexed(entityIds);

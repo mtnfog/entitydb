@@ -33,26 +33,26 @@ import org.aeonbits.owner.Config.Sources;
 @Sources("file:entitydb.properties")
 public interface EntityDbProperties extends Config {
 	
-	public static final String INTERNAL = "internal";
+	String INTERNAL = "internal";
 	
-	public static final String MYSQL = "mysql";
-	public static final String DYNAMODB = "dynamodb";
-	public static final String MONGODB = "mongodb";
+	String MYSQL = "mysql";
+	String DYNAMODB = "dynamodb";
+	String MONGODB = "mongodb";
 	
-	public static final String ELASTICSEARCH = "elasticsearch";
+	String ELASTICSEARCH = "elasticsearch";
 	
-	public static final String ACTIVEMQ = "activemq";
-	public static final String SQS = "sqs";
+	String ACTIVEMQ = "activemq";
+	String SQS = "sqs";
 	
-	public static final String INFLUXDB = "influxdb";
-	public static final String CLOUDWATCH = "cloudwatch";
+	String INFLUXDB = "influxdb";
+	String CLOUDWATCH = "cloudwatch";
 	
 	/**
 	 * Gets the ID of the system.
 	 * @return The ID of the system.
 	 */
 	@Key("system.id")
-	public String getSystemId();
+	String getSystemId();
 	
 	/**
 	 * Gets if the indexer is enabled.
@@ -60,7 +60,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("indexer.enabled")
 	@DefaultValue("true")
-	public boolean isIndexerEnabled();
+	boolean isIndexerEnabled();
 	
 	/**
 	 * Gets the maximum number of entities to index
@@ -69,7 +69,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("indexer.batch.size")
 	@DefaultValue("25")
-	public int getIndexerBatchSize();
+	int getIndexerBatchSize();
 	
 	/**
 	 * Gets the provider of the user manager.
@@ -78,7 +78,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("user.manager")
 	@DefaultValue("internal")
-	public String getUserManager();
+	String getUserManager();
 	
 	/**
 	 * Gets if audit is enabled.
@@ -86,7 +86,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("audit.enabled")
 	@DefaultValue("true")
-	public boolean isAuditEnabled();
+	boolean isAuditEnabled();
 	
 	/**
 	 * Gets the destination for the audit events.
@@ -95,7 +95,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("audit.logger")
     @DefaultValue("tempfile")
-    public String getAuditLogger();
+    String getAuditLogger();
 	
 	/**
 	 * Gets the provider of the entity store.
@@ -104,14 +104,14 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("entitystore")
     @DefaultValue("internal")
-    public String getDatabase();
+    String getDatabase();
 	
 	/**
 	 * Gets the hostname of the MongoDB server.
 	 * @return The hostname of the MongoDB server.
 	 */
 	@Key("mongodb.host")
-    public String getMongoDBHost();
+    String getMongoDBHost();
 	
 	/**
 	 * Gets the port of the MongoDB server.
@@ -120,49 +120,49 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("mongodb.port")
 	@DefaultValue("27017")
-    public int getMongoDBPort();
+    int getMongoDBPort();
 	
 	/**
 	 * Gets the name of the MongoDB database.
 	 * @return The name of the MongoDB database.
 	 */
 	@Key("mongodb.database")
-    public String getMongoDBDatabase();
+    String getMongoDBDatabase();
 	
 	/**
 	 * Gets the name of the MongoDB collection.
 	 * @return The name of the MongoDB collection.
 	 */
 	@Key("mongodb.collection")
-    public String getMongoDBCollection();
+    String getMongoDBCollection();
 	
 	/**
 	 * Gets the MongoDB username.
 	 * @return The MongoDB username.
 	 */
 	@Key("mongodb.username")
-    public String getMongoDBUsername();
+    String getMongoDBUsername();
 	
 	/**
 	 * Gets the MongoDB password.
 	 * @return The MongoDB password.
 	 */
 	@Key("mongodb.password")
-    public String getMongoDBPassword();
+    String getMongoDBPassword();
 	
 	/**
 	 * Gets the Cassandra hostname.
 	 * @return The Cassandra hostname.
 	 */
 	@Key("cassandra.host")
-    public String getCassandraHost();
+    String getCassandraHost();
 	
 	/**
 	 * Gets the Cassandra port.
 	 * @return The Cassandra port.
 	 */
 	@Key("cassandra.port")
-    public int getCassandraPort();
+    int getCassandraPort();
 	
 	/**
 	 * Gets the Cassandra keyspace.
@@ -171,56 +171,56 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("cassandra.keyspace")
 	@DefaultValue("entitydb")
-    public String getCassandraKeyspace();
+    String getCassandraKeyspace();
 	
 	/**
 	 * Gets the DynamoDB endpoint.
 	 * @return The DynamoDB endpoint.
 	 */
 	@Key("dynamodb.endpoint")
-    public String getDynamoDBEndpoint();
+    String getDynamoDBEndpoint();
 	
 	/**
 	 * Gets the name of the DynamoDB table.
 	 * @return The name of the DynamoDB table.
 	 */
 	@Key("dynamodb.table")
-    public String getDynamoDBTable();
+    String getDynamoDBTable();
 	
 	/**
 	 * Gets the access key for DynamoDB.
 	 * @return The access key for DynamoDB.
 	 */
 	@Key("dynamodb.accesskey")
-    public String getDynamoDBAccessKey();
+    String getDynamoDBAccessKey();
 	
 	/**
 	 * Gets the secret key for DynamoDB.
 	 * @return The secret key for DynamoDB.
 	 */
 	@Key("dynamodb.secretkey")
-    public String getDynamoDBSecretKey();
+    String getDynamoDBSecretKey();
 	
 	/**
 	 * Gets the MySQL JDBC URL.
 	 * @return The MySQL JDBC URL.
 	 */
 	@Key("mysql.jdbc.url")
-    public String getMySqlJdbcURL();
+    String getMySqlJdbcURL();
 	
 	/**
 	 * Gets the MySQL username.
 	 * @return The MySQL username.
 	 */
 	@Key("mysql.username")
-    public String getMySqlUsername();
+    String getMySqlUsername();
 	
 	/**
 	 * Gets the MySQL password.
 	 * @return The MySQL password.
 	 */
 	@Key("mysql.password")
-    public String getMySqlPassword();
+    String getMySqlPassword();
 	
 	/**
 	 * Gets the cache provider.
@@ -229,14 +229,14 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("cache")
 	@DefaultValue("internal")
-    public String getCache();
+    String getCache();
 	
 	/**
 	 * Gets the memcached hosts.
 	 * @return The memcached hosts.
 	 */
 	@Key("cache.memcached.hosts")
-    public String getMemcachedHosts();
+    String getMemcachedHosts();
 		
 	/**
 	 * Gets the cache TTL.
@@ -245,7 +245,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("cache.ttl")
 	@DefaultValue("3600")
-	public int getCacheTtl();
+	int getCacheTtl();
 	
 	/**
 	 * Gets the queue provider.
@@ -254,14 +254,14 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("queue.provider")
 	@DefaultValue("internal")
-    public String getQueueProvider();
+    String getQueueProvider();
 		
 	/**
 	 * Gets the SQS queue URL.
 	 * @return The SQS queue URL.
 	 */
 	@Key("queue.sqs.queue.url")
-    public String getSqsQueueUrl();
+    String getSqsQueueUrl();
 	
 	/**
 	 * Gets the SQS endpoint.
@@ -270,21 +270,21 @@ public interface EntityDbProperties extends Config {
 	 * will be returned.
 	 */
 	@Key("queue.sqs.endpoint")
-    public String getSqsEndpoint();
+    String getSqsEndpoint();
 	
 	/**
 	 * Gets the SQS access key.
 	 * @return The SQS access key.
 	 */
 	@Key("queue.sqs.accesskey")
-    public String getSqsAccessKey();
+    String getSqsAccessKey();
 	
 	/**
 	 * Gets the SQS secret key.
 	 * @return The SQS secret key.
 	 */
 	@Key("queue.sqs.secretkey")
-    public String getSqsSecretKey();
+    String getSqsSecretKey();
 	
 	/**
 	 * Gets the SQS queue visibility timeout.
@@ -292,7 +292,7 @@ public interface EntityDbProperties extends Config {
 	 * properties then <code>60</code> will be returned.
 	 */
 	@Key("queue.sqs.visibility.timeout")
-    public int getSqsVisibilityTimeout();
+    int getSqsVisibilityTimeout();
 	
 	/**
 	 * Gets the ActiveMQ broker URL.
@@ -302,7 +302,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("queue.activemq.broker.url")
 	@DefaultValue("vm://localhost?broker.persistent=true")
-    public String getActiveMQBrokerUrl();
+    String getActiveMQBrokerUrl();
 	
 	/**
 	 * Gets the name of the ActiveMQ queue.
@@ -311,7 +311,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("queue.activemq.queue.name")
 	@DefaultValue("entities")
-    public String getActiveMQQueueName();
+    String getActiveMQQueueName();
 	
 	/**
 	 * Gets the timeout for the ActiveMQ queue connections.
@@ -320,7 +320,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("queue.activemq.timeout")
 	@DefaultValue("100")
-    public int getActiveMQBrokerTimeout();
+    int getActiveMQBrokerTimeout();
 	
 	/**
 	 * Gets if the rules engine is enabled.
@@ -329,14 +329,14 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("rules.engine.enabled")
 	@DefaultValue("false")
-    public boolean isRulesEngineEnabled();
+    boolean isRulesEngineEnabled();
 
 	/**
 	 * Gets the directory containing the rules.
 	 * @return The directory containing the rules.
 	 */
 	@Key("rules.directory")
-    public String getRulesDirectory();
+    String getRulesDirectory();
 	
 	/**
 	 * Gets the search index provider.
@@ -345,28 +345,28 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("search.index.provider")
 	@DefaultValue("internal")
-	public String getSearchIndexProvider();
+	String getSearchIndexProvider();
 	
 	/**
 	 * Gets the hostname of Elasticsearch.
 	 * @return The hostname of Elasticsearch.
 	 */
 	@Key("elasticsearch.host")
-    public String getElasticsearchHost();
+    String getElasticsearchHost();
 	
 	/**
 	 * Gets the username for Elasticsearch.
 	 * @return The username for Elasticsearch.
 	 */
 	@Key("elasticsearch.username")
-    public String getElasticsearchUsername();
+    String getElasticsearchUsername();
 	
 	/**
 	 * Gets the password for Elasticsearch.
 	 * @return The password for Elasticsearch.
 	 */
 	@Key("elasticsearch.password")
-    public String getElasticsearchPassword();
+    String getElasticsearchPassword();
 	
 	/**
 	 * Gets the provider of the datastore.
@@ -375,7 +375,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("datastore")
 	@DefaultValue("internal")
-	public String getDataStoreDatabase();
+	String getDataStoreDatabase();
 	
 	/**
 	 * Gets the JDBC URL for the datastore.
@@ -385,21 +385,21 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("datastore.jdbc.url")
 	@DefaultValue("jdbc:mariadb://localhost/entitydb?useSSL=false")
-	public String getJdbcUrl();
+	String getJdbcUrl();
 	
 	/**
 	 * Gets the username for the datastore.
 	 * @return The username for the datastore.
 	 */
 	@Key("datastore.username")
-	public String getDataStoreUsername();
+	String getDataStoreUsername();
 	
 	/**
 	 * Gets the password for the datastore.
 	 * @return The password for the datastore.
 	 */
 	@Key("datastore.password")
-	public String getDataStorePassword();
+	String getDataStorePassword();
 	
 	/**
 	 * Gets the provider for the metrics.
@@ -408,7 +408,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("metrics.provider")
 	@DefaultValue("internal")
-	public String getMetricsProvider();
+	String getMetricsProvider();
 	
 	/**
 	 * Gets the CloudWatch namespace. If not specified in the
@@ -417,7 +417,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("metrics.cloudwatch.namespace")
 	@DefaultValue("EntityDB")
-	public String getCloudWatchNamespace();
+	String getCloudWatchNamespace();
 	
 	/**
 	 * Gets the CloudWatch endpoint. If not specified in the
@@ -427,49 +427,49 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("metrics.cloudwatch.endpoint")
 	@DefaultValue("https://monitoring.us-east-1.amazonaws.com")
-	public String getCloudWatchEndpoint();
+	String getCloudWatchEndpoint();
 	
 	/**
 	 * Gets the CloudWatch access key.
 	 * @return The CloudWatch access key.
 	 */
 	@Key("metrics.cloudwatch.accesskey")
-	public String getCloudWatchAccessKey();
+	String getCloudWatchAccessKey();
 	
 	/**
 	 * Gets the CloudWatch secret key.
 	 * @return The CloudWatch secret key.
 	 */
 	@Key("metrics.cloudwatch.secretkey")
-	public String getCloudWatchSecretKey();
+	String getCloudWatchSecretKey();
 	
 	/**
 	 * Gets the InfluxDB endpoint.
 	 * @return The InfluxDB endpoint.
 	 */
 	@Key("metrics.influxdb.endpoint")
-	public String getInfluxDbEndpoint();
+	String getInfluxDbEndpoint();
 	
 	/**
 	 * Gets the InfluxDB database name.
 	 * @return The InfluxDB database name.
 	 */
 	@Key("metrics.influxdb.database")
-	public String getInfluxDbDatabase();
+	String getInfluxDbDatabase();
 	
 	/**
 	 * Gets the InfluxDB username.
 	 * @return The InfluxDB username.
 	 */
 	@Key("metrics.influxdb.username")
-	public String getInfluxDbUsername();
+	String getInfluxDbUsername();
 	
 	/**
 	 * Gets the InfluxDB password.
 	 * @return The InfluxDB password.
 	 */
 	@Key("metrics.influxdb.password")
-	public String getInfluxDbPassword();
+	String getInfluxDbPassword();
 		
 	/**
 	 * Gets if entity ACLs are masked when entities are returned
@@ -480,7 +480,7 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("mask.entity.acl")
 	@DefaultValue("false")
-	public boolean isMaskEntityAcl();
+	boolean isMaskEntityAcl();
 	
 	/**
 	 * Gets if test data should be populated to the datastore when
@@ -491,6 +491,6 @@ public interface EntityDbProperties extends Config {
 	 */
 	@Key("populate.test.data")
 	@DefaultValue("false")
-	public boolean isPopulateTestData();
+	boolean isPopulateTestData();
 	
 }

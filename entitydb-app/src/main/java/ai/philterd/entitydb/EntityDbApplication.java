@@ -20,35 +20,6 @@
  */
 package ai.philterd.entitydb;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import org.aeonbits.owner.ConfigFactory;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import ai.philterd.entitydb.audit.FileAuditLogger;
 import ai.philterd.entitydb.audit.FluentdAuditLogger;
 import ai.philterd.entitydb.caching.memcached.MemcachedCache;
@@ -66,6 +37,8 @@ import ai.philterd.entitydb.model.entitystore.EntityStore;
 import ai.philterd.entitydb.model.metrics.MetricReporter;
 import ai.philterd.entitydb.model.queue.QueueConsumer;
 import ai.philterd.entitydb.model.queue.QueuePublisher;
+import ai.philterd.entitydb.model.rulesengine.RulesEngine;
+import ai.philterd.entitydb.model.rulesengine.RulesEngineException;
 import ai.philterd.entitydb.model.search.IndexedEntity;
 import ai.philterd.entitydb.model.search.Indexer;
 import ai.philterd.entitydb.model.search.SearchIndex;
@@ -80,13 +53,38 @@ import ai.philterd.entitydb.rulesengine.xml.XmlRulesEngine;
 import ai.philterd.entitydb.search.ElasticSearchIndex;
 import ai.philterd.entitydb.search.EmbeddedElasticsearchServer;
 import ai.philterd.entitydb.search.indexer.ElasticSearchIndexer;
-
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.MemcachedClient;
+import org.aeonbits.owner.ConfigFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 
-import ai.philterd.entitydb.model.rulesengine.RulesEngine;
-import ai.philterd.entitydb.model.rulesengine.RulesEngineException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 // Auto-configuration for MongoDB: http://stackoverflow.com/a/34415014/1428388
 // Auto-configuration for Jackson: http://www.leveluplunch.com/java/tutorials/023-configure-integrate-gson-spring-boot/
@@ -101,7 +99,7 @@ import ai.philterd.entitydb.model.rulesengine.RulesEngineException;
 @SpringBootApplication(exclude = { JacksonAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class })
 @PropertySource(value = {"file:entitydb.properties"}, ignoreResourceNotFound = false)
 @Configuration
-public class EntityDbApplication extends SpringBootServletInitializer {		
+public class EntityDbApplication extends SpringBootServletInitializer {
 
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbApplication.class);
 		
@@ -268,7 +266,7 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 			if(StringUtils.equalsIgnoreCase(EntityDbProperties.INTERNAL, properties.getSearchIndexProvider())) {
 				
-				EmbeddedElasticsearchServer embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
+				final EmbeddedElasticsearchServer embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
 				embeddedElasticsearchServer.start();
 				
 				LOGGER.warn("Using the internal search index is not recommended for production systems.");
@@ -389,10 +387,10 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 	@Bean
 	public QueueConsumer getQueueConsumer() {
-		
+
 		QueueConsumer queueConsumer = null;
-		
-		String queue = properties.getQueueProvider();
+
+		final String queue = properties.getQueueProvider();
 								
 		if(StringUtils.equalsIgnoreCase(EntityDbProperties.SQS, queue)) {
 									
@@ -429,11 +427,11 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), getIndexerCache());
 			
 		} else {
-			
+
 			LOGGER.warn("Invalid queue {}. Using the internal queue.", queue);
-			
+
 			queueConsumer = new InternalQueueConsumer(getEntityStore(), getRulesEngines(), getAuditLogger(), getMetricReporter(), getIndexerCache());
-			
+
 		}
 		
 		return queueConsumer;			
@@ -442,7 +440,6 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		
 	@Bean
 	public MetricReporter getMetricReporter() {
-	
 		
 		if(StringUtils.equalsIgnoreCase(EntityDbProperties.INFLUXDB, properties.getMetricsProvider())) {
 			
@@ -486,16 +483,16 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 	@Bean
 	public ConcurrentLinkedQueue<IndexedEntity> getIndexerCache() {
 
-		return new ConcurrentLinkedQueue<IndexedEntity>();
+		return new ConcurrentLinkedQueue<>();
 		
 	}
-	
-	@Bean(destroyMethod="shutdown")
+
+	@Bean
 	public CacheManager cacheManager() {
 		
 		LOGGER.info("Creating cache manager.");
-		
-		List<String> cacheNames = new LinkedList<String>();
+
+		final List<String> cacheNames = new LinkedList<>();
 		
 		cacheNames.add("nonExpiredContinuousQueries");
 		cacheNames.add("continuousQueriesByUser");
@@ -507,8 +504,8 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 		if(StringUtils.equalsIgnoreCase(properties.getCache(), "memcached")) {
 			
 			try {
-				
-				MemcachedClient memcachedClient = new MemcachedClient(
+
+				final MemcachedClient memcachedClient = new MemcachedClient(
 						new ConnectionFactoryBuilder()
 							.setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
 							.build(),
@@ -518,10 +515,8 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 				
 				final Collection<MemcachedCache> caches = new ArrayList<MemcachedCache>();
 				
-				for(String cacheName : cacheNames) {
-				
+				for(final String cacheName : cacheNames) {
 					caches.add(new MemcachedCache(memcachedClient, cacheName, properties.getCacheTtl()));
-					
 				}
 				
 				return new MemcachedCacheManager(caches);
@@ -536,14 +531,12 @@ public class EntityDbApplication extends SpringBootServletInitializer {
 			
 			LOGGER.info("Using internal cache.");
 			
-			SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-			
-			List<ConcurrentMapCache> caches = new LinkedList<ConcurrentMapCache>();
+			final SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
+
+			final List<ConcurrentMapCache> caches = new LinkedList<>();
 			
 			for(String cacheName : cacheNames) {
-				
 				caches.add(new ConcurrentMapCache(cacheName));
-				
 			}
 			
 			simpleCacheManager.setCaches(caches);

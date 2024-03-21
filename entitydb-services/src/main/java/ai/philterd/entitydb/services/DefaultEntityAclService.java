@@ -64,8 +64,8 @@ public class DefaultEntityAclService implements EntityAclService {
 		
 		// The entity needs to exist (in the search index). 
 		// The request to change the ACL will be put onto the queue.				
-		
-		IndexedEntity indexedEntity = searchIndex.getEntity(entityId);
+
+		final IndexedEntity indexedEntity = searchIndex.getEntity(entityId);
 		
 		if(indexedEntity == null) {
 			

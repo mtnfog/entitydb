@@ -72,14 +72,14 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 	
 	@Test
 	public void getNonIndexedEntities() throws EntityStoreException {
-		
-		Entity entity = new Entity();
+
+		final Entity entity = new Entity();
 		entity.setText("George Washington");
 		entity.setConfidence(90.0);
 		entity.setType("person");
 		entity.setContext("context");
-		
-		Entity entity2 = new Entity();
+
+		final Entity entity2 = new Entity();
 		entity2.setText("George Washington");
 		entity2.setConfidence(90.0);
 		entity2.setType("person");
@@ -89,8 +89,8 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		entityStore.storeEntity(entity2, "::1");
 	
 		assertEquals(2, entityStore.getEntityCount());
-		
-		List<T> nonIndexedEntities = entityStore.getNonIndexedEntities(25);
+
+		final List<T> nonIndexedEntities = entityStore.getNonIndexedEntities(25);
 		
 		assertEquals(2, nonIndexedEntities.size());
 				
@@ -98,14 +98,14 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 	
 	@Test
 	public void getVisibleNonIndexedEntities() throws EntityStoreException, NonexistantEntityException {
-		
-		Entity entity = new Entity();
+
+		final Entity entity = new Entity();
 		entity.setText("George Washington");
 		entity.setConfidence(90.0);
 		entity.setType("person");
 		entity.setContext("context");
-		
-		Entity entity2 = new Entity();
+
+		final Entity entity2 = new Entity();
 		entity2.setText("George Washington");
 		entity2.setConfidence(90.0);
 		entity2.setType("person");
@@ -117,8 +117,8 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		assertEquals(2, entityStore.getEntityCount());	
 		
 		final String entityId3 = entityStore.updateAcl(entityId2, "::0");
-		
-		List<T> nonIndexedEntities = entityStore.getNonIndexedEntities(25);
+
+		final List<T> nonIndexedEntities = entityStore.getNonIndexedEntities(25);
 		
 		assertEquals(2, nonIndexedEntities.size());
 		
@@ -138,20 +138,20 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 	
 	@Test
 	public void markAsIndexed() throws EntityStoreException {
-		
-		Entity entity = new Entity();
+
+		final Entity entity = new Entity();
 		entity.setText("George Washington");
 		entity.setConfidence(90.0);
 		entity.setType("person");
 		entity.setContext("context");
-		
-		String entityId1 = entityStore.storeEntity(entity, "::1");
+
+		final String entityId1 = entityStore.storeEntity(entity, "::1");
 		
 		entity.setContext("context2");
-		String entityId2 = entityStore.storeEntity(entity, "::1");
+		final String entityId2 = entityStore.storeEntity(entity, "::1");
 		
 		assertEquals(2, entityStore.getEntityCount());
-		
+
 		List<T> nonIndexedEntities = entityStore.getNonIndexedEntities(25);
 		
 		assertEquals(2, nonIndexedEntities.size());
@@ -167,11 +167,11 @@ public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 		assertEquals(0, nonIndexedEntities.size());
 		
 		// Verify that the entities we just marked really did get marked.
-		
-		T e1 = entityStore.getEntityById(entityId1);
+
+		final T e1 = entityStore.getEntityById(entityId1);
 		assertTrue(e1.getIndexed() != 0);
-		
-		T e2 = entityStore.getEntityById(entityId2);
+
+		final T e2 = entityStore.getEntityById(entityId2);
 		assertTrue(e2.getIndexed() != 0);
 		
 	}

@@ -63,8 +63,8 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public User getUserByApiKey(String apiKey) {
-				
-		UserEntity userEntity = userRepository.getByApiKey(apiKey);
+
+		final UserEntity userEntity = userRepository.getByApiKey(apiKey);
 		
 		return User.fromEntity(userEntity);
 		
@@ -73,39 +73,31 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public boolean authenticate(String apiKey) {
-	
-		UserEntity userEntity = userRepository.getByApiKey(apiKey);
-		
-		if(userEntity != null) {
-			
-			return true;
-			
-		} else {
-			
-			return false;
-			
-		}
+
+		final UserEntity userEntity = userRepository.getByApiKey(apiKey);
+
+        return userEntity != null;
 		
 	}
 	
 
 	@Override
 	public List<Notification> getUserNotifications(String apiKey) {
-		
-		List<Notification> notifications = new LinkedList<Notification>();
-		
-		UserEntity userEntity = userRepository.getByApiKey(apiKey);
+
+		final List<Notification> notifications = new LinkedList<Notification>();
+
+		final UserEntity userEntity = userRepository.getByApiKey(apiKey);
 				
 		// When coming through the API the user will exist because if not
 		// the AuthorizationInterceptor will deny the request.
 		
 		if(userEntity != null) {
-		
-			List<NotificationEntity> notificationEntities = notificationRepository.findByUserOrderByIdDesc(userEntity);
+
+			final List<NotificationEntity> notificationEntities = notificationRepository.findByUserOrderByIdDesc(userEntity);
 			
-			for(NotificationEntity notificationEntity : notificationEntities) {
-				
-				Notification notification = Notification.fromEntity(notificationEntity);
+			for(final NotificationEntity notificationEntity : notificationEntities) {
+
+				final Notification notification = Notification.fromEntity(notificationEntity);
 				
 				notifications.add(notification);
 				
@@ -124,21 +116,21 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public List<ContinuousQuery> getUserContinuousQueries(String apiKey) {
-		
-		List<ContinuousQuery> continuousQueries = new LinkedList<ContinuousQuery>();
-		
-		UserEntity userEntity = userRepository.getByApiKey(apiKey);
+
+		final List<ContinuousQuery> continuousQueries = new LinkedList<ContinuousQuery>();
+
+		final UserEntity userEntity = userRepository.getByApiKey(apiKey);
 				
 		// When coming through the API the user will exist because if not
 		// the AuthorizationInterceptor will deny the request.
 		
 		if(userEntity != null) {
-		
-			List<ContinuousQueryEntity> continuousQueryEntities = entityQueryService.findByUserOrderByIdDesc(userEntity);
+
+			final List<ContinuousQueryEntity> continuousQueryEntities = entityQueryService.findByUserOrderByIdDesc(userEntity);
 			
-			for(ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
-				
-				ContinuousQuery continuousQuery = ContinuousQuery.fromEntity(continuousQueryEntity);
+			for(final ContinuousQueryEntity continuousQueryEntity : continuousQueryEntities) {
+
+				final ContinuousQuery continuousQuery = ContinuousQuery.fromEntity(continuousQueryEntity);
 				
 				continuousQueries.add(continuousQuery);
 				

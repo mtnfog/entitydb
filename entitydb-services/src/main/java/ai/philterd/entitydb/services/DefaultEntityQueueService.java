@@ -67,22 +67,13 @@ public class DefaultEntityQueueService implements EntityQueueService {
 		
 		queuePublisher.queueIngest(entities, acl, apiKey);
 		
-		executor.execute(new Runnable() {
-			
-		    @Override
-		    public void run() {
-
-		    	executeContinuousQueries(entities, entityAcl);
-		    	
-		    }
-		    
-		});				
+		executor.execute(() -> executeContinuousQueries(entities, entityAcl));
 		
 	}
 	
 	private void executeContinuousQueries(final Collection<Entity> entities, final Acl acl)  {
-			
-		long timestamp = System.currentTimeMillis();
+
+		final long timestamp = System.currentTimeMillis();
 		
 		entityQueryService.executeContinuousQueries(entities, acl, timestamp);
 		

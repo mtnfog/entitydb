@@ -73,8 +73,8 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 	
 	private static final Logger LOGGER = LogManager.getLogger(RdbmsEntityStore.class);
 
-	private SessionFactory sessionFactory;
-	private String jdbcUrl;
+	private final SessionFactory sessionFactory;
+	private final String jdbcUrl;
 		
 	/**
 	 * Creates a connection to a SQL Server entity store.
@@ -180,15 +180,15 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RdbmsStoredEntity> getNonIndexedEntities(int limit) {
-		
-		Session session = sessionFactory.openSession();
-		
-		Criteria criteria = session.createCriteria(RdbmsStoredEntity.class, "a");		
+
+		final Session session = sessionFactory.openSession();
+
+		final Criteria criteria = session.createCriteria(RdbmsStoredEntity.class, "a");
 		criteria.add(Restrictions.eq("indexed", Long.valueOf(0)));
 		criteria.add(Restrictions.eq("visible", 1));
 		criteria.setMaxResults(limit);
-		
-		List<RdbmsStoredEntity> entities = criteria.list();
+
+		final List<RdbmsStoredEntity> entities = criteria.list();
 		
 		session.close();
 		
@@ -199,16 +199,16 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 
 	@Override
 	public long markEntitiesAsIndexed(Collection<String> entityIds) {
-		
+
 		int updated = 0;
 		
 		if(CollectionUtils.isNotEmpty(entityIds)) {
-			
-			Session session = sessionFactory.openSession();
-			
-			String sql = "UPDATE Entities SET indexed = :indexed WHERE id in (:entityIds)";
-			
-			Query query = session.createSQLQuery(sql)
+
+			final Session session = sessionFactory.openSession();
+
+			final String sql = "UPDATE Entities SET indexed = :indexed WHERE id in (:entityIds)";
+
+			final Query query = session.createSQLQuery(sql)
 					.setParameter("indexed", System.currentTimeMillis())
 					.setParameterList("entityIds", entityIds);
 			
@@ -225,24 +225,20 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 
 	@Override
 	public boolean markEntityAsIndexed(String entityId) {
-		
-		Session session = sessionFactory.openSession();
-		
-		String sql = "UPDATE Entities SET indexed = :indexed WHERE id = :entityId";
-		
-		Query query = session.createSQLQuery(sql)
+
+		final Session session = sessionFactory.openSession();
+
+		final String sql = "UPDATE Entities SET indexed = :indexed WHERE id = :entityId";
+
+		final Query query = session.createSQLQuery(sql)
 				.setParameter("indexed", System.currentTimeMillis())
 				.setParameter("entityId", entityId);
-		
-		int updated = query.executeUpdate();
+
+		final int updated = query.executeUpdate();
 		
 		session.close();
-		
-		if(updated == 1) {
-			return true;
-		} else {
-			return false;
-		}
+
+        return updated == 1;
 		
 	}
 	
@@ -256,13 +252,13 @@ public class RdbmsEntityStore implements EntityStore<RdbmsStoredEntity> {
 	 */
 	@Override
 	public QueryResult query(EntityQuery entityQuery) throws EntityStoreException {
-		
-		Session session = sessionFactory.openSession();
+
+		final Session session = sessionFactory.openSession();
 		
 		LOGGER.debug("Executing entity query: {}", entityQuery.toString());
 		
 		// Convert entityQuery to a Hibernate criteria.
-		Criteria criteria = session.createCriteria(RdbmsStoredEntity.class, "a");
+		final Criteria criteria = session.createCriteria(RdbmsStoredEntity.class, "a");
 		
 		if(entityQuery.getConfidenceRange() != null) {
 			

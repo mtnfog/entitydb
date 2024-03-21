@@ -39,9 +39,9 @@ public class MemcachedCache implements Cache {
 
 	private static final Logger LOGGER = LogManager.getLogger(MemcachedCache.class);
 
-	private String name;
-	private MemcachedClient client;		
-	private int ttl;
+	private final String name;
+	private final MemcachedClient client;
+	private final int ttl;
 	
 	/**
 	 * Creates a new implementation of {@link Cache} for memcached.

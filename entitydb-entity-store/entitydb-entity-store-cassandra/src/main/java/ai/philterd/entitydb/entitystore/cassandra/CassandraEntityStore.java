@@ -84,9 +84,9 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	public static final String TABLE_NAME = "entities";
 	private static final int DEFAULT_PAGE_SIZE = 25;
 		
-	private String host;
-	private String keySpace;	
-	private Session session;		
+	private final String host;
+	private final String keySpace;
+	private final Session session;
 	
 	/**
 	 * Creates a Cassandra entity store. 
@@ -98,8 +98,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 		this.host = host;
 		this.keySpace = keySpace;
-		
-		Cluster cluster = Cluster.builder()
+
+		final Cluster cluster = Cluster.builder()
 				.addContactPoint(host)
 				.withPort(port)
 				.withQueryOptions(new QueryOptions().setFetchSize(DEFAULT_PAGE_SIZE))
@@ -139,19 +139,19 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		// Because of being restricted to a single index, the "visible"
 		// column is checked on each returned entity and not in the query.
 		// That's why the "visible" condition is commented out in the below query.
-		
-		Select select = QueryBuilder.select()
+
+		final Select select = QueryBuilder.select()
 		        .all()
 		        .from(keySpace, TABLE_NAME)
 		        .where(eq("indexed", Long.valueOf(0)))
 		        //.and(eq("visible", Long.valueOf(1)))
 		        .limit(limit);
-		
-		ResultSet resultSet = session.execute(select);
-		
-		List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
-		
-		Iterator<Row> iterator = resultSet.iterator();				
+
+		final ResultSet resultSet = session.execute(select);
+
+		final List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
+
+		final Iterator<Row> iterator = resultSet.iterator();
 		
 		while(iterator.hasNext()) {
 			
@@ -177,19 +177,19 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	public boolean markEntityAsIndexed(String entityId) {
 		
 		boolean result = false;
-		
-		CassandraStoredEntity entity = getEntityById(entityId);
+
+		final CassandraStoredEntity entity = getEntityById(entityId);
 
 		if(entity != null) {
-			
-			Statement statement = QueryBuilder
+
+			final Statement statement = QueryBuilder
 				.update(keySpace, TABLE_NAME)
 				.with(set("indexed", System.currentTimeMillis()))
 				.where(eq("id", entityId));		
 			
 			try {
-			
-				ResultSet resultSet = session.execute(statement);
+
+				final ResultSet resultSet = session.execute(statement);
 				
 				// wasApplied() is not the right function here because
 				// this is not a conditional update but it does indicate
@@ -199,8 +199,6 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 			} catch (Exception ex) {
 				
 				LOGGER.error("Unable to mark entity " + entityId + " as indexed.", ex);
-				
-				result = false;
 				
 			}
 			
@@ -216,9 +214,9 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 		int indexed = 0;
 		
-		for(String entityId : entityIds) {
-			
-			boolean marked = markEntityAsIndexed(entityId);
+		for(final String entityId : entityIds) {
+
+			final boolean marked = markEntityAsIndexed(entityId);
 			
 			if(marked) {
 				indexed++;
@@ -242,8 +240,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 			// Executing in a batch doesn't help performance - it provides atomicity for the insert.
 			final BatchStatement batchStatement = new BatchStatement(BatchStatement.Type.LOGGED);
-			
-			PreparedStatement entityInsert = session.prepare(insertInto(keySpace, TABLE_NAME)
+
+			final PreparedStatement entityInsert = session.prepare(insertInto(keySpace, TABLE_NAME)
 					.value("id", bindMarker())
 					.value("text", bindMarker())
 					.value("confidence", bindMarker())
@@ -258,8 +256,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					.value("timestamp", bindMarker())
 					.value("visible", bindMarker())
 					.value("indexed", bindMarker()));
-			
-			BoundStatement boundEntityInsert = entityInsert.bind(
+
+			final BoundStatement boundEntityInsert = entityInsert.bind(
 					entityId, 
 					entity.getText(),
 					entity.getConfidence(), 
@@ -273,7 +271,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					entity.getMetadata(),
 					System.currentTimeMillis(),
 					1,
-					Long.valueOf(0));
+                    0L);
 			
 			batchStatement.add(boundEntityInsert);
 						
@@ -292,17 +290,17 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 
 	@Override
 	public String updateAcl(String entityId, String acl) throws EntityStoreException, NonexistantEntityException {
-		
-		String newEntityId = StringUtils.EMPTY;
-				
-		CassandraStoredEntity entity = getEntityById(entityId);
+
+		final String newEntityId;
+
+		final CassandraStoredEntity entity = getEntityById(entityId);
 		
 		if(entity != null) {
 		
 			// Create the cloned entity and save it.
-			CassandraStoredEntity cloned = new CassandraStoredEntity();
+			final CassandraStoredEntity cloned = new CassandraStoredEntity();
 						
-			cloned.setAcl(acl.toString());
+			cloned.setAcl(acl);
 			cloned.setTimestamp(System.currentTimeMillis());
 			cloned.setConfidence(entity.getConfidence());
 			cloned.setContext(entity.getContext());
@@ -321,8 +319,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 			
 			// Executing in a batch doesn't help performance - it provides atomicity for the insert.
 			final BatchStatement batchStatement = new BatchStatement(BatchStatement.Type.LOGGED);
-			
-			PreparedStatement entityInsert = session.prepare(insertInto(keySpace, TABLE_NAME)
+
+			final PreparedStatement entityInsert = session.prepare(insertInto(keySpace, TABLE_NAME)
 					.value("id", bindMarker())
 					.value("text", bindMarker())
 					.value("confidence", bindMarker())
@@ -336,9 +334,9 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					.value("visible", bindMarker())
 					.value("timestamp", bindMarker())
 					.value("indexed", bindMarker())
-					.value("metadata", bindMarker()));		
-			
-			BoundStatement boundEntityInsert = entityInsert.bind(
+					.value("metadata", bindMarker()));
+
+			final BoundStatement boundEntityInsert = entityInsert.bind(
 					newEntityId, 
 					cloned.getText(),
 					cloned.getConfidence(), 
@@ -353,8 +351,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 					System.currentTimeMillis(),
 					cloned.getIndexed(),
 					cloned.getMetadata());
-						
-			Statement updateEntityStatement = 
+
+			final Statement updateEntityStatement =
 					QueryBuilder
 						.update(keySpace, TABLE_NAME)
 						.with(set("visible", 0))
@@ -386,12 +384,12 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 
 	@Override
 	public Map<Entity, String> storeEntities(Set<Entity> entities, String acl) throws EntityStoreException {
+
+		final Map<Entity, String> storedEntities = new HashMap<>();
 		
-		Map<Entity, String> storedEntities = new HashMap<Entity, String>();
-		
-		for(Entity entity : entities) {						
-			
-			String entityId = storeEntity(entity, acl);
+		for(final Entity entity : entities) {
+
+			final String entityId = storeEntity(entity, acl);
 			
 			storedEntities.put(entity, entityId);
 			
@@ -404,8 +402,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 
 	@Override
 	public void deleteEntity(String entityId) {
-		
-		Statement statement = QueryBuilder.delete()
+
+		final Statement statement = QueryBuilder.delete()
 		        .from(keySpace, TABLE_NAME)
 		        .where(eq("id", entityId));
 		
@@ -416,12 +414,12 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 
 	@Override
 	public List<CassandraStoredEntity> getEntitiesByIds(List<String> entityIds, boolean maskAcl) {
+
+		final List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
 		
-		List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
-		
-		for(String entityId : entityIds) {
-			
-			CassandraStoredEntity entity = getEntityById(entityId);
+		for(final String entityId : entityIds) {
+
+			final CassandraStoredEntity entity = getEntityById(entityId);
 			
 			if(entity != null) {
 				
@@ -445,8 +443,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	 */
 	@Override
 	public QueryResult query(EntityQuery entityQuery) throws EntityStoreException {
-	
-		Select select = QueryBuilder.select().from(keySpace, TABLE_NAME);
+
+		final Select select = QueryBuilder.select().from(keySpace, TABLE_NAME);
 				
 		if(StringUtils.isNotEmpty(entityQuery.getText())) {
 			
@@ -510,30 +508,30 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		 */
 					
 		// The fetchsize must be sufficient to support this query.
-		int fetchSize = entityQuery.getOffset() + entityQuery.getLimit();
+		final int fetchSize = entityQuery.getOffset() + entityQuery.getLimit();
 		select.setFetchSize(fetchSize);
 		
 		// Some queries are not optimal. We won't prevent them but they are discouraged.
 		// See the table schema to understand the bad queries.
 		select.allowFiltering();
-		
-		ResultSet resultSet = session.execute(select);
-					
+
+		final ResultSet resultSet = session.execute(select);
+
 		List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
-		
-		Iterator<Row> iterator = resultSet.iterator();				
+
+		final Iterator<Row> iterator = resultSet.iterator();
 		
 		while(iterator.hasNext()) {
-			
-			Row row = iterator.next();
-			
-			CassandraStoredEntity cassandraStoredEntity = rowToEntity(row);
+
+			final Row row = iterator.next();
+
+			final CassandraStoredEntity cassandraStoredEntity = rowToEntity(row);
 			
 			cassandraStoredEntities.add(cassandraStoredEntity);
 			
 		}
-		
-		String queryId = UUID.randomUUID().toString();
+
+		final String queryId = UUID.randomUUID().toString();
 		
 		// Determine the offset and limit.
 		if(cassandraStoredEntities.size() < entityQuery.getOffset()) {
@@ -556,10 +554,10 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 			}
 			
 		}
+
+		final List<IndexedEntity> indexedEntities = new LinkedList<IndexedEntity>();
 		
-		List<IndexedEntity> indexedEntities = new LinkedList<IndexedEntity>();
-		
-		for(CassandraStoredEntity cassandraStoredEntity : cassandraStoredEntities) {
+		for(final CassandraStoredEntity cassandraStoredEntity : cassandraStoredEntities) {
 			
 			try {
 				
@@ -582,22 +580,22 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 
 	@Override
 	public CassandraStoredEntity getEntityById(String id) {
-	
-		Select select = QueryBuilder.select().from(keySpace, TABLE_NAME);
+
+		final Select select = QueryBuilder.select().from(keySpace, TABLE_NAME);
 		
 		select.where(eq("id", id));
-		
-		ResultSet resultSet = session.execute(select);
-		
-		List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
-		
-		Iterator<Row> iterator = resultSet.iterator();	
+
+		final ResultSet resultSet = session.execute(select);
+
+		final List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
+
+		final Iterator<Row> iterator = resultSet.iterator();
 	
 		while(iterator.hasNext()) {
 			
 			Row row = iterator.next();
-			
-			CassandraStoredEntity cassandraStoredEntity = rowToEntity(row);
+
+			final CassandraStoredEntity cassandraStoredEntity = rowToEntity(row);
 			
 			cassandraStoredEntities.add(cassandraStoredEntity);
 			
@@ -622,8 +620,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		try {
 		
 			long count = 0;
-			
-			PreparedStatement select = session.prepare(select().countAll().from(keySpace, TABLE_NAME));
+
+			final PreparedStatement select = session.prepare(select().countAll().from(keySpace, TABLE_NAME));
 			final Row row = session.execute(select.bind()).one();
 			
 			if(row != null) {
@@ -649,9 +647,9 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		try {
 		
 			long count = 0;
-			
-			PreparedStatement statement = session.prepare(select().countAll().from(keySpace, TABLE_NAME).where(eq("context", bindMarker())));
-			Row row = session.execute(statement.bind(context)).one();   
+
+			final PreparedStatement statement = session.prepare(select().countAll().from(keySpace, TABLE_NAME).where(eq("context", bindMarker())));
+			final Row row = session.execute(statement.bind(context)).one();
 			
 			if(row != null) {
 				
@@ -685,8 +683,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	public void deleteContext(String context) throws EntityStoreException {
 
 		try {
-		
-			Statement statement = QueryBuilder.delete()
+
+			final Statement statement = QueryBuilder.delete()
 			        .from(keySpace, TABLE_NAME)
 			        .where(eq("context", context));
 			
@@ -705,8 +703,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	public void deleteDocument(String documentId) throws EntityStoreException {
 		
 		try {
-			
-			Statement statement = QueryBuilder.delete()
+
+			final Statement statement = QueryBuilder.delete()
 			        .from(keySpace, TABLE_NAME)
 			        .where(eq("documentid", documentId));
 			
@@ -732,8 +730,8 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	}
 	
 	private CassandraStoredEntity rowToEntity(Row row) {
-		
-		CassandraStoredEntity cassandraStoredEntity = new CassandraStoredEntity();
+
+		final CassandraStoredEntity cassandraStoredEntity = new CassandraStoredEntity();
 		cassandraStoredEntity.setId(row.getString("id"));
 		cassandraStoredEntity.setText(row.getString("text"));
 		cassandraStoredEntity.setType(row.getString("type"));
