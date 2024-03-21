@@ -54,7 +54,8 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			</dependency>
+			<version>${log4j.version}</version>
+		</dependency>
         <dependency>
             <groupId>ai.philterd.entitydb</groupId>
             <artifactId>eql-filters</artifactId>
