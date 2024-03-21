@@ -40,7 +40,7 @@ import ai.philterd.entitydb.model.entity.Entity;
 /**
  * Static functions for applying EQL statements to entities.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public class EqlFilters {

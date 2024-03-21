@@ -54,7 +54,7 @@ public class PersistenceJPAConfig {
 
 		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
 		entityManager.setDataSource(dataSource());
-		entityManager.setPackagesToScan(new String[] { "com.mtnfog.entitydb.model.datastore.entities" });
+		entityManager.setPackagesToScan(new String[] { "ai.philterd.entitydb.model.datastore.entities" });
 
 		entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		entityManager.setJpaProperties(getProperties());

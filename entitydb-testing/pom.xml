@@ -49,7 +49,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.mtnfog.entitydb.testing.StressTest</mainClass>
+							<mainClass>ai.philterd.entitydb.testing.StressTest</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -123,16 +123,15 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			</dependency>
-
 		<dependency>
-			<groupId>com.mtnfog</groupId>
-			<artifactId>entity-model</artifactId>
-			<version>${entity.model.version}</version>
+			<groupId>ai.philterd.entitydb</groupId>
+			<artifactId>entitydb-model</artifactId>
+			<version>${project.version}</version>
 			<type>test-jar</type>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			</dependency>
+		</dependency>
 	</dependencies>
 </project>

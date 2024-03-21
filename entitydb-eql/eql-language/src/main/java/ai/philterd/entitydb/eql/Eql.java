@@ -57,7 +57,7 @@ import ai.philterd.entitydb.model.exceptions.QueryGenerationException;
  * The purpose of EQL is to provide a generic interface that
  * can be used to query across all entity stores.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public class Eql {

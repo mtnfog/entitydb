@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Mountain Fog, Inc.
+ * Copyright 2024 Philterd, LLC
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.List;
  * created from a {@link QueryResult} in this class's
  * constructor.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public class QueryResult {

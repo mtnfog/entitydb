@@ -66,7 +66,7 @@ package ai.philterd.entitydb.model.eql;
  * Specifies entity ordering for use in an
  * {@link EntityQuery query}.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public enum SortOrder {

@@ -20,24 +20,22 @@
  */
 package ai.philterd.test.entitydb.queues.publishers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.gson.Gson;
-import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.metrics.DefaultMetricReporter;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.exceptions.EntityPublisherException;
 import ai.philterd.entitydb.model.exceptions.MalformedAclException;
 import ai.philterd.entitydb.model.metrics.MetricReporter;
 import ai.philterd.entitydb.model.security.Acl;
 import ai.philterd.entitydb.queues.publishers.SqsQueuePublisher;
-import com.mtnfog.test.entity.utils.RandomEntityUtils;
+import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class SqsQueuePublisherIT {
 

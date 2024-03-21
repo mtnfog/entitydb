@@ -147,9 +147,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
-			<artifactId>entity-model</artifactId>
-			<version>${entity.model.version}</version>
+			<groupId>ai.philterd.entitydb</groupId>
+			<artifactId>entitydb-model</artifactId>
+			<version>${project.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>

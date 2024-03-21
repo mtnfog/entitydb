@@ -28,7 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ai.philterd.entitydb.model.entity.Entity;
-import com.mtnfog.entitydb.driver.model.exceptions.EntityDbClientException;
+import ai.philterd.entitydb.driver.model.exceptions.EntityDbClientException;
 import com.squareup.okhttp.OkHttpClient;
 
 import retrofit.RequestInterceptor;

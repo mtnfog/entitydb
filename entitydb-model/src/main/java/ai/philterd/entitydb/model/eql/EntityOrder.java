@@ -25,7 +25,7 @@ package ai.philterd.entitydb.model.eql;
  * Specifies the field to order by in an
  * {@link EntityQuery query}.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public enum EntityOrder {

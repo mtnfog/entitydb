@@ -168,9 +168,9 @@ Drools implementation:
 
 ```
 import ai.philterd.entitydb.model.entity.Entity;
-import com.mtnfog.entity.EntityExtractionAttributes;
-import com.mtnfog.idyl.sdk.rulesengine.drools.model.EntitiesHolder;
-import com.mtnfog.idyl.e3.rules.Ses;
+import ai.philterd.entity.EntityExtractionAttributes;
+import ai.philterd.idyl.sdk.rulesengine.drools.model.EntitiesHolder;
+import ai.philterd.idyl.e3.rules.Ses;
 
 // This is a sample rule that sends an email when an entity having the
 // text "George Washington" is extracted. To use this rule, set your

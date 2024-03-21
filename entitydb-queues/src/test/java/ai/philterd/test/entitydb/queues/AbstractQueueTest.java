@@ -20,23 +20,12 @@
  */
 package ai.philterd.test.entitydb.queues;
 
-import static org.junit.Assert.*;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.audit.FileAuditLogger;
 import ai.philterd.entitydb.entitystore.rdbms.RdbmsEntityStore;
 import ai.philterd.entitydb.entitystore.rdbms.model.RdbmsStoredEntity;
 import ai.philterd.entitydb.metrics.DefaultMetricReporter;
 import ai.philterd.entitydb.model.audit.AuditLogger;
+import ai.philterd.entitydb.model.entity.Entity;
 import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
 import ai.philterd.entitydb.model.entitystore.EntityStore;
 import ai.philterd.entitydb.model.exceptions.EntityPublisherException;
@@ -47,7 +36,18 @@ import ai.philterd.entitydb.model.queue.QueueConsumer;
 import ai.philterd.entitydb.model.queue.QueuePublisher;
 import ai.philterd.entitydb.model.rulesengine.RulesEngine;
 import ai.philterd.entitydb.model.search.IndexedEntity;
-import com.mtnfog.test.entity.utils.RandomEntityUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public abstract class AbstractQueueTest {
 

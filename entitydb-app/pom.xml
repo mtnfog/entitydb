@@ -33,7 +33,7 @@
 	<name>entitydb-app</name>
 	<packaging>jar</packaging>
 	<properties>
-		<start.class>com.mtnfog.entitydb.EntityDbApplication</start.class>
+		<start.class>ai.philterd.entitydb.EntityDbApplication</start.class>
 	</properties>
 	<build>
 		<finalName>entitydb</finalName>

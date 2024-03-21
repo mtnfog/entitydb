@@ -41,8 +41,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.mtnfog.entitydb")
-@EnableJpaRepositories("com.mtnfog.entitydb")
+@ComponentScan(basePackages = "ai.philterd.entitydb")
+@EnableJpaRepositories("ai.philterd.entitydb")
 public class RepositoryTestConfig {
 	
 	private static final Logger LOGGER = LogManager.getLogger(RepositoryTestConfig.class);
@@ -52,7 +52,7 @@ public class RepositoryTestConfig {
 
 		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
 		entityManager.setDataSource(dataSource());
-		entityManager.setPackagesToScan(new String[] { "com.mtnfog.entitydb.model.datastore.entities" });
+		entityManager.setPackagesToScan(new String[] { "ai.philterd.entitydb.model.datastore.entities" });
 
 		entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		entityManager.setJpaProperties(getProperties());

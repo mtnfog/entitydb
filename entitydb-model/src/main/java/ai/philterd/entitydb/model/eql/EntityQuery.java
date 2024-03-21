@@ -56,7 +56,7 @@ import org.apache.logging.log4j.Logger;
  * by the query. If the {@link EntityOrder} is not set the default sort
  * order is the entity text. Searches are not case-sensitive by default.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public class EntityQuery {

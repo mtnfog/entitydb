@@ -65,7 +65,7 @@ package ai.philterd.entitydb.model.eql;
 /**
  * A confidence range for a query.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public class ConfidenceRange {

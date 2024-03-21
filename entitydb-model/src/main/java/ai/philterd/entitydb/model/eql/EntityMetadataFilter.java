@@ -67,7 +67,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 /**
  * Used to query on entity metadata in an entity store.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public class EntityMetadataFilter {

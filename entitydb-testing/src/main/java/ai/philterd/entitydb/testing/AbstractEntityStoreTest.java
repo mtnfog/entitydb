@@ -20,21 +20,18 @@
  */
 package ai.philterd.entitydb.testing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import ai.philterd.entitydb.model.entity.Entity;
+import ai.philterd.entitydb.model.entitystore.AbstractStoredEntity;
+import ai.philterd.entitydb.model.entitystore.EntityStore;
+import ai.philterd.entitydb.model.entitystore.MetadataSanitizer;
+import ai.philterd.entitydb.model.entitystore.QueryResult;
 import ai.philterd.entitydb.model.eql.ConfidenceRange;
 import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
 import ai.philterd.entitydb.model.eql.EntityOrder;
 import ai.philterd.entitydb.model.eql.EntityQuery;
+import ai.philterd.entitydb.model.exceptions.EntityStoreException;
+import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
+import ai.philterd.entitydb.model.search.IndexedEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,15 +41,16 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ai.philterd.entitydb.model.entity.Entity;
-import ai.philterd.entitydb.model.entitystore.AbstractStoredEntity;
-import ai.philterd.entitydb.model.entitystore.EntityStore;
-import ai.philterd.entitydb.model.entitystore.MetadataSanitizer;
-import ai.philterd.entitydb.model.entitystore.QueryResult;
-import ai.philterd.entitydb.model.exceptions.EntityStoreException;
-import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
-import ai.philterd.entitydb.model.search.IndexedEntity;
-import com.mtnfog.test.entity.utils.RandomEntityUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractEntityStoreTest<T extends AbstractStoredEntity> {
 	

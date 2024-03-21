@@ -34,7 +34,7 @@ import ai.philterd.entitydb.model.entity.Entity;
 /**
  * Pig UDF that executes an EQL statement on an entity.
  * 
- * @author Mountain Fog, Inc.
+ * @author Philterd, LLC
  *
  */
 public class EqlFilterFunc extends EvalFunc<String> {

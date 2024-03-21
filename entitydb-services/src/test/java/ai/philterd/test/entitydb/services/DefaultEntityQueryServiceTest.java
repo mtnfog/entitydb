@@ -107,7 +107,7 @@ public class DefaultEntityQueryServiceTest {
 	}
 
 	@Configuration
-	@ComponentScan(basePackages = "com.mtnfog.entitydb")
+	@ComponentScan(basePackages = "ai.philterd.entitydb")
 	static class ContextConfiguration {
 		
 		@Bean

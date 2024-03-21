@@ -116,7 +116,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mtnfog</groupId>
+			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-filters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
