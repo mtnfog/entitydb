@@ -96,7 +96,7 @@
 		<surefire.version>2.18</surefire.version>
 		<spring.boot.version>3.2.3</spring.boot.version>
 		<spring.core.version>6.1.5</spring.core.version>
-		<spring.data.jpa.version>1.11.23.RELEASE</spring.data.jpa.version>
+		<spring.data.jpa.version>3.2.4</spring.data.jpa.version>
 		<spring.security.version>4.2.20.RELEASE</spring.security.version>
 		<spymemcached.version>2.12.3</spymemcached.version>
 		<!-- Put these in profiles. -->

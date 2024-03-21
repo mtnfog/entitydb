@@ -22,9 +22,7 @@ package ai.philterd.entitydb.datastore.configuration;
 
 import java.util.Properties;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
+import jakarta.persistence.EntityManagerFactory;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +38,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ai.philterd.entitydb.configuration.EntityDbProperties;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
@@ -100,7 +100,7 @@ public class PersistenceJPAConfig {
 	@Bean
 	public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
 
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		final JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(emf);
 
 		return transactionManager;
