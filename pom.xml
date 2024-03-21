@@ -56,9 +56,8 @@
 		<antlr.version>4.13.1</antlr.version>
 		<aspectjweaver.version>1.9.21.2</aspectjweaver.version>
 		<aws.sdk.version>1.12.683</aws.sdk.version>
-		<cassandra.version>3.7</cassandra.version>
-		<cassandra.datastax.version>3.1.0</cassandra.datastax.version>
-		<cassandra.unit.version>3.0.0.1</cassandra.unit.version>
+		<cassandra.version>4.1.4</cassandra.version>
+		<cassandra.unit.version>4.3.1.0</cassandra.unit.version>
 		<commons.cli.version>1.6.0</commons.cli.version>
 		<commons.codec.version>1.16.1</commons.codec.version>
 		<commons.collections.version>4.4</commons.collections.version>

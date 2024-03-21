@@ -20,6 +20,7 @@
  */
 package ai.philterd.test.entitydb.entitystore.cassandra;
 
+import com.datastax.oss.driver.api.core.CqlSession;
 import org.cassandraunit.CassandraCQLUnit;
 import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
 import org.junit.Ignore;
@@ -41,10 +42,10 @@ public class CassandraEntityStoreTest extends AbstractEntityStoreTest<CassandraS
 	public CassandraCQLUnit embeddedCassandra = new CassandraCQLUnit(new ClassPathCQLDataSet("entitydb.cql", KEYSPACE), null, 120000, 120000);
 		
 	@Override
-	public EntityStore<CassandraStoredEntity> getEntityStore() throws EntityStoreException {
+	public EntityStore<CassandraStoredEntity> getEntityStore() {
 
-		Session session = embeddedCassandra.getSession();
-		CassandraEntityStore cassandraEntityStore = new CassandraEntityStore(session, KEYSPACE);
+		final CqlSession session = embeddedCassandra.getSession();
+		final CassandraEntityStore cassandraEntityStore = new CassandraEntityStore(session, KEYSPACE);
 				
 		return cassandraEntityStore;
 		

@@ -20,15 +20,34 @@
  */
 package ai.philterd.entitydb.entitystore.cassandra;
 
-import static com.datastax.driver.core.querybuilder.QueryBuilder.bindMarker;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.contains;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.containsKey;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.gte;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.insertInto;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.lte;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.select;
-import static com.datastax.driver.core.querybuilder.QueryBuilder.set;
+import ai.philterd.entitydb.entitystore.cassandra.model.CassandraStoredEntity;
+import ai.philterd.entitydb.model.entity.Entity;
+import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
+import ai.philterd.entitydb.model.entitystore.EntityStore;
+import ai.philterd.entitydb.model.entitystore.QueryResult;
+import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
+import ai.philterd.entitydb.model.eql.EntityQuery;
+import ai.philterd.entitydb.model.exceptions.EntityStoreException;
+import ai.philterd.entitydb.model.exceptions.MalformedAclException;
+import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
+import ai.philterd.entitydb.model.search.IndexedEntity;
+import com.datastax.driver.core.BatchStatement;
+import com.datastax.driver.core.BoundStatement;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.QueryOptions;
+import com.datastax.driver.core.Statement;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
+import com.datastax.driver.core.querybuilder.Select;
+import com.datastax.oss.driver.api.core.CqlIdentifier;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Date;
@@ -40,33 +59,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.datastax.driver.core.BatchStatement;
-import com.datastax.driver.core.BoundStatement;
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.QueryOptions;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.Statement;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.querybuilder.Select;
-import ai.philterd.entitydb.model.entity.Entity;
-import ai.philterd.entitydb.entitystore.cassandra.model.CassandraStoredEntity;
-import ai.philterd.entitydb.model.eql.EntityMetadataFilter;
-import ai.philterd.entitydb.model.eql.EntityQuery;
-import ai.philterd.entitydb.model.entitystore.EntityIdGenerator;
-import ai.philterd.entitydb.model.entitystore.EntityStore;
-import ai.philterd.entitydb.model.entitystore.QueryResult;
-import ai.philterd.entitydb.model.exceptions.EntityStoreException;
-import ai.philterd.entitydb.model.exceptions.MalformedAclException;
-import ai.philterd.entitydb.model.exceptions.NonexistantEntityException;
-import ai.philterd.entitydb.model.search.IndexedEntity;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.bindMarker;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.contains;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.containsKey;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.gte;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.insertInto;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.lte;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.select;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.set;
 
 /**
  * Implementation of {@link EntityStore} that uses a Cassandra database.
@@ -86,7 +87,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 	private final String host;
 	private final String keySpace;
-	private final Session session;
+	private final CqlSession session;
 	
 	/**
 	 * Creates a Cassandra entity store. 
@@ -103,9 +104,9 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 				.addContactPoint(host)
 				.withPort(port)
 				.withQueryOptions(new QueryOptions().setFetchSize(DEFAULT_PAGE_SIZE))
-				.build();		
-		
-		this.session = cluster.connect(keySpace);
+				.build();
+
+		this.session = CqlSession.builder().build();
 	      
 	}
 	
@@ -114,9 +115,9 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	 * @param session The pre-existing Cassandra session.
 	 * @param keySpace The Cassandra keyspace.
 	 */
-	public CassandraEntityStore(Session session, String keySpace) {
+	public CassandraEntityStore(CqlSession session, String keySpace) {
 		
-		this.host = session.getCluster().getClusterName();
+		this.host = session.getContext().getSessionName();
 		this.keySpace = keySpace;
 		this.session = session;
 		
@@ -135,10 +136,12 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 	public List<CassandraStoredEntity> getNonIndexedEntities(int limit) {
 
 		// We can NOT allow filtering here because this query WILL be run.
-		// The "indexed" column is indexed but we can only use one index.
+		// The "indexed" column is indexed, but we can only use one index.
 		// Because of being restricted to a single index, the "visible"
 		// column is checked on each returned entity and not in the query.
 		// That's why the "visible" condition is commented out in the below query.
+
+		final SimpleStatement simpleStatement = SimpleStatement.newInstance("SELECT * FROM my_table WHERE id = 1").setKeyspace(CqlIdentifier.fromCql("my_keyspace"));
 
 		final Select select = QueryBuilder.select()
 		        .all()
@@ -147,7 +150,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		        //.and(eq("visible", Long.valueOf(1)))
 		        .limit(limit);
 
-		final ResultSet resultSet = session.execute(select);
+		final ResultSet resultSet = session.execute(simpleStatement);
 
 		final List<CassandraStoredEntity> cassandraStoredEntities = new LinkedList<CassandraStoredEntity>();
 
@@ -155,7 +158,7 @@ public class CassandraEntityStore implements EntityStore<CassandraStoredEntity> 
 		
 		while(iterator.hasNext()) {
 			
-			Row row = iterator.next();
+			final Row row = iterator.next();
 			
 			CassandraStoredEntity cassandraStoredEntity = rowToEntity(row);
 			

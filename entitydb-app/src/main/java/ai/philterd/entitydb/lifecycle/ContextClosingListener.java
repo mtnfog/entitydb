@@ -42,7 +42,7 @@ public class ContextClosingListener implements ApplicationListener<ContextClosed
 	private AuditLogger auditLogger;
 	
 	@Override
-	public void onApplicationEvent(ContextClosedEvent arg0) {
+	public void onApplicationEvent(ContextClosedEvent contextClosedEvent) {
 		
 		// Gracefully stop things.
 		queueConsumer.shutdown();
