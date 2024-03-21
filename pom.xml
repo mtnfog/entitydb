@@ -29,21 +29,22 @@
 	<name>entitydb</name>
 	<description>Storage and analysis of entities.</description>
 	<inceptionYear>2016</inceptionYear>
-	<url>https://www.github.com/mtnfog/entitydb</url>
+	<url>https://www.github.com/philterd/entitydb</url>
 	<scm>
-		<connection>scm:git:ssh://git@bitbucket.org/mountainfog/entitydb.git</connection>
-		<developerConnection>scm:git:ssh://git@bitbucket.org/mountainfog/entitydb.git</developerConnection>
-		<url>https://github.com/mtnfog/entitydb</url>
+		<connection>scm:git@github.com:philterd/entitydb.git</connection>
+		<developerConnection>scm:git@github.com:philterd/entitydb.git</developerConnection>
+		<url>https://github.com/philterd/entitydb</url>
 	</scm>
 	<licenses>
 		<license>
-			<name>GNU Affero General Public License (AGPL) version 3.0</name>
-			<url>https://www.gnu.org/licenses/agpl-3.0.en.html</url>
+			<name>Apache License, version 2</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>manual</distribution>
-			<comments>Proprietary licenses are available by contacting support@mtnfog.com.</comments>
+			<comments>Other licenses may be available by contacting support@philterd.ai.</comments>
 		</license>
 	</licenses>
 	<properties>
+		<maven.compiler.release>17</maven.compiler.release>
 		<!-- Encodings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -55,16 +56,16 @@
 		<aeonbits.owner.version>1.0.9</aeonbits.owner.version>
 		<antlr.version>4.0</antlr.version>
 		<aspectjweaver.version>1.8.9</aspectjweaver.version>
-		<aws.sdk.version>1.11.49</aws.sdk.version>
+		<aws.sdk.version>1.12.683</aws.sdk.version>
 		<cassandra.version>3.7</cassandra.version>
 		<cassandra.datastax.version>3.1.0</cassandra.datastax.version>
 		<cassandra.unit.version>3.0.0.1</cassandra.unit.version>
-		<commons.cli.version>1.3.1</commons.cli.version>
-		<commons.codec.version>1.10</commons.codec.version>
-		<commons.collections.version>4.1</commons.collections.version>
+		<commons.cli.version>1.6.0</commons.cli.version>
+		<commons.codec.version>1.16.1</commons.codec.version>
+		<commons.collections.version>4.4</commons.collections.version>
 		<commons.configuration.version>2.0</commons.configuration.version>
-		<commons.io.version>2.4</commons.io.version>
-		<commons.lang.version>3.4</commons.lang.version>
+		<commons.io.version>2.15.1</commons.io.version>
+		<commons.lang.version>3.14.0</commons.lang.version>
 		<dbunit.version>2.5.0</dbunit.version>
 		<spring-test-dbunit.version>1.2.1</spring-test-dbunit.version>
 		<ehcache.version>2.10.1</ehcache.version>
@@ -73,20 +74,19 @@
 		<failsafe.version>2.18</failsafe.version>
 		<fluentd.logger.version>0.3.2</fluentd.logger.version>
 		<fongo.version>2.0.7</fongo.version>
-		<gson.version>2.7</gson.version>
+		<gson.version>2.10.1</gson.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<hibernate.version>5.1.0.Final</hibernate.version>
 		<hsqldb.version>2.3.4</hsqldb.version>
 		<httpclient.version>4.5</httpclient.version>
 		<influxdb.version>2.4</influxdb.version>
-		<jacoco.version>0.7.2.201409121644</jacoco.version>
 		<jackson.version>2.6.6</jackson.version>
 		<jackson.mapper.version>1.9.11</jackson.mapper.version>
 		<javax.persistence.version>2.1.1</javax.persistence.version>
 		<jest.version>2.0.3</jest.version>
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.12</junit.version>
-		<log4j.version>2.6.2</log4j.version>
+		<log4j.version>2.23.1</log4j.version>
 		<lucene.version>5.5.0</lucene.version>
 		<mariadb.java.client.version>1.5.4</mariadb.java.client.version>
 		<maven.compiler.version>3.2</maven.compiler.version>
@@ -95,21 +95,14 @@
 		<powermock.version>1.6.2</powermock.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<surefire.version>2.18</surefire.version>
-		<spring.boot.version>1.4.1.RELEASE</spring.boot.version>
-		<spring.data.jpa.version>1.10.5.RELEASE</spring.data.jpa.version>
+		<spring.boot.version>1.5.22.RELEASE</spring.boot.version>
+		<spring.data.jpa.version>1.11.23.RELEASE</spring.data.jpa.version>
 		<spring.version>4.2.8.RELEASE</spring.version>
-		<spring.security.version>4.1.3.RELEASE</spring.security.version>
+		<spring.security.version>4.2.20.RELEASE</spring.security.version>
 		<spymemcached.version>2.12.1</spymemcached.version>
 		<!-- Testing -->
 		<skipTests>false</skipTests>
 		<skipIntegrationTests>false</skipIntegrationTests>
-		<!-- Sonar properties -->
-		<sonar.host.url>http://jenkins:9000</sonar.host.url>
-		<sonar.jacoco.reportPath>target/coverage-reports/jacoco-ut.exec</sonar.jacoco.reportPath>
-		<sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
-		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-		<sonar.test.exclusions>**/test/*</sonar.test.exclusions>
-		<sonar.exclusions>**/test/**</sonar.exclusions>
 		<!-- Put these in profiles. -->
 		<datastore>internal</datastore>
 		<entitystore>internal</entitystore>
@@ -200,11 +193,11 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.12.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>7</release>
 				</configuration>
 			</plugin>
 			<plugin>

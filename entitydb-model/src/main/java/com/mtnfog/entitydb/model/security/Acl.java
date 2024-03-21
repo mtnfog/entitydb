@@ -161,8 +161,7 @@ public class Acl {
 	}
 	
 	/**
-	 * Determines if the entity having the given ACL is visible to the given {@link User user}. 
-	 * @param acl The entity's {@link Acl ACL}.
+	 * Determines if the entity having the given ACL is visible to the given {@link User user}.
 	 * @param user The {@link User user}.
 	 * @return <code>true</code> if the entity having the given ACL is visible to the user;
 	 * otherwise <code>false</code>.
@@ -225,7 +224,7 @@ public class Acl {
 	 * Returns the ACL in the format users:groups:world,
 	 * such as <code>user1:user2:1</code>.
 	 */
-	@Override
+	/*@Override
 	public String toString() {
 		
 		final String usersCsv = String.join(",", users);
@@ -233,7 +232,7 @@ public class Acl {
 		
 		return String.format("%s:%s:%d", usersCsv, groupsCsv, world);
 		
-	}
+	}*/
 	
 	/**
 	 * Gets the ACL's users.

@@ -68,11 +68,11 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>com.mtnfog.entitydb</groupId>
 			<artifactId>entitydb-java-driver</artifactId>
 			<version>1.1-SNAPSHOT</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>

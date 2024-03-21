@@ -6,3 +6,4 @@ target/
 .classpath
 .project
 activemq-data/
+.idea/

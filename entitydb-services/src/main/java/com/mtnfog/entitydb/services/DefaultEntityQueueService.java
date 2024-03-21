@@ -60,7 +60,7 @@ public class DefaultEntityQueueService implements EntityQueueService {
 	public void queueIngest(final Collection<Entity> entities, final String acl, final String apiKey) throws MalformedAclException, EntityPublisherException {
 		
 		// Validate the ACL.
-		Acl entityAcl = new Acl(acl);
+		final Acl entityAcl = new Acl(acl);
 		
 		queuePublisher.queueIngest(entities, acl, apiKey);
 		

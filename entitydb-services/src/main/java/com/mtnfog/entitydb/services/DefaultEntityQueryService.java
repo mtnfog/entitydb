@@ -321,7 +321,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
 			
 			LOGGER.trace("No matching entities found.");
 			
-			queryResult = new QueryResult(Collections.emptyList(), queryId);
+			queryResult = new QueryResult(Collections.<IndexedEntity>emptyList(), queryId);
 			
 		}
 			
