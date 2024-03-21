@@ -93,6 +93,7 @@
 		<slf4j.version>1.7.21</slf4j.version>
 		<surefire.version>2.18</surefire.version>
 		<spring.boot.version>3.2.3</spring.boot.version>
+		<spring.core.version>6.1.5</spring.core.version>
 		<spring.data.jpa.version>1.11.23.RELEASE</spring.data.jpa.version>
 		<spring.security.version>4.2.20.RELEASE</spring.security.version>
 		<spymemcached.version>2.12.3</spymemcached.version>
@@ -258,16 +259,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<!-- Import dependency management from Spring Boot -->
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>1.4.1.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>

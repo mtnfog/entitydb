@@ -49,8 +49,10 @@
 		</dependency>
 		<dependency>
 		<groupId>org.springframework</groupId>
+			<groupId>org.spring</groupId>
 			<artifactId>spring-context-support</artifactId>
-			</dependency>
+			<version>${spring.context.support.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
