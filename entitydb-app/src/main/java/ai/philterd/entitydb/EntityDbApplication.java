@@ -86,9 +86,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-// Auto-configuration for MongoDB: http://stackoverflow.com/a/34415014/1428388
-// Auto-configuration for Jackson: http://www.leveluplunch.com/java/tutorials/023-configure-integrate-gson-spring-boot/
-
 /**
  * The EntityDB application. EntityDB uses Spring Boot and
  * builds as a runnable jar.
@@ -97,42 +94,33 @@ import java.util.concurrent.ThreadPoolExecutor;
  *
  */
 @SpringBootApplication(exclude = { JacksonAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class })
-@PropertySource(value = {"file:entitydb.properties"}, ignoreResourceNotFound = false)
+@PropertySource(value = {"file:entitydb.properties"})
 @Configuration
 public class EntityDbApplication extends SpringBootServletInitializer {
 
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbApplication.class);
 		
 	private static final EntityDbProperties properties = ConfigFactory.create(EntityDbProperties.class);
-	
-	/**
-	 * The EntityDB main function.
-	 * @param args Command line arguments. (None are required.)
-	 */
-	public static void main(String[] args) {
-						
-		// Start the REST service.
-		SpringApplication.run(EntityDbApplication.class, args);
 
+	public static void main(String[] args) {
+		SpringApplication.run(EntityDbApplication.class, args);
 	}
 	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		
 		return application.sources(EntityDbApplication.class);
-		
 	}
 	
 	@Bean(destroyMethod = "shutdown")
 	public ThreadPoolExecutor getThreadPoolExecutor() {
-		
-		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-		
+
+		final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+
 		executor.setMaximumPoolSize(16);
-		executor.setCorePoolSize(8);		
-	    
+		executor.setCorePoolSize(8);
+
 		return executor;
-		
+
 	}
 		
 	@Bean

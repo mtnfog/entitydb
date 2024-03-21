@@ -13,6 +13,5 @@
 	<modules>
 		<module>eql-language</module>
 		<module>eql-filters</module>
-		<module>eql-pig-udf</module>
   </modules>
 </project>
