@@ -69,24 +69,22 @@ public class EntityDbRestApiController {
 	
 	private static final Logger LOGGER = LogManager.getLogger(EntityDbRestApiController.class);
 	
-	@Autowired
-	private EntityQueryService entityQueryService;
-	
-	@Autowired
-	private SearchIndex searchIndex;
-	
-	@Autowired
-	private EntityAclService entityAclService;
-	
-	@Autowired
-	public EntityStore<?> entityStore;
-	
-	@Autowired
-	public UserService userService;
-	
-	@Autowired
-	public EntityQueueService entityQueueService;
-		
+	private final EntityQueryService entityQueryService;
+	private final SearchIndex searchIndex;
+	private final EntityAclService entityAclService;
+	public final EntityStore<?> entityStore;
+	public final UserService userService;
+	public final EntityQueueService entityQueueService;
+
+	public EntityDbRestApiController(EntityQueryService entityQueryService, SearchIndex searchIndex, EntityAclService entityAclService, EntityStore<?> entityStore, UserService userService, EntityQueueService entityQueueService) {
+		this.entityQueryService = entityQueryService;
+		this.searchIndex = searchIndex;
+		this.entityAclService = entityAclService;
+		this.entityStore = entityStore;
+		this.userService = userService;
+		this.entityQueueService = entityQueueService;
+	}
+
 	/**
 	 * Gets the status.
 	 * @return The {@link Status status}.
@@ -138,7 +136,7 @@ public class EntityDbRestApiController {
 	/**
 	 * Gets the continuous queries for a user identified by the API key.
 	 * @param authorization The user's API key.
-	 * @return A list of {@link ContinuousQueries queries}.
+	 * @return A list of continuous queries.
 	 */
 	@RequestMapping(value = "/api/user/continuousqueries", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -160,14 +158,11 @@ public class EntityDbRestApiController {
 					
 	/**
 	 * Queues an entities for ingest.
-	 * @param entities A collection of {@link Entities}.
+	 * @param entities A collection of entities.
 	 * @param acl An optional ACL for all entities. If not specified all entities
 	 * are visible to all users. 
 	 * @param authorization The user's API key.
-	 * @throws MalformedAclException Thrown if the ACL is invalid.
-	 * @throws Exception Thrown if the entities cannot be queued for ingestion.
-	 * Check the server log for more information.
-	 */
+     */
 	@RequestMapping(value = "/api/entity", method = {RequestMethod.PUT, RequestMethod.POST})
 	@ResponseStatus(HttpStatus.OK)
 	public void store(
@@ -198,8 +193,6 @@ public class EntityDbRestApiController {
 	 * @param entityId The ID of the entity.
 	 * @param acl The updated ACL for the entity.
 	 * @param authorization The user's API key.
-	 * @throws NonexistantEntityException Thrown if the entity having the entity ID does not exist.
-	 * @throws MalformedAclException Thrown if the ACL is invalid.
 	 * @throws InternalServerErrorException Thrown if the entity's ACL cannot
 	 * be updated for other reasons. Check the server log for more information on the cause.
 	 */
@@ -207,7 +200,7 @@ public class EntityDbRestApiController {
 	@ResponseStatus(HttpStatus.OK)
 	public void store(
 			@PathVariable String entityId,
-			@RequestParam(value="acl", required=true) String acl,
+			@RequestParam(value="acl") String acl,
 			@RequestHeader(value="Authorization") String authorization) {
 					
 		try {
@@ -265,7 +258,7 @@ public class EntityDbRestApiController {
 				status = HttpStatus.CREATED;
 			}
 			
-			return new ResponseEntity<QueryResult>(queryResult, status);
+			return new ResponseEntity<>(queryResult, status);
 			
 		} catch (QueryExecutionException ex) {
 			
