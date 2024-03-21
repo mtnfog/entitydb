@@ -29,12 +29,6 @@
 	</parent>
 	<artifactId>entitydb-entity-store-dynamodb</artifactId>
 	<name>entitydb-entity-store-dynamodb</name>
-	<licenses>
-		<license>
-			<name>${license.name}</name>
-			<url>${license.url}</url>
-		</license>
-	</licenses>
 	<build>
 		<plugins>
 			<plugin>
@@ -132,7 +126,7 @@
 			<version>${commons.lang.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cai.philterd.entitydb</groupId>
+			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-language</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -111,7 +111,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cai.philterd.entitydb</groupId>
+			<groupId>ai.philterd.entitydb</groupId>
 			<artifactId>eql-language</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -31,12 +31,6 @@
 	</parent>
 	<artifactId>entitydb-entity-store-cassandra</artifactId>
 	<name>entitydb-entity-store-cassandra</name>
-	<licenses>
-		<license>
-			<name>${license.name}</name>
-			<url>${license.url}</url>
-		</license>
-	</licenses>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.cassandra</groupId>
