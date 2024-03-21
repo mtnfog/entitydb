@@ -4,13 +4,11 @@ EntityDB is an application that integrates several components to provide a unifi
 
 As EntityDB matures and gets closer to a 1.0 release, the project's goals are to provide a means for storing and querying entities that's scalable, efficient, and useful to the community.
 
-For help using and configuring EntityDB please refer to the [wiki](https://github.com/mtnfog/entitydb/wiki), especially the [Quick Start Guide](https://github.com/mtnfog/entitydb/wiki/Quick-Start-Guide). More information about EntityDB may be available on our website at http://www.mtnfog.com/products/entitydb/.
+For help using and configuring EntityDB please refer to the [wiki](https://github.com/philterd/entitydb/wiki), especially the [Quick Start Guide](https://github.com/mtnfog/entitydb/wiki/Quick-Start-Guide). More information about EntityDB may be available on our website at http://www.philterd.ai/products/entitydb/.
 
 ## Architectural Overview
 
-![Architecture](https://www.mtnfog.com/wp-content/uploads/2016/02/entitydb-architecture.png)
-
-The architecture of EntityDB is shown in the block diagram above. Entities are stored in an underlying database. Supported databases are MySQL, MongoDB, Cassandra, and DynamoDB. Entities are indexed in Elasticsearch for fast querying. A cache stores recently ingested and accessed entities to improve performance. A separate database, the data store, manages data such as users, groups, queries, and other information.
+Entities are stored in an underlying database. Supported databases are MySQL, MongoDB, Cassandra, and DynamoDB. Entities are indexed in Elasticsearch for fast querying. A cache stores recently ingested and accessed entities to improve performance. A separate database, the data store, manages data such as users, groups, queries, and other information.
 
 ## Features
 

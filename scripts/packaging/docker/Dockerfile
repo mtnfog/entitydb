@@ -1,6 +1,6 @@
-# Dockerfile for Mountain Fog's EntityDB.
+# Dockerfile for Philterd's EntityDB.
 FROM ubuntu:16.04
-MAINTAINER Mountain Fog <support@mtnfog.com>
+MAINTAINER Philterd <support@philterd.ai>
 
 RUN apt-get -qq update 
 RUN apt-get -qq -y upgrade
