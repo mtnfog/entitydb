@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<entity.model.version>1.0.9</entity.model.version>
 		<junit.version>4.13.1</junit.version>
-		<log4j.version>2.6.2</log4j.version>
+		<log4j.version>2.12.4</log4j.version>
 		<okhttp.version>2.7.5</okhttp.version>
 		<retrofit.version>1.9.0</retrofit.version>
 	</properties>
