@@ -2,11 +2,7 @@
 
 EntityDB is an application that integrates several components to provide a unified means for storing and querying entities (people, places, and things). This project includes the Entity Query Language (EQL) which facilitates querying entities across various underlying databases through a single query language.
 
-As EntityDB matures and gets closer to a 1.0 release, the project's goals are to provide a means for storing and querying entities that's scalable, efficient, and useful to the community.
-
-For help using and configuring EntityDB please see the [docs](https://github.com/philterd/docs).
-
-## Architectural Overview
+## Architecture
 
 Entities are stored in an underlying database. Supported databases are MySQL, MongoDB, Cassandra, and DynamoDB. Entities are indexed in Elasticsearch for fast querying. A cache stores recently ingested and accessed entities to improve performance. A separate database, the data store, manages data such as users, groups, queries, and other information.
 
@@ -63,10 +59,6 @@ mvn clean install
 ## Running
 
 Once successfully built, an `entitydb.jar` will be under `entitydb-app/target`. This is a runnable jar that can be started with `java -jar entitydb.jar`. By default, all components will use internal implementations but this can be changed in the `entitydb.properties`. See the [Documentation](https://github.com/mtnfog/entitydb/blob/master/documentation.md) for details on configuring the `entitydb.properties`.
-
-## Deploying
-
-Refer to the [wiki](https://github.com/mtnfog/entitydb/wiki/Deploying) for detailed deployment instructions. Scripts are included under the `scripts/packaging/` directory to create an AMI (Packer script), a Docker container, and a CloudFormation stack.
 
 ### Ingesting Entities
 
