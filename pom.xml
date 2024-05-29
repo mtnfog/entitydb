@@ -159,7 +159,7 @@
 		<module>entitydb-model</module>
 		<module>entitydb-entity-store</module>
 		<module>entitydb-eql</module>
-		<!--<module>entitydb-java-driver</module>-->
+		<module>entitydb-java-driver</module>
 		<module>entitydb-app</module>
 		<module>entitydb-rules-engine</module>
 		<module>entitydb-search</module>
